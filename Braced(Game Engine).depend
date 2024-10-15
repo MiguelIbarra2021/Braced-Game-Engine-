@@ -1,0 +1,68 @@
+# depslib dependency file v1.0
+1726535383 source:c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\main.cpp
+	<windows.h>
+	<_Common.h>
+	<Scene.h>
+
+1724893941 c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\include\_common.h
+	<string.h>
+	<GL/glut.h>
+	<stdlib.h>
+	<iostream>
+	<windows.h>
+	<gl/gl.h>
+
+1724718931 c:\users\migue\onedrive\desktop\csci 191-t\common\include\gl\glut.h
+	<windows.h>
+	<stdlib.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1728579017 c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\include\scene.h
+	<vector>
+	<_Common.h>
+	"Scene.h"
+	"_lightSetup.h"
+	"_Models.h"
+	"_KbMs.h"
+
+1726704582 source:c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\src\_kbms.cpp
+	"_KbMs.h"
+
+1726590100 c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\include\_kbms.h
+	<_Common.h>
+	<_Models.h>
+
+1726707832 c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\include\_models.h
+	<_Common.h>
+	<_textureLoader.h>
+
+1726706981 c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\include\_textureloader.h
+	<_Common.h>
+	<SOIL.h>
+
+1668646408 c:\users\migue\onedrive\desktop\csci 191-t\common\include\soil.h
+
+1726700230 source:c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\src\_lightsetup.cpp
+	"_lightSetup.h"
+
+1726589588 c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\include\_lightsetup.h
+	<_Common.h>
+
+1726708210 source:c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\src\_models.cpp
+	"_Models.h"
+
+1726708276 source:c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\src\_textureloader.cpp
+	"_textureLoader.h"
+
+1726761961 source:c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\src\scene.cpp
+	"Scene.h"
+	"_lightSetup.h"
+	"_Models.h"
+	"_KbMs.h"
+
+1726759669 source:c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\src\__models.cpp
+	"__Models.h"
+
+1726759669 c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\include\__models.h
+
