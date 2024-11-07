@@ -1,13 +1,16 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+// Internal Libraries
 #include <vector>
-#include <_Common.h>
 
+// Custom Libraries
 #include "_Scene.h"
 #include "_LightSetup.h"
 #include "_Models.h"
 #include "_KbMs.h"
+#include "_TerrainGenerator.h"
+#include "_Common.h"
 
 class Scene
 {

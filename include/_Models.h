@@ -7,20 +7,24 @@
 class _Models
 {
     public:
+        // Constructor
         _Models();
         virtual ~_Models();
 
-        GLfloat rotateX;
-        GLfloat rotateY;
-        GLfloat rotateZ;
-
-        GLfloat positionX;
-        GLfloat positionY;
-        GLfloat positionZ;
-
-        _TextureLoader* myTex = new _TextureLoader();
+        // Functions
         GLvoid initModel(char* fileName);
-        GLvoid drawModel(int, double, double, double);  // Added model selection & rgb values
+        GLvoid drawModel(int);  // Added model selection & rgb values
+
+        // Transforms
+        vec3 position;
+        vec3 rotation;
+        vec3 scale;
+
+        rgb color;
+
+        // Sub Classes
+        _TextureLoader* myTex = new _TextureLoader();
+
 
     protected:
 

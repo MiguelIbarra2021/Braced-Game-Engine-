@@ -1,28 +1,23 @@
 #include "_TextureLoader.h"
 
 _TextureLoader::_TextureLoader()
-{
-    //ctor
-
-}
+{}
 
 _TextureLoader::~_TextureLoader()
-{
-    //dtor
-}
+{}
 
-void _TextureLoader::loadTexture(char* fileName)
+void _TextureLoader::loadTexture(char* file)  // Gets file and loads it
 {
     glGenTextures(1, &tex);             // Generate handler
     glBindTexture(GL_TEXTURE_2D, tex);   // Point image to handler
 
-    image = SOIL_load_image(fileName, &width, &height, 0, SOIL_LOAD_RGBA);
+    image = SOIL_load_image(file, &width, &height, 0, SOIL_LOAD_RGBA);
 
     // Load image file
 
     // Check errors
     if(!image)
-        cout <<"Image: " << fileName << " not found" << endl;
+        cout <<"Image: " << file << " not found" << endl;
 
     glTexImage2D(GL_TEXTURE_2D,
                  0,

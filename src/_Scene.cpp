@@ -4,12 +4,19 @@ _LightSetup** lightHierarchy = nullptr;     // Allows for multiple seperate ligh
 _LightSetup* myLight = new _LightSetup();   // Original Light
 _Models** objectHierarchy = nullptr;        // Hierarchy of objects
 _KbMs* sysControl = new _KbMs();            // Mouse and Key Control
+_TerrainGenerator* terrain = new _TerrainGenerator();
 
-int objects = 0;                            // # of objects in Scene
-int lights = 0;                            // # of lights in Scene
+int objects;                            // # of objects in Scene
+int lights;                            // # of lights in Scene
+bool editmode;
 
 Scene::Scene()
-{}
+{
+    // Initalize Variables
+    objects = 0;
+    lights = 0;
+    editmode = false;
+}
 
 Scene::~Scene()
 {}
@@ -26,7 +33,11 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
         sysControl->wParam = wParam;
 
         case WM_KEYDOWN:
-            sysControl->keyPress(objectHierarchy[0]);
+            if(editmode)    // On Activation You Can Edit Objects In Scene & Save It
+            {
+                sysControl->keyPress(&terrain->position);
+            }
+
             break;
         case WM_KEYUP:
             sysControl->keyUp();
@@ -105,6 +116,8 @@ GLint Scene::initGL()   // Initalize Scene
         }
     }
 
+    terrain->initTerrain("");
+
     return true;
 }
 
@@ -113,7 +126,9 @@ GLint Scene::drawScene()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();           // Clear Matrices
 
-    objectHierarchy[0]->drawModel(1, 1, 1, 1);
+    objectHierarchy[0]->drawModel(1);
+
+    terrain->drawTerrain();
 
     return true;
 

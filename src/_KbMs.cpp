@@ -24,41 +24,60 @@ void _KbMs::keyPress(_Models* model)
     switch(wParam)
     {
     case VK_UP:
-        model->rotateX += 1.0;
+        model->rotation.x += 1.0;
         break;
     case VK_DOWN:
-        model->rotateX -= 1.0;
+        model->rotation.x -= 1.0;
         break;
     case VK_LEFT:
-        model->rotateY += 1.0;
+        model->rotation.y += 1.0;
         break;
     case VK_RIGHT:
-        model->rotateY -= 1.0;
+        model->rotation.y -= 1.0;
         break;
     case VK_NUMPAD1:
-        model->positionZ += 1.0;
+        model->position.z += 1.0;
         break;
     case VK_NUMPAD2:
-        model->positionZ -= 1.0;
+        model->position.z -= 1.0;
         break;
     case 0x57:  // W
-        model->rotateX += 1.0;
+        model->rotation.x += 1.0;
         break;
     case 0x53:  // S
-        model->rotateX -= 1.0;
+        model->rotation.x -= 1.0;
         break;
     case 0x44:  // D
-        model->rotateY += 1.0;
+        model->rotation.y += 1.0;
         break;
     case 0x41:  // A
-        model->rotateY -= 1.0;
+        model->rotation.y -= 1.0;
         break;
     case 0x51:  // Q Rotate +z
-        model->rotateZ += 1.0;
+        model->rotation.z += 1.0;
         break;
     case 0x45:  // E Rotate -z
-        model->rotateZ -= 1.0;
+        model->rotation.z -= 1.0;
         break;
+    }
+}
+
+void _KbMs::keyPress(vec3* position)
+{
+    switch(wParam)
+    {
+        case VK_UP:
+            position->y += 1.0;
+            break;
+        case VK_DOWN:
+            position->y -= 1.0;
+            break;
+        case VK_LEFT:
+            position->x += 1.0;
+            break;
+        case VK_RIGHT:
+            position->x -= 1.0;
+            break;
     }
 }
 
@@ -94,24 +113,24 @@ void _KbMs::mouseEventUp()
 
 void _KbMs::mouseWheel(_Models* model, double delta)
 {
-    model->positionZ += delta/100;
+    model->position.z += delta/100;
 }
 
 void _KbMs::mouseMove(_Models* model, double x, double y)
 {
     if(mouseTranslation)
     {
-        model->positionX += (x - prev_MouseX)/100.0;
-        model->positionY -= (y - prev_MouseY)/100.0;
+        model->position.x += (x - prev_MouseX)/100.0;
+        model->position.y -= (y - prev_MouseY)/100.0;
     }
     else if(mouseRotation)
     {
-        model->rotateY += (x - prev_MouseX);
-        model->rotateX += (y - prev_MouseY);
+        model->rotation.y += (x - prev_MouseX);
+        model->rotation.x += (y - prev_MouseY);
     }
     else if(zRotation)
     {
-        model->rotateZ += (x - prev_MouseX);
+        model->rotation.z += (x - prev_MouseX);
     }
 
     prev_MouseX = x;

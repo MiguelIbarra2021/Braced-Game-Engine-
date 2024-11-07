@@ -2,39 +2,31 @@
 
 _Models::_Models()
 {
-    //ctor
+    color.r = 1.0;
+    color.g = 1.0;
+    color.b = 1.0;
 
-    rotateX = 0.0;
-    rotateY = 0.0;
-    rotateZ = 0.0;
-
-    positionX = 0.0;
-    positionY = 0.0;
-    positionZ = -8.0;
+    position.z = -8.0;
 }
 
 _Models::~_Models()
-{
-    //dtor
-}
+{}
 
 GLvoid _Models::initModel(char* fileName)
-{
-    myTex->loadTexture(fileName);
-}
+{ myTex->loadTexture(fileName); }
 
-GLvoid _Models::drawModel(int sel, double r, double g, double b)
+GLvoid _Models::drawModel(int sel)
 {
-    // glColor3f(0.55, 0.30, 0.10); // Old brown rgb
-    glColor3f(r, g, b); // Custom rgb
+    // Color
+    glColor3f(color.r, color.g, color.b); // Custom rgb
 
     // Translation goes first
-    glTranslated(positionX, positionY, positionZ);
+    glTranslated(position.x, position.y, position.z);
 
     // Rotate on all 3 axis
-    glRotatef(rotateX, 1, 0, 0);
-    glRotatef(rotateY, 0, 1, 0);
-    glRotatef(rotateZ, 0, 0, 1);
+    glRotatef(rotation.x, 1, 0, 0);
+    glRotatef(rotation.y, 0, 1, 0);
+    glRotatef(rotation.z, 0, 0, 1);
 
     switch(sel)  // Select type of model selected
     {

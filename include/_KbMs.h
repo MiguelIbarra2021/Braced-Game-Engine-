@@ -13,6 +13,7 @@ class _KbMs
         WPARAM wParam;
 
         void keyPress(_Models *);
+        void keyPress(vec3* position);
         void keyUp();
 
         void mouseEventDown(double, double);

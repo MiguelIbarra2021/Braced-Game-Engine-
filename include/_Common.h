@@ -1,6 +1,7 @@
 #ifndef _COMMON_H
 #define _COMMON_H
 
+// Commonly Used Libraries
 #include<string.h>
 #include <cmath>
 #include<GL/glut.h>
@@ -10,27 +11,23 @@
 #include <gl/gl.h>
 #include <time.h>
 
-typedef struct{
+// Color
+typedef struct
+{ float r = 0.0, g = 0.0, b = 0.0; }rgb;
 
-    float r, g, b;
-}rgb;
+// 2D/3D/4D vectors
+typedef struct
+{ float x = 0.0, y = 0.0; }vec2;
 
-typedef struct{
+typedef struct
+{ float x = 0.0, y = 0.0, z = 0.0; }vec3;
 
-    float x, y, z;
-}vec3;
+typedef struct
+{ float x = 0.0, y = 0.0, z = 0.0, w = 0.0; }vec4;
 
-typedef struct{
-
-    float x, y, z, w;
-}vec4;
-
-typedef struct{
-
-    float x, y;
-}vec2;
-
+// Commonly Used Namespaces
 using namespace std;
+
 class _Common
 {
     public:

@@ -66,12 +66,12 @@
 
 1726759669 c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\include\__models.h
 
-1730846741 source:c:\github\braced-game-engine-\main.cpp
+1730847559 source:c:\github\braced-game-engine-\main.cpp
 	<windows.h>
 	<_Common.h>
 	<_Scene.h>
 
-1730332896 c:\github\braced-game-engine-\include\_common.h
+1730996435 c:\github\braced-game-engine-\include\_common.h
 	<string.h>
 	<cmath>
 	<GL/glut.h>
@@ -86,10 +86,10 @@
 
 1726756069 c:\github\braced-game-engine-\include\__models.h
 
-1726700982 source:c:\github\braced-game-engine-\src\_kbms.cpp
+1730998703 source:c:\github\braced-game-engine-\src\_kbms.cpp
 	"_KbMs.h"
 
-1726586500 c:\github\braced-game-engine-\include\_kbms.h
+1730997976 c:\github\braced-game-engine-\include\_kbms.h
 	<_Common.h>
 	<_Models.h>
 
@@ -99,26 +99,27 @@
 1730847391 c:\github\braced-game-engine-\include\_lightsetup.h
 	<_Common.h>
 
-1730846919 source:c:\github\braced-game-engine-\src\_textureloader.cpp
+1730996791 source:c:\github\braced-game-engine-\src\_textureloader.cpp
 	"_TextureLoader.h"
 
-1730846926 c:\github\braced-game-engine-\include\_textureloader.h
-	<_Common.h>
+1730996750 c:\github\braced-game-engine-\include\_textureloader.h
+	"_Common.h"
 	<SOIL.h>
 
-1730847391 c:\github\braced-game-engine-\include\_scene.h
+1730997569 c:\github\braced-game-engine-\include\_scene.h
 	<vector>
-	<_Common.h>
 	"_Scene.h"
 	"_LightSetup.h"
 	"_Models.h"
 	"_KbMs.h"
+	"_TerrainGenerator.h"
+	"_Common.h"
 
-1730846946 c:\github\braced-game-engine-\include\_models.h
+1730998349 c:\github\braced-game-engine-\include\_models.h
 	<_Common.h>
 	<_TextureLoader.h>
 
-1730847391 source:c:\github\braced-game-engine-\src\_scene.cpp
+1730998582 source:c:\github\braced-game-engine-\src\_scene.cpp
 	"_Scene.h"
 
 1727307402 source:c:\github\braced-game-engine-\src\_timer.cpp
@@ -127,14 +128,27 @@
 1727307436 c:\github\braced-game-engine-\include\_timer.h
 	"_Common.h"
 
-1726704610 source:c:\github\braced-game-engine-\src\_models.cpp
+1730998674 source:c:\github\braced-game-engine-\src\_models.cpp
 	"_Models.h"
 
-1730847325 source:c:\github\braced-game-engine-\src\_skybox.cpp
+1730997019 source:c:\github\braced-game-engine-\src\_skybox.cpp
 	"_Skybox.h"
 
 1730846336 c:\github\braced-game-engine-\include\_skybox.h
 	"_Common.h"
 	"_TextureLoader.h"
 	"_Timer.h"
+
+1730332255 source:c:\github\braced-game-engine-\src\_collision.cpp
+	"_Collision.h"
+
+1730332270 c:\github\braced-game-engine-\include\_collision.h
+	<_Common.h>
+
+1730997489 source:c:\github\braced-game-engine-\src\_terraingenerator.cpp
+	"_TerrainGenerator.h"
+
+1730997214 c:\github\braced-game-engine-\include\_terraingenerator.h
+	<_Common.h>
+	<_TextureLoader.h>
 
