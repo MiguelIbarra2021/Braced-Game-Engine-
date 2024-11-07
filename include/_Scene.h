@@ -4,8 +4,8 @@
 #include <vector>
 #include <_Common.h>
 
-#include "Scene.h"
-#include "_lightSetup.h"
+#include "_Scene.h"
+#include "_LightSetup.h"
 #include "_Models.h"
 #include "_KbMs.h"
 

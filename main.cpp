@@ -10,7 +10,7 @@
 #pragma comment(lib, "glu32.lib")
 
 #include <_Common.h>
-#include <Scene.h>
+#include <_Scene.h>
 
 HDC		hDC=NULL;	    // Private GDI Device Context
 HGLRC		hRC=NULL;	// Permanent Rendering Context
@@ -19,7 +19,7 @@ HINSTANCE	hInstance;	// Holds The Instance Of The Application
 
 bool	keys[256];		// Array Used For The Keyboard Routine
 bool	active=TRUE;	// Window Active Flag Set To TRUE By Default
-bool	fullscreen=TRUE;// Fullscreen Flag Set To Fullscreen Mode By Default
+bool	fullscreen=FALSE;// Fullscreen Flag Set To Not Fullscreen Mode By Default
 
 LRESULT	CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);	// Declaration For WndProc
 
@@ -314,12 +314,6 @@ int WINAPI WinMain(
 	int	fullscreenWidth  = GetSystemMetrics(SM_CXSCREEN);
     	int	fullscreenHeight = GetSystemMetrics(SM_CYSCREEN);
 
-	// Ask The User Which Screen Mode They Prefer
-	if (MessageBox(NULL,"Would You Like To Run In Fullscreen Mode?", "Start FullScreen?",MB_YESNO|MB_ICONQUESTION)==IDNO)
-	{
-		fullscreen=FALSE;			    // Windowed Mode
-	}
-
 	// Create Our OpenGL Window
 
 	if (!CreateGLWindow("Assignment 1",fullscreenWidth,fullscreenHeight,256,fullscreen))
@@ -357,9 +351,9 @@ int WINAPI WinMain(
 				SwapBuffers(hDC);	    // Swap Buffers (Double Buffering)
 			}
 
-			if (keys[0x46])		    // Is F1 Being Pressed?
+			if (keys[VK_F1])		    // Is F1 Being Pressed?
 			{
-				keys[0x46]=FALSE;	    // If So Make Key FALSE
+				keys[VK_F1]=FALSE;	    // If So Make Key FALSE
 				KillGLWindow();		    // Kill Our Current Window
 				fullscreen=!fullscreen;	// Toggle Fullscreen / Windowed Mode
 

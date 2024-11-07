@@ -1,17 +1,17 @@
-#include "_textureLoader.h"
+#include "_TextureLoader.h"
 
-_textureLoader::_textureLoader()
+_TextureLoader::_TextureLoader()
 {
     //ctor
 
 }
 
-_textureLoader::~_textureLoader()
+_TextureLoader::~_TextureLoader()
 {
     //dtor
 }
 
-void _textureLoader::loadTexture(char* fileName)
+void _TextureLoader::loadTexture(char* fileName)
 {
     glGenTextures(1, &tex);             // Generate handler
     glBindTexture(GL_TEXTURE_2D, tex);   // Point image to handler
@@ -42,5 +42,5 @@ void _textureLoader::loadTexture(char* fileName)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-void _textureLoader::bindTexture()
+void _TextureLoader::bindTexture()
 { glBindTexture(GL_TEXTURE_2D, tex); }   // Point image to handler

@@ -1,16 +1,16 @@
-#include "_lightSetup.h"
+#include "_LightSetup.h"
 
-_lightSetup::_lightSetup()
+_LightSetup::_LightSetup()
 {
     //ctor
     dir = false;
 }
 
-_lightSetup::~_lightSetup()
+_LightSetup::~_LightSetup()
 {
     //dtor
 }
-GLvoid _lightSetup::setLight(GLenum light)
+GLvoid _LightSetup::setLight(GLenum light)
 {
     glEnable(light);
     glEnable(GL_LIGHTING);
@@ -53,7 +53,7 @@ GLvoid _lightSetup::setLight(GLenum light)
         high_shininess[1] = 100.0;      //
 }
 
-GLvoid _lightSetup::movingLight(GLenum light, double x, double y)
+GLvoid _LightSetup::movingLight(GLenum light, double x, double y)
 {
     /*if(!dir)
         if(spin < 10)

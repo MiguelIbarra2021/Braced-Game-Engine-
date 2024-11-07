@@ -1,13 +1,13 @@
-#ifndef _LIGHTSETUP_H
-#define _LIGHTSETUP_H
+#ifndef _LightSetup_H
+#define _LightSetup_H
 
 #include <_Common.h>
 
-class _lightSetup
+class _LightSetup
 {
     public:
-        _lightSetup();
-        virtual ~_lightSetup();
+        _LightSetup();
+        virtual ~_LightSetup();
 
         GLfloat light_ambient[4];       // Environment
         GLfloat light_diffuse[4];       // For Shade
@@ -30,4 +30,4 @@ class _lightSetup
     private:
 };
 
-#endif // _LIGHTSETUP_H
+#endif // _LightSetup_H

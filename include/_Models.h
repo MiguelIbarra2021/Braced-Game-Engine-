@@ -2,7 +2,7 @@
 #define _MODELS_H
 
 #include <_Common.h>
-#include <_textureLoader.h>
+#include <_TextureLoader.h>
 
 class _Models
 {
@@ -18,7 +18,7 @@ class _Models
         GLfloat positionY;
         GLfloat positionZ;
 
-        _textureLoader* myTex = new _textureLoader();
+        _TextureLoader* myTex = new _TextureLoader();
         GLvoid initModel(char* fileName);
         GLvoid drawModel(int, double, double, double);  // Added model selection & rgb values
 

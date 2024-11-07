@@ -4,11 +4,11 @@
 #include <_Common.h>
 #include <SOIL.h>
 
-class _textureLoader
+class _TextureLoader
 {
     public:
-        _textureLoader();
-        virtual ~_textureLoader();
+        _TextureLoader();
+        virtual ~_TextureLoader();
 
         GLuint tex;             // Image buffer id
         int width, height;   // Image dimensions

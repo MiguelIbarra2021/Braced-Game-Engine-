@@ -1,7 +1,7 @@
-#include "Scene.h"
+#include "_Scene.h"
 
-_lightSetup** lightHierarchy = nullptr;     // Allows for multiple seperate lights
-_lightSetup* myLight = new _lightSetup();   // Original Light
+_LightSetup** lightHierarchy = nullptr;     // Allows for multiple seperate lights
+_LightSetup* myLight = new _LightSetup();   // Original Light
 _Models** objectHierarchy = nullptr;        // Hierarchy of objects
 _KbMs* sysControl = new _KbMs();            // Mouse and Key Control
 
@@ -9,10 +9,10 @@ int objects = 0;                            // # of objects in Scene
 int lights = 0;                            // # of lights in Scene
 
 Scene::Scene()
-{ }
+{}
 
 Scene::~Scene()
-{ }
+{}
 
 int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
                   UINT	uMsg,			    // Message For This Window
@@ -165,25 +165,25 @@ GLvoid Scene::insertLight()             // Inserts selected object into the scen
 {
     if(lights == 0)                            // If Hierarchy is empty create a new one
     {
-        lightHierarchy = new _lightSetup*[1];      // Create new hierarchy with one object in it
-        lightHierarchy[0] = new _lightSetup();     // New Model at first hierarchy
+        lightHierarchy = new _LightSetup*[1];      // Create new hierarchy with one object in it
+        lightHierarchy[0] = new _LightSetup();     // New Model at first hierarchy
     }
     else if(lights < 8)                                       // If hierarchy is established increase it by one; Less than 8
     {
-        _lightSetup** temp = new _lightSetup*[lights];
+        _LightSetup** temp = new _LightSetup*[lights];
 
         for(int i = 0; i < lights; i++)        // Transfer objects to temp
             temp[i] = lightHierarchy[i];
 
         delete[] lightHierarchy;
-        _lightSetup** lightHierarchy = new _lightSetup*[lights + 1];
+        _LightSetup** lightHierarchy = new _LightSetup*[lights + 1];
 
         for(int i = 0; i < lights; i++)        // Transfer objects back to hierarchy
             lightHierarchy[i] = temp[i];
 
         delete[] temp;
 
-        lightHierarchy[lights] = new _lightSetup();
+        lightHierarchy[lights] = new _LightSetup();
     }
     else
     {
