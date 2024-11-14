@@ -11,6 +11,7 @@
 #include "_KbMs.h"
 #include "_TerrainGenerator.h"
 #include "_Common.h"
+#include "_Camera.h"
 
 class Scene
 {
@@ -26,8 +27,19 @@ class Scene
         WPARAM wParam;
 
         // Game Engine Functions
-        GLvoid insertObject(int);
+        GLvoid t_switch();
+
+        GLvoid insertObject(char* tex_file, char* mdl_file); // Custom Models
+        GLvoid insertObject(int);                           // Premade
+
         GLvoid insertLight();
+
+        // Game Engine Variables
+        enum mode{ TRANSFORM, ROTATE, SCALE };   // Used to switch between what edit will happen to object
+        mode transform_trigger;
+
+        bool state_change;
+        bool editmode;
 
     protected:
 

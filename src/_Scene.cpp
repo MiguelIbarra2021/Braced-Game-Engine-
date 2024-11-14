@@ -5,10 +5,11 @@ _LightSetup* myLight = new _LightSetup();   // Original Light
 _Models** objectHierarchy = nullptr;        // Hierarchy of objects
 _KbMs* sysControl = new _KbMs();            // Mouse and Key Control
 _TerrainGenerator* terrain = new _TerrainGenerator();
+_ModelLoaderMD2* md = new _ModelLoaderMD2();
+_Camera* camera = new _Camera();
 
 int objects;                            // # of objects in Scene
 int lights;                            // # of lights in Scene
-bool editmode;
 
 Scene::Scene()
 {
@@ -16,6 +17,9 @@ Scene::Scene()
     objects = 0;
     lights = 0;
     editmode = false;
+
+    state_change = false;
+    transform_trigger = TRANSFORM;
 }
 
 Scene::~Scene()
@@ -33,17 +37,35 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
         sysControl->wParam = wParam;
 
         case WM_KEYDOWN:
+
+            sysControl->keyPress(camera);
+
+            sysControl->keyPress(&state_change);
+
+            ////////////////////////////////////////////////////////////////////////
             if(editmode)    // On Activation You Can Edit Objects In Scene & Save It
             {
-                sysControl->keyPress(&terrain->position);
+                switch(transform_trigger)
+                {
+                    case TRANSFORM:
+                        sysControl->keyPress(&terrain->position);
+                        break;
+                    case ROTATE:
+                        sysControl->keyPress(&terrain->rotation);
+                        break;
+                    case SCALE:
+                        sysControl->keyPress(&terrain->scale);
+                        break;
+                }
             }
+            ////////////////////////////////////////////////////////////////////////
 
             break;
         case WM_KEYUP:
-            sysControl->keyUp();
+            //sysControl->keyUp();
             break;
         case WM_MOUSEWHEEL:
-            sysControl->mouseWheel(objectHierarchy[0], (double)GET_WHEEL_DELTA_WPARAM(wParam));
+            //sysControl->mouseWheel(objectHierarchy[0], (double)GET_WHEEL_DELTA_WPARAM(wParam));
             break;
         case WM_LBUTTONDOWN:
             sysControl->mouseEventDown(LOWORD(lParam), HIWORD(lParam));
@@ -64,7 +86,7 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
             sysControl->mouseEventUp();
             break;
         case WM_MOUSEMOVE:
-            sysControl->mouseMove(objectHierarchy[0], LOWORD(lParam), HIWORD(lParam));
+            //sysControl->mouseMove(objectHierarchy[0], LOWORD(lParam), HIWORD(lParam));
             break;
     }
 }
@@ -78,10 +100,11 @@ GLint Scene::initGL()   // Initalize Scene
     glDepthFunc(GL_LEQUAL);                 // LEqual -> <=; Depth Function Type
 
     glEnable(GL_COLOR_MATERIAL);
-
     glEnable(GL_TEXTURE_2D);                // Enables textures in the scene
 
-    insertObject(1);
+    terrain->initTerrain("");
+    terrain->scale.x = terrain->scale.y = terrain->scale.z = 100;
+    insertObject("models/gun_color.png", "models/c.md2");
 
     insertLight();
 
@@ -116,7 +139,7 @@ GLint Scene::initGL()   // Initalize Scene
         }
     }
 
-    terrain->initTerrain("");
+    camera->camInit();
 
     return true;
 }
@@ -126,9 +149,23 @@ GLint Scene::drawScene()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();           // Clear Matrices
 
-    objectHierarchy[0]->drawModel(1);
+    // Edit Mode State //
+    if(state_change)
+        t_switch();
 
-    terrain->drawTerrain();
+    // Scene
+    if(!camera->mode)
+        camera->setUpCam();
+    else
+        camera->updateViewDirection();
+
+    glPushMatrix();
+        objectHierarchy[0]->drawModel();
+    glPopMatrix();
+
+    glPushMatrix();
+        terrain->drawTerrain();
+    glPopMatrix();
 
     return true;
 
@@ -147,6 +184,38 @@ GLvoid Scene::resizeScene(GLsizei width, GLsizei height)
 }
 
 // Game Engine Functions
+
+GLvoid Scene::insertObject(char* tex_file, char* mdl_file)             // Inserts selected object into the scene; Tempory
+{
+    if(objects == 0)                            // If Hierarchy is empty create a new one
+    {
+        objectHierarchy = new _Models*[1];      // Create new hierarchy with one object in it
+        objectHierarchy[0] = new _Models();     // New Model at first hierarchy
+
+        objectHierarchy[0]->initModel(tex_file, mdl_file);
+    }
+    else                                        // If hierarchy is established increase it by one
+    {
+        _Models** temp = new _Models*[objects];
+
+        for(int i = 0; i < objects; i++)        // Transfer objects to temp
+            temp[i] = objectHierarchy[i];
+
+        delete[] objectHierarchy;
+        _Models** objectHierarchy = new _Models*[objects + 1];
+
+        for(int i = 0; i < objects; i++)        // Transfer objects back to hierarchy
+            objectHierarchy[i] = temp[i];
+
+        delete[] temp;
+
+        objectHierarchy[objects] = new _Models();
+
+        objectHierarchy[objects]->initModel(tex_file, mdl_file);
+    }
+
+    objects++;                                 // Objects in scene increased by one
+}
 
 GLvoid Scene::insertObject(int sel)             // Inserts selected object into the scene; Tempory
 {
@@ -206,4 +275,10 @@ GLvoid Scene::insertLight()             // Inserts selected object into the scen
     }
 
     lights++;                                 // Objects in scene increased by one
+}
+
+GLvoid Scene::t_switch()
+{
+    transform_trigger = static_cast<mode>((transform_trigger + 1) % (SCALE + 1));
+    state_change = false;
 }

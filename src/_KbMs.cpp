@@ -2,11 +2,14 @@
 
 _KbMs::_KbMs()
 {
-    //ctor
+    // Initalize Variables
 
     // Mouse's previous position
     prev_MouseX = 0;
     prev_MouseY = 0;
+
+    cPrev_MouseX = 0;
+    cPrev_MouseY = 0;
 
     // Did mouse move
     mouseTranslation = false;
@@ -17,6 +20,48 @@ _KbMs::_KbMs()
 _KbMs::~_KbMs()
 {
     //dtor
+}
+
+void _KbMs::keyPress(_Camera* cam)
+{
+    switch(wParam)
+    {
+    case VK_UP:  // Up Arrow
+        cam->mode = false;
+        cam->angleY += 0.05;
+        break;
+    case VK_DOWN:  // Down Arrow
+        cam->mode = false;
+        cam->angleY -= 0.05;
+        break;
+    case VK_LEFT:  // Left Arrow
+        cam->mode = false;
+        cam->angleX -= 0.05;
+        break;
+    case VK_RIGHT:  // Right Arrow
+        cam->mode = false;
+        cam->angleX += 0.05;
+        break;
+    case 0x57:  // W
+        cam->mode = true;
+        cam->angleY += 0.05;
+        break;
+    case 0x53:  // S
+        cam->mode = true;
+        cam->angleY -= 0.05;
+        break;
+    case 0x44:  // D
+        cam->mode = true;
+        cam->angleX -= 0.05;
+        break;
+    case 0x41:  // A
+        cam->mode = true;
+        cam->angleX += 0.05;
+        break;
+    }
+
+    if(!cam->mode)
+        cam->orbitCamera(0, 0);
 }
 
 void _KbMs::keyPress(_Models* model)
@@ -62,21 +107,31 @@ void _KbMs::keyPress(_Models* model)
     }
 }
 
-void _KbMs::keyPress(vec3* position)
+void _KbMs::keyPress(bool* state)
+{
+    switch(wParam)
+    {
+        case VK_DECIMAL:
+            *state = true;
+            break;
+    }
+}
+
+void _KbMs::keyPress(vec3* m_transform)
 {
     switch(wParam)
     {
         case VK_UP:
-            position->y += 1.0;
+            m_transform->y += 1.0;
             break;
         case VK_DOWN:
-            position->y -= 1.0;
+            m_transform->y -= 1.0;
             break;
         case VK_LEFT:
-            position->x += 1.0;
+            m_transform->x -= 1.0;
             break;
         case VK_RIGHT:
-            position->x -= 1.0;
+            m_transform->x += 1.0;
             break;
     }
 }

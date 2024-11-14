@@ -3,6 +3,7 @@
 
 #include <_Common.h>
 #include <_Models.h>
+#include <_Camera.h>
 
 class _KbMs
 {
@@ -13,7 +14,13 @@ class _KbMs
         WPARAM wParam;
 
         void keyPress(_Models *);
-        void keyPress(vec3* position);
+
+        // Special Key
+        void keyPress(_Camera* cam);
+        void keyPress(vec3* m_transform);
+        void keyPress(bool* state);
+        void keyPress();
+
         void keyUp();
 
         void mouseEventDown(double, double);
@@ -24,6 +31,9 @@ class _KbMs
 
         double prev_MouseX;
         double prev_MouseY;
+
+        double cPrev_MouseX;
+        double cPrev_MouseY;
 
         bool mouseTranslation;
         bool mouseRotation;

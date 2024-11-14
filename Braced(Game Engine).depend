@@ -66,7 +66,7 @@
 
 1726759669 c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\include\__models.h
 
-1730847559 source:c:\github\braced-game-engine-\main.cpp
+1731536479 source:c:\github\braced-game-engine-\main.cpp
 	<windows.h>
 	<_Common.h>
 	<_Scene.h>
@@ -86,12 +86,13 @@
 
 1726756069 c:\github\braced-game-engine-\include\__models.h
 
-1730998703 source:c:\github\braced-game-engine-\src\_kbms.cpp
+1731542278 source:c:\github\braced-game-engine-\src\_kbms.cpp
 	"_KbMs.h"
 
-1730997976 c:\github\braced-game-engine-\include\_kbms.h
+1731542396 c:\github\braced-game-engine-\include\_kbms.h
 	<_Common.h>
 	<_Models.h>
+	<_Camera.h>
 
 1730847391 source:c:\github\braced-game-engine-\src\_lightsetup.cpp
 	"_LightSetup.h"
@@ -106,7 +107,7 @@
 	"_Common.h"
 	<SOIL.h>
 
-1730997569 c:\github\braced-game-engine-\include\_scene.h
+1731542429 c:\github\braced-game-engine-\include\_scene.h
 	<vector>
 	"_Scene.h"
 	"_LightSetup.h"
@@ -114,12 +115,14 @@
 	"_KbMs.h"
 	"_TerrainGenerator.h"
 	"_Common.h"
+	"_Camera.h"
 
-1730998349 c:\github\braced-game-engine-\include\_models.h
+1731471864 c:\github\braced-game-engine-\include\_models.h
 	<_Common.h>
 	<_TextureLoader.h>
+	<_ModelLoaderMD2.h>
 
-1730998582 source:c:\github\braced-game-engine-\src\_scene.cpp
+1731542204 source:c:\github\braced-game-engine-\src\_scene.cpp
 	"_Scene.h"
 
 1727307402 source:c:\github\braced-game-engine-\src\_timer.cpp
@@ -128,7 +131,7 @@
 1727307436 c:\github\braced-game-engine-\include\_timer.h
 	"_Common.h"
 
-1730998674 source:c:\github\braced-game-engine-\src\_models.cpp
+1731539483 source:c:\github\braced-game-engine-\src\_models.cpp
 	"_Models.h"
 
 1730997019 source:c:\github\braced-game-engine-\src\_skybox.cpp
@@ -151,4 +154,21 @@
 1730997214 c:\github\braced-game-engine-\include\_terraingenerator.h
 	<_Common.h>
 	<_TextureLoader.h>
+
+1730769408 c:\github\braced-game-engine-\include\_modelloadermd2.h
+	<_Common.h>
+	<_TextureLoader.h>
+	"Anorms.h"
+
+1730769404 c:\github\braced-game-engine-\include\anorms.h
+
+1731539530 source:c:\github\braced-game-engine-\src\_modelloadermd2.cpp
+	"_ModelLoaderMD2.h"
+
+1729740547 c:\github\braced-game-engine-\include\_camera.h
+	<_Common.h>
+	<cmath>
+
+1729740535 source:c:\github\braced-game-engine-\src\_camera.cpp
+	"_Camera.h"
 
