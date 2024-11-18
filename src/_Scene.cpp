@@ -14,9 +14,12 @@ int lights;                            // # of lights in Scene
 Scene::Scene()
 {
     // Initalize Variables
+    screenHeight = GetSystemMetrics(SM_CYSCREEN);
+    screenWidth =   GetSystemMetrics(SM_CXSCREEN);
+
     objects = 0;
     lights = 0;
-    editmode = false;
+    editmode = true;
 
     state_change = false;
     transform_trigger = TRANSFORM;
@@ -48,13 +51,13 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
                 switch(transform_trigger)
                 {
                     case TRANSFORM:
-                        sysControl->keyPress(&terrain->position);
+                        sysControl->keyPress(&objectHierarchy[0]->position);
                         break;
                     case ROTATE:
-                        sysControl->keyPress(&terrain->rotation);
+                        sysControl->keyPress(&objectHierarchy[0]->rotation);
                         break;
                     case SCALE:
-                        sysControl->keyPress(&terrain->scale);
+                        sysControl->keyPress(&objectHierarchy[0]->scale);
                         break;
                 }
             }
@@ -86,6 +89,7 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
             sysControl->mouseEventUp();
             break;
         case WM_MOUSEMOVE:
+            mouseMapping(LOWORD(lParam), HIWORD(lParam));
             //sysControl->mouseMove(objectHierarchy[0], LOWORD(lParam), HIWORD(lParam));
             break;
     }
@@ -104,7 +108,16 @@ GLint Scene::initGL()   // Initalize Scene
 
     terrain->initTerrain("");
     terrain->scale.x = terrain->scale.y = terrain->scale.z = 100;
+    // Shotgun Model
+    //insertObject("models/gun_color.png", "models/duck/d.md2");
     insertObject("models/gun_color.png", "models/c.md2");
+
+    objectHierarchy[0]->scale.x = 0.25;
+    objectHierarchy[0]->scale.y = 0.25;
+    objectHierarchy[0]->scale.z = 0.25;
+
+    objectHierarchy[0]->position.z = 7;
+    objectHierarchy[0]->position.y = -4;
 
     insertLight();
 
@@ -153,13 +166,15 @@ GLint Scene::drawScene()
     if(state_change)
         t_switch();
 
-    // Scene
+    // Camera
     if(!camera->mode)
         camera->setUpCam();
     else
         camera->updateViewDirection();
 
+    // Scene
     glPushMatrix();
+        updateObjectRotation(&objectHierarchy[0]->rotation);
         objectHierarchy[0]->drawModel();
     glPopMatrix();
 
@@ -181,6 +196,34 @@ GLvoid Scene::resizeScene(GLsizei width, GLsizei height)
     gluPerspective(45, aspectRatio, 0.1, 2000);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+}
+
+GLvoid Scene::mouseMapping(int x, int y) //x&y are mouse coords
+{
+    screenHeight = GetSystemMetrics(SM_CYSCREEN);
+    screenWidth =   GetSystemMetrics(SM_CXSCREEN);
+
+    GLint viewPort[4];
+    GLdouble modelViewM[16]; //modelView Matrix; 4x4 matrix???
+    GLdouble projectionM[16]; //projection matrix
+    GLfloat winX, winY, winZ;
+
+    float scale = 60*(screenWidth/screenHeight); //supposed to give us an estimation of mouse coords
+
+    glGetDoublev(GL_MODELVIEW_MATRIX, modelViewM); //gets values from arg1 and stores them in arg2
+    glGetDoublev(GL_PROJECTION_MATRIX, projectionM);
+    glGetIntegerv(GL_VIEWPORT, viewPort);
+
+    winX = (GLfloat)x;
+    winY = (GLfloat)(viewPort[3] - y);
+    glReadPixels(x,int(winY), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ); //takes all that bs and stores it into winZ
+
+    //init mouse coords
+    mouseX = (GLfloat)(x - screenWidth/2.0)/scale;
+    mouseY = (GLfloat)(screenHeight/2.0 - y)/scale;
+    mouseZ = -100.0;
+
+    gluUnProject(winX, winY, winZ, modelViewM, projectionM, viewPort, &mouseX, &mouseY, &mouseZ);
 }
 
 // Game Engine Functions
@@ -281,4 +324,55 @@ GLvoid Scene::t_switch()
 {
     transform_trigger = static_cast<mode>((transform_trigger + 1) % (SCALE + 1));
     state_change = false;
+}
+
+GLvoid Scene::updateObjectRotation(vec3* target)
+{
+    // Calculate the direction vector
+    float directionX = mouseX - target->x;
+    float directionY = mouseY - target->y;
+    float directionZ = mouseZ - target->z;
+
+    // Normalize the direction vector
+    float length = sqrt(directionX * directionX + directionY * directionY + directionZ * directionZ);
+
+    cout << length << endl;
+
+    if (length == 0)
+        return; // Avoid division by zero
+
+    directionX /= length;
+    directionY /= length;
+    directionZ /= length;
+
+    // Assume default forward vector is (0, 0, -1)
+    vec3 forward = { 0.0f, 0.0f, 1.0f };
+
+    // Calculate rotation axis using cross product
+    vec3 axis = {
+        forward.y * directionZ - forward.z * directionY,
+        forward.z * directionX - forward.x * directionZ,
+        forward.x * directionY - forward.y * directionX
+    };
+
+    // Normalize axis
+    float axisLength = sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z);
+
+    if (axisLength != 0)
+    {
+        axis.x /= axisLength;
+        axis.y /= axisLength;
+        axis.z /= axisLength;
+    }
+
+    // Calculate rotation angle using dot product
+    float dot = std::max(-1.0f, std::min(1.0f, forward.x * directionX + forward.y * directionY + forward.z * directionZ));
+    float angle = acos(dot) * (180.0f / 3.1415926); // Convert to degrees
+
+    // Update object's rotation (assuming object has a rotation field)
+    target->x = axis.x * angle;
+    target->y = axis.y * angle;
+    target->z = axis.z * angle;
+
+    //cout << "X: " << directionX << "Y: " << directionY << "Z: " << directionZ << endl;
 }

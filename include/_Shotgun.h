@@ -12,6 +12,8 @@ class _Shotgun
 
         GLvoid pointTowardsMouse(_Models* model, vec3* rotation);
 
+        vec3 point;
+
     protected:
 
     private:
