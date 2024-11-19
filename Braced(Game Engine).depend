@@ -122,7 +122,7 @@
 	<_TextureLoader.h>
 	<_ModelLoaderMD2.h>
 
-1731798846 source:c:\github\braced-game-engine-\src\_scene.cpp
+1731982287 source:c:\github\braced-game-engine-\src\_scene.cpp
 	"_Scene.h"
 
 1731545406 source:c:\github\braced-game-engine-\src\_timer.cpp
@@ -155,14 +155,14 @@
 	<_Common.h>
 	<_TextureLoader.h>
 
-1731545406 c:\github\braced-game-engine-\include\_modelloadermd2.h
+1731979148 c:\github\braced-game-engine-\include\_modelloadermd2.h
 	<_Common.h>
 	<_TextureLoader.h>
 	"Anorms.h"
 
 1731545406 c:\github\braced-game-engine-\include\anorms.h
 
-1731545406 source:c:\github\braced-game-engine-\src\_modelloadermd2.cpp
+1731982047 source:c:\github\braced-game-engine-\src\_modelloadermd2.cpp
 	"_ModelLoaderMD2.h"
 
 1731545406 c:\github\braced-game-engine-\include\_camera.h

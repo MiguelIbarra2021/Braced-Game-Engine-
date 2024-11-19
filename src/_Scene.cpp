@@ -19,7 +19,7 @@ Scene::Scene()
 
     objects = 0;
     lights = 0;
-    editmode = true;
+    editmode = false;
 
     state_change = false;
     transform_trigger = TRANSFORM;
@@ -109,8 +109,13 @@ GLint Scene::initGL()   // Initalize Scene
     terrain->initTerrain("");
     terrain->scale.x = terrain->scale.y = terrain->scale.z = 100;
     // Shotgun Model
-    //insertObject("models/gun_color.png", "models/duck/d.md2");
     insertObject("models/gun_color.png", "models/c.md2");
+
+    // Duck Model
+    insertObject("models/gun_color.png", "models/duck/d.md2");
+
+    // Foliage
+    insertObject("", "models/bushes/ah.md2");
 
     objectHierarchy[0]->scale.x = 0.25;
     objectHierarchy[0]->scale.y = 0.25;
@@ -179,8 +184,21 @@ GLint Scene::drawScene()
     glPopMatrix();
 
     glPushMatrix();
+        glDisable(GL_LIGHTING);
+        objectHierarchy[1]->drawModel();
+        glEnable(GL_LIGHTING);
+    glPopMatrix();
+
+    glPushMatrix();
+        objectHierarchy[2]->drawModel();
+    glPopMatrix();
+
+    glPushMatrix();
         terrain->drawTerrain();
     glPopMatrix();
+
+    objectHierarchy[1]->mdl->actionTrigger = objectHierarchy[1]->mdl->DYING;
+    objectHierarchy[1]->mdl->Actions();
 
     return true;
 
@@ -245,7 +263,7 @@ GLvoid Scene::insertObject(char* tex_file, char* mdl_file)             // Insert
             temp[i] = objectHierarchy[i];
 
         delete[] objectHierarchy;
-        _Models** objectHierarchy = new _Models*[objects + 1];
+        objectHierarchy = new _Models*[objects + 1];
 
         for(int i = 0; i < objects; i++)        // Transfer objects back to hierarchy
             objectHierarchy[i] = temp[i];
@@ -336,7 +354,7 @@ GLvoid Scene::updateObjectRotation(vec3* target)
     // Normalize the direction vector
     float length = sqrt(directionX * directionX + directionY * directionY + directionZ * directionZ);
 
-    cout << length << endl;
+    //cout << length << endl;
 
     if (length == 0)
         return; // Avoid division by zero

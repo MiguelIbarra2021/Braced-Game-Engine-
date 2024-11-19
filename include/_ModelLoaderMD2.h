@@ -123,8 +123,9 @@ class _ModelLoaderMD2
           void Draw();
           void FreeModel (struct md2_model_t *mdl);
 
+          void Actions();
 
-          enum {STAND, WALKLEFT,WALKRIGHT,RUN,JUMP, ATTACK};
+          enum {SHOOT, RELOAD, FLY, DYING, DEAD};
           int actionTrigger =0;
           int StartFrame =0;
           int EndFrame;
