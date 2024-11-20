@@ -189,7 +189,7 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
 
             if(shot)
             {
-                Launch_Duck();
+                //Launch_Duck();
                 shot = false;
             }
             break;
@@ -374,6 +374,8 @@ GLint Scene::drawScene()
         bullets[i].drawProjectile(false);
         bullets[i].ProjectileAction();
     }
+
+    Automatic_Launcher();
 
     for(int i=0; i < 4; i++)
     {
@@ -617,31 +619,38 @@ GLvoid Scene::initFog()
     glHint(GL_FOG_HINT, GL_DONT_CARE); // Let OpenGL choose the quality
 }
 
-void Scene::Launch_Duck()
+GLvoid Scene::Automatic_Launcher()
 {
-    updateObjectRotation(&lanRot[active_duck], &desPos[active_duck]);
+    for(int i = 0; i < 4; i++)
+        if(ducks[i].pos.z > desPos[i].z - 30 || ducks[i].actionTrigger == ducks[i].READY)
+            Launch_Duck(i);
+}
 
-    ducks[active_duck].src.x = lanPos[active_duck].x;
-    ducks[active_duck].src.y = lanPos[active_duck].y;
-    ducks[active_duck].src.z = lanPos[active_duck].z;
+GLvoid Scene::Launch_Duck(int current_duck)
+{
+    updateObjectRotation(&lanRot[current_duck], &desPos[current_duck]);
 
-    ducks[active_duck].rot.x = lanRot[active_duck].x;
-    ducks[active_duck].rot.y = lanRot[active_duck].y;
-    ducks[active_duck].rot.z = lanRot[active_duck].z;
+    ducks[current_duck].src.x = lanPos[current_duck].x;
+    ducks[current_duck].src.y = lanPos[current_duck].y;
+    ducks[current_duck].src.z = lanPos[current_duck].z;
 
-    ducks[active_duck].des.x = desPos[active_duck].x;
-    ducks[active_duck].des.y = desPos[active_duck].y;
-    ducks[active_duck].des.z = desPos[active_duck].z;
+    ducks[current_duck].rot.x = lanRot[current_duck].x;
+    ducks[current_duck].rot.y = lanRot[current_duck].y;
+    ducks[current_duck].rot.z = lanRot[current_duck].z;
 
-    ducks[active_duck].t = 0;
+    ducks[current_duck].des.x = desPos[current_duck].x;
+    ducks[current_duck].des.y = desPos[current_duck].y;
+    ducks[current_duck].des.z = desPos[current_duck].z;
 
-    ducks[active_duck].actionTrigger = ducks[active_duck].SHOOT;
+    ducks[current_duck].t = 0;
 
-    ducks[active_duck].live = true;
+    ducks[current_duck].actionTrigger = ducks[current_duck].SHOOT;
+
+    ducks[current_duck].live = true;
 
     cout << "spawned" << endl;
 
-    active_duck = (active_duck + 1) % 4;
+    //active_duck = (active_duck + 1) % 4;
 }
 
 GLvoid Scene::Kill_Duck(int duck)
