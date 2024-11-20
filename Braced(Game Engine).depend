@@ -1,10 +1,10 @@
 # depslib dependency file v1.0
-1726535383 source:c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\main.cpp
+1726535383 source:c:\Users\bryan\Desktop\CSCI 191T\Project\Braced-Game-Engine-\main.cpp
 	<windows.h>
 	<_Common.h>
 	<Scene.h>
 
-1724893941 c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\include\_common.h
+1724893941 c:\Users\bryan\Desktop\CSCI 191T\Project\Braced-Game-Engine-\include\_common.h
 	<string.h>
 	<GL/glut.h>
 	<stdlib.h>
@@ -12,13 +12,13 @@
 	<windows.h>
 	<gl/gl.h>
 
-1724715331 c:\users\migue\onedrive\desktop\csci 191-t\common\include\gl\glut.h
+1724715331 c:\users\bryan\Desktop\CSCI 191T\Common\include\GL\glut.h
 	<windows.h>
 	<stdlib.h>
 	<GL/gl.h>
 	<GL/glu.h>
 
-1728579017 c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\include\scene.h
+1728579017 c:\Users\bryan\Desktop\CSCI 191T\Project\Braced-Game-Engine-\include\scene.h
 	<vector>
 	<_Common.h>
 	"Scene.h"
@@ -26,45 +26,45 @@
 	"_Models.h"
 	"_KbMs.h"
 
-1726704582 source:c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\src\_kbms.cpp
+1726704582 source:c:\Users\bryan\Desktop\CSCI 191T\Project\Braced-Game-Engine-\src\_kbms.cpp
 	"_KbMs.h"
 
-1726590100 c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\include\_kbms.h
+1726590100 c:\Users\bryan\Desktop\CSCI 191T\Project\Braced-Game-Engine-\include\_kbms.h
 	<_Common.h>
 	<_Models.h>
 
-1726707832 c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\include\_models.h
+1726707832 c:\Users\bryan\Desktop\CSCI 191T\Project\Braced-Game-Engine-\include\_models.h
 	<_Common.h>
 	<_textureLoader.h>
 
-1726706981 c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\include\_textureloader.h
+1726706981 c:\Users\bryan\Desktop\CSCI 191T\Project\Braced-Game-Engine-\include\_textureloader.h
 	<_Common.h>
 	<SOIL.h>
 
-1668642808 c:\users\migue\onedrive\desktop\csci 191-t\common\include\soil.h
+1668642808 c:\users\bryan\Desktop\CSCI 191T\Common\include\soil
 
-1726700230 source:c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\src\_lightsetup.cpp
+1726700230 source:c:\Users\bryan\Desktop\CSCI 191T\Project\Braced-Game-Engine-\src\_lightsetup.cpp
 	"_lightSetup.h"
 
-1726589588 c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\include\_lightsetup.h
+1726589588 c:\Users\bryan\Desktop\CSCI 191T\Project\Braced-Game-Engine-\include\_lightsetup.h
 	<_Common.h>
 
-1726708210 source:c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\src\_models.cpp
+1726708210 source:c:\Users\bryan\Desktop\CSCI 191T\Project\Braced-Game-Engine-\src\_models.cpp
 	"_Models.h"
 
-1726708276 source:c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\src\_textureloader.cpp
+1726708276 source:c:\Users\bryan\Desktop\CSCI 191T\Project\Braced-Game-Engine-\src\_textureloader.cpp
 	"_textureLoader.h"
 
-1726761961 source:c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\src\scene.cpp
+1726761961 source:c:\Users\bryan\Desktop\CSCI 191T\Project\Braced-Game-Engine-\src\scene.cpp
 	"Scene.h"
 	"_lightSetup.h"
 	"_Models.h"
 	"_KbMs.h"
 
-1726759669 source:c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\src\__models.cpp
+1726759669 source:c:\Users\bryan\Desktop\CSCI 191T\Project\Braced-Game-Engine-\src\__models.cpp
 	"__Models.h"
 
-1726759669 c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\include\__models.h
+1726759669 c:\Users\bryan\Desktop\CSCI 191T\Project\Braced-Game-Engine-\include\__models.h
 
 1731536479 source:c:\github\braced-game-engine-\main.cpp
 	<windows.h>
@@ -171,4 +171,133 @@
 
 1729740535 source:c:\github\braced-game-engine-\src\_camera.cpp
 	"_Camera.h"
+
+1729740535 ated upstream
+
+1731623588 source:c:\github\braced-game-engine-\src\_shotgun.cpp
+	"_Shotgun.h"
+
+1731546888 c:\github\braced-game-engine-\include\_shotgun.h
+	"_Common.h"
+	"_Models.h"
+
+1731556260 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\main.cpp
+	<windows.h>
+	<_Common.h>
+	<_Scene.h>
+
+1732078851 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_common.h
+	<string.h>
+	<cmath>
+	<GL/glut.h>
+	<stdlib.h>
+	<iostream>
+	<windows.h>
+	<gl/gl.h>
+	<time.h>
+
+1732077351 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_scene.h
+	<vector>
+	"_Scene.h"
+	"_LightSetup.h"
+	"_Models.h"
+	"_KbMs.h"
+	"_TerrainGenerator.h"
+	"_Common.h"
+	"_Camera.h"
+	"_ModelLoaderMD2.h"
+	"_Skybox.h"
+
+1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_lightsetup.h
+	<_Common.h>
+
+1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_models.h
+	<_Common.h>
+	<_TextureLoader.h>
+	<_ModelLoaderMD2.h>
+
+1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_textureloader.h
+	"_Common.h"
+	<SOIL.h>
+
+1732077350 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_modelloadermd2.h
+	<_Common.h>
+	<_TextureLoader.h>
+	"Anorms.h"
+
+1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\anorms.h
+
+1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_kbms.h
+	<_Common.h>
+	<_Models.h>
+	<_Camera.h>
+
+1732050235 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_camera.h
+	<_Common.h>
+	<cmath>
+
+1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_terraingenerator.h
+	<_Common.h>
+	<_TextureLoader.h>
+
+1732077350 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_camera.cpp
+	"_Camera.h"
+
+1731556260 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_collision.cpp
+	"_Collision.h"
+
+1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_collision.h
+	<_Common.h>
+
+1732077350 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_kbms.cpp
+	"_KbMs.h"
+
+1731556260 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_lightsetup.cpp
+	"_LightSetup.h"
+
+1731556260 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_models.cpp
+	"_Models.h"
+
+1732079719 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_scene.cpp
+	"_Scene.h"
+
+1732077350 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_shotgun.cpp
+	"_Shotgun.h"
+
+1732077350 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_shotgun.h
+	"_Common.h"
+	"_Models.h"
+
+1731556260 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_skybox.cpp
+	"_Skybox.h"
+
+1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_skybox.h
+	"_Common.h"
+	"_TextureLoader.h"
+	"_Timer.h"
+
+1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_timer.h
+	"_Common.h"
+
+1731556260 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_terraingenerator.cpp
+	"_TerrainGenerator.h"
+
+1731556260 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_textureloader.cpp
+	"_TextureLoader.h"
+
+1731556260 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_timer.cpp
+	"_Timer.h"
+
+1730932738 c:\users\bryan\desktop\csci 191t\common\include\gl\glut.h
+	<windows.h>
+	<stdlib.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1668639208 c:\users\bryan\desktop\csci 191t\common\include\soil.h
+
+1732077463 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_modelloadermd2.cpp
+	"_ModelLoaderMD2.h"
+
+1732052103 shed changes
 

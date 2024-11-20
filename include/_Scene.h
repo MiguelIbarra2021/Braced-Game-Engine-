@@ -12,6 +12,8 @@
 #include "_TerrainGenerator.h"
 #include "_Common.h"
 #include "_Camera.h"
+#include "_ModelLoaderMD2.h"
+#include "_Skybox.h"
 
 class Scene
 {

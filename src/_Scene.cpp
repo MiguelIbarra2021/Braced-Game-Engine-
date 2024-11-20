@@ -7,6 +7,7 @@ _KbMs* sysControl = new _KbMs();            // Mouse and Key Control
 _TerrainGenerator* terrain = new _TerrainGenerator();
 _ModelLoaderMD2* md = new _ModelLoaderMD2();
 _Camera* camera = new _Camera();
+_Skybox* sky = new _Skybox();
 
 int objects;                            // # of objects in Scene
 int lights;                            // # of lights in Scene
@@ -106,6 +107,22 @@ GLint Scene::initGL()   // Initalize Scene
     terrain->scale.x = terrain->scale.y = terrain->scale.z = 100;
     insertObject("models/gun_color.png", "models/c.md2");
 
+    //Skybox
+    sky->skyBoxInit("images/forestMorning.jfif");
+
+    // Duck Model
+   // insertObject("models/gun_color.png", "models/duck/d.md2");
+
+    // Foliage
+    //insertObject("", "models/bushes/ah.md2");
+
+    objectHierarchy[0]->scale.x = 0.25;
+    objectHierarchy[0]->scale.y = 0.25;
+    objectHierarchy[0]->scale.z = 0.25;
+
+    objectHierarchy[0]->position.z = 7;
+    objectHierarchy[0]->position.y = -4;
+
     insertLight();
 
     for(int i = 0; i < lights; i++)
@@ -161,6 +178,21 @@ GLint Scene::drawScene()
 
     glPushMatrix();
         objectHierarchy[0]->drawModel();
+    glPopMatrix();
+
+    glPushMatrix();
+
+        glDisable(GL_LIGHTING);
+        objectHierarchy[1]->drawModel();
+        glEnable(GL_LIGHTING);
+    glPopMatrix();
+
+    glPushMatrix();
+    sky->skyBoxDraw();
+    glPopMatrix();
+
+    glPushMatrix();
+        objectHierarchy[2]->drawModel();
     glPopMatrix();
 
     glPushMatrix();

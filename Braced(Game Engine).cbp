@@ -34,16 +34,17 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add directory="C:/Users/migue/OneDrive/Desktop/CSCI 191-T/common/include" />
+			<Add directory="../../Common" />
+			<Add directory="../../Common/Include" />
 		</Compiler>
 		<Linker>
-			<Add library="../../Users/migue/OneDrive/Desktop/CSCI 191-T/common/lib/libSOIL.a" />
+			<Add library="../../Common/lib/libSOIL.a" />
 			<Add library="glut32" />
 			<Add library="opengl32" />
 			<Add library="glu32" />
 			<Add library="winmm" />
 			<Add library="gdi32" />
-			<Add directory="C:/Users/migue/OneDrive/Desktop/CSCI 191-T/common/lib" />
+			<Add directory="../../Common/lib" />
 		</Linker>
 		<Unit filename="include/Anorms.h" />
 		<Unit filename="include/_Collision.h" />
