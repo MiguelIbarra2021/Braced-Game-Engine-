@@ -1,15 +1,24 @@
 #include "_Scene.h"
 
 _LightSetup** lightHierarchy = nullptr;     // Allows for multiple seperate lights
-_LightSetup* myLight = new _LightSetup();   // Original Light
 _Models** objectHierarchy = nullptr;        // Hierarchy of objects
 _KbMs* sysControl = new _KbMs();            // Mouse and Key Control
 _TerrainGenerator* terrain = new _TerrainGenerator();
-_ModelLoaderMD2* md = new _ModelLoaderMD2();
 _Camera* camera = new _Camera();
 
+// Target Ducks
+vec3 desPos[4];   // Destination
+vec3 lanPos[4];   // Launch Position
+vec3 lanRot[4];   // Launch Rotation
+_Projectile ducks[4];
+
+int active_duck = 0;
+
+int mouseClicks;
 int objects;                            // # of objects in Scene
 int lights;                            // # of lights in Scene
+
+bool shot = false;
 
 GLfloat fogColor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 
@@ -19,12 +28,65 @@ Scene::Scene()
     screenHeight = GetSystemMetrics(SM_CYSCREEN);
     screenWidth =   GetSystemMetrics(SM_CXSCREEN);
 
+    mouseClicks = 0;
     objects = 0;
     lights = 0;
     editmode = false;
 
     state_change = false;
     transform_trigger = TRANSFORM;
+
+    // Initalize Duck Launcher: Launch Position
+    lanPos[0].x = 20;
+    lanPos[0].y = -20;
+    lanPos[0].z = 40;
+
+    lanPos[1].x = 10;
+    lanPos[1].y = -20;
+    lanPos[1].z = 40;
+
+    lanPos[2].x = -10;
+    lanPos[2].y = -20;
+    lanPos[2].z = 40;
+
+    lanPos[3].x = -20;
+    lanPos[3].y = -20;
+    lanPos[3].z = 40;
+
+    // Initalize Duck Launcher: Launch Rotation
+    lanRot[0].x = -20;
+    lanRot[0].y = -10;
+    lanRot[0].z = 20;
+
+    lanRot[1].x = -5;
+    lanRot[1].y = -10;
+    lanRot[1].z = 20;
+
+    lanRot[2].x = 5;
+    lanRot[2].y = -10;
+    lanRot[2].z = 20;
+
+    lanRot[3].x = 20;
+    lanRot[3].y = -10;
+    lanRot[3].z = 20;
+
+// Initalize Duck Launcher: Destination Position
+    desPos[0].x = 15;
+    desPos[0].y = 100;
+    desPos[0].z = 100;
+
+    desPos[1].x = 5;
+    desPos[1].y = 100;
+    desPos[1].z = 100;
+
+    desPos[2].x = -5;
+    desPos[2].y = 100;
+    desPos[2].z = 100;
+
+    desPos[3].x = -15;
+    desPos[3].y = 100;
+    desPos[3].z = 100;
+
 }
 
 Scene::~Scene()
@@ -44,7 +106,6 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
         case WM_KEYDOWN:
 
             sysControl->keyPress(camera);
-
             sysControl->keyPress(&state_change);
 
             ////////////////////////////////////////////////////////////////////////
@@ -74,6 +135,8 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
             break;
         case WM_LBUTTONDOWN:
             sysControl->mouseEventDown(LOWORD(lParam), HIWORD(lParam));
+
+            shot = true;
             break;
         case WM_RBUTTONDOWN:
             sysControl->mouseEventDown(LOWORD(lParam), HIWORD(lParam));
@@ -83,6 +146,12 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
             break;
         case WM_LBUTTONUP:
             sysControl->mouseEventUp();
+
+            if(shot)
+            {
+                Launch_Duck();
+                shot = false;
+            }
             break;
         case WM_RBUTTONUP:
             sysControl->mouseEventUp();
@@ -140,6 +209,13 @@ GLint Scene::initGL()   // Initalize Scene
 
     insertLight();
 
+    // Ducks
+    for(int i = 0; i < 4; i++)
+    {
+        ducks[i].initProjectile("models/duck/d.md2");
+        ducks[i].mdl->actionTrigger = ducks[i].mdl->FLY;
+        ducks[i].mdl->Actions();
+    }
 
     // Initalize Lights
     for(int i = 0; i < lights; i++)
@@ -196,7 +272,7 @@ GLint Scene::drawScene()
 
     // Scene
     glPushMatrix();
-        updateObjectRotation(&objectHierarchy[0]->rotation);
+        updateObjectRotation(&objectHierarchy[0]->rotation, nullptr);
         objectHierarchy[0]->drawModel();
     glPopMatrix();
 
@@ -207,15 +283,21 @@ GLint Scene::drawScene()
     glPopMatrix();
 
     glPushMatrix();
-        objectHierarchy[2]->drawModel();
+        //objectHierarchy[2]->drawModel();
     glPopMatrix();
 
     glPushMatrix();
         //terrain->drawTerrain();
     glPopMatrix();
 
-    objectHierarchy[1]->mdl->actionTrigger = objectHierarchy[1]->mdl->DYING;
+    objectHierarchy[1]->mdl->actionTrigger = objectHierarchy[1]->mdl->FLY;
     objectHierarchy[1]->mdl->Actions();
+
+    for(int i=0; i < 4; i++)
+    {
+        ducks[i].drawProjectile(true);
+        ducks[i].ProjectileAction();
+    }
 
     return true;
 
@@ -234,33 +316,43 @@ GLvoid Scene::resizeScene(GLsizei width, GLsizei height)
 }
 
 // Temp Positon
-GLvoid Scene::mouseMapping(int x, int y) //x&y are mouse coords
+GLvoid Scene::mouseMapping(int x, int y) // x & y are mouse coords
 {
     screenHeight = GetSystemMetrics(SM_CYSCREEN);
-    screenWidth =   GetSystemMetrics(SM_CXSCREEN);
+    screenWidth = GetSystemMetrics(SM_CXSCREEN);
 
     GLint viewPort[4];
-    GLdouble modelViewM[16]; //modelView Matrix; 4x4 matrix???
-    GLdouble projectionM[16]; //projection matrix
+    GLdouble modelViewM[16];
+    GLdouble projectionM[16];
     GLfloat winX, winY, winZ;
 
-    float scale = 60*(screenWidth/screenHeight); //supposed to give us an estimation of mouse coords
+    float scale = 60 * (screenWidth / screenHeight); // Adjust for screen aspect ratio
 
-    glGetDoublev(GL_MODELVIEW_MATRIX, modelViewM); //gets values from arg1 and stores them in arg2
-    glGetDoublev(GL_PROJECTION_MATRIX, projectionM);
-    glGetIntegerv(GL_VIEWPORT, viewPort);
+    glGetDoublev(GL_MODELVIEW_MATRIX, modelViewM); // Get ModelView matrix
+    glGetDoublev(GL_PROJECTION_MATRIX, projectionM); // Get Projection matrix
+    glGetIntegerv(GL_VIEWPORT, viewPort); // Get Viewport dimensions
 
     winX = (GLfloat)x;
     winY = (GLfloat)(viewPort[3] - y);
-    glReadPixels(x,int(winY), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ); //takes all that bs and stores it into winZ
 
-    //init mouse coords
-    mouseX = (GLfloat)(x - screenWidth/2.0)/scale;
-    mouseY = (GLfloat)(screenHeight/2.0 - y)/scale;
-    mouseZ = -100.0;
+    // Read depth value at the current mouse position
+    glReadPixels(x, int(winY), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ);
 
+    // Depth thresholding to ignore unintended objects
+    if (winZ < 0.01f || winZ > 0.99f) {
+        // Ignore out-of-range depth values
+        winZ = 1.0f; // Default depth (far plane)
+    }
+
+    // Initialize mouse coordinates in world space
+    mouseX = (GLfloat)(x - screenWidth / 2.0) / scale;
+    mouseY = (GLfloat)(screenHeight / 2.0 - y) / scale;
+    mouseZ = -100.0f;
+
+    // Perform unprojection to get world coordinates
     gluUnProject(winX, winY, winZ, modelViewM, projectionM, viewPort, &mouseX, &mouseY, &mouseZ);
 }
+
 
 // Game Engine Functions
 
@@ -361,14 +453,32 @@ GLvoid Scene::t_switch()
 {
     transform_trigger = static_cast<mode>((transform_trigger + 1) % (SCALE + 1));
     state_change = false;
+
+    cout << "dec" << endl;
+
+    Kill_Duck();
 }
 
-GLvoid Scene::updateObjectRotation(vec3* target)
+GLvoid Scene::updateObjectRotation(vec3* object, vec3* target)
 {
-    // Calculate the direction vector
-    float directionX = mouseX - target->x;
-    float directionY = mouseY - target->y;
-    float directionZ = mouseZ - target->z;
+    float directionX = 0;
+    float directionY = 0;
+    float directionZ = 0;
+
+    if(target == nullptr)
+    {
+        // Calculate the direction vector
+        directionX = mouseX - object->x;
+        directionY = mouseY - object->y;
+        directionZ = mouseZ - object->z;
+    }
+    else
+    {
+        // Calculate the direction vector
+        directionX = target->x - object->x;
+        directionY = target->y - object->y;
+        directionZ = target->z - object->z;
+    }
 
     // Normalize the direction vector
     float length = sqrt(directionX * directionX + directionY * directionY + directionZ * directionZ);
@@ -407,9 +517,9 @@ GLvoid Scene::updateObjectRotation(vec3* target)
     float angle = acos(dot) * (180.0f / 3.1415926); // Convert to degrees
 
     // Update object's rotation (assuming object has a rotation field)
-    target->x = axis.x * angle;
-    target->y = axis.y * angle;
-    target->z = axis.z * angle;
+    object->x = axis.x * angle;
+    object->y = axis.y * angle;
+    object->z = axis.z * angle;
 
     //cout << "X: " << directionX << "Y: " << directionY << "Z: " << directionZ << endl;
 }
@@ -423,4 +533,39 @@ GLvoid Scene::initFog()
     glFogf(GL_FOG_START, 100.0f); // Set start distance (for GL_LINEAR)
     glFogf(GL_FOG_END, 200.0f); // Set end distance (for GL_LINEAR)
     glHint(GL_FOG_HINT, GL_DONT_CARE); // Let OpenGL choose the quality
+}
+
+void Scene::Launch_Duck()
+{
+    updateObjectRotation(&lanRot[active_duck], &desPos[active_duck]);
+
+    ducks[active_duck].src.x = lanPos[active_duck].x;
+    ducks[active_duck].src.y = lanPos[active_duck].y;
+    ducks[active_duck].src.z = lanPos[active_duck].z;
+
+    ducks[active_duck].rot.x = lanRot[active_duck].x;
+    ducks[active_duck].rot.y = lanRot[active_duck].y;
+    ducks[active_duck].rot.z = lanRot[active_duck].z;
+
+    ducks[active_duck].des.x = desPos[active_duck].x;
+    ducks[active_duck].des.y = desPos[active_duck].y;
+    ducks[active_duck].des.z = desPos[active_duck].z;
+
+    ducks[active_duck].t = 0;
+
+    ducks[active_duck].actionTrigger = ducks[active_duck].SHOOT;
+
+    ducks[active_duck].live = true;
+
+    cout << "spawned" << endl;
+
+    active_duck = (active_duck + 1) % 4;
+}
+
+GLvoid Scene::Kill_Duck()
+{
+    ducks[active_duck].actionTrigger = ducks[active_duck].DEAD;
+    ducks[active_duck].rot.x = 90;
+
+    active_duck = (active_duck + 1) % 4;
 }

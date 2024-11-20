@@ -86,7 +86,7 @@
 
 1726756069 c:\github\braced-game-engine-\include\__models.h
 
-1731623658 source:c:\github\braced-game-engine-\src\_kbms.cpp
+1732128822 source:c:\github\braced-game-engine-\src\_kbms.cpp
 	"_KbMs.h"
 
 1731545406 c:\github\braced-game-engine-\include\_kbms.h
@@ -107,7 +107,7 @@
 	"_Common.h"
 	<SOIL.h>
 
-1732061456 c:\github\braced-game-engine-\include\_scene.h
+1732140300 c:\github\braced-game-engine-\include\_scene.h
 	<vector>
 	"_Scene.h"
 	"_LightSetup.h"
@@ -116,13 +116,14 @@
 	"_TerrainGenerator.h"
 	"_Common.h"
 	"_Camera.h"
+	"_Projectile.h"
 
 1731545406 c:\github\braced-game-engine-\include\_models.h
 	<_Common.h>
 	<_TextureLoader.h>
 	<_ModelLoaderMD2.h>
 
-1732061238 source:c:\github\braced-game-engine-\src\_scene.cpp
+1732141537 source:c:\github\braced-game-engine-\src\_scene.cpp
 	"_Scene.h"
 
 1731545406 source:c:\github\braced-game-engine-\src\_timer.cpp
@@ -148,7 +149,7 @@
 1731545406 c:\github\braced-game-engine-\include\_collision.h
 	<_Common.h>
 
-1732061278 source:c:\github\braced-game-engine-\src\_terraingenerator.cpp
+1732061529 source:c:\github\braced-game-engine-\src\_terraingenerator.cpp
 	"_TerrainGenerator.h"
 
 1731545406 c:\github\braced-game-engine-\include\_terraingenerator.h
@@ -162,7 +163,7 @@
 
 1731545406 c:\github\braced-game-engine-\include\anorms.h
 
-1731982047 source:c:\github\braced-game-engine-\src\_modelloadermd2.cpp
+1732126808 source:c:\github\braced-game-engine-\src\_modelloadermd2.cpp
 	"_ModelLoaderMD2.h"
 
 1731545406 c:\github\braced-game-engine-\include\_camera.h
@@ -178,4 +179,13 @@
 1731546888 c:\github\braced-game-engine-\include\_shotgun.h
 	"_Common.h"
 	"_Models.h"
+
+1732139827 source:c:\github\braced-game-engine-\src\_projectile.cpp
+	"_Projectile.h"
+
+1732130006 c:\github\braced-game-engine-\include\_projectile.h
+	"_Common.h"
+	"_TextureLoader.h"
+	"_ModelLoaderMD2.h"
+	"_Timer.h"
 

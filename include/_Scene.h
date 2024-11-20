@@ -12,6 +12,7 @@
 #include "_TerrainGenerator.h"
 #include "_Common.h"
 #include "_Camera.h"
+#include "_Projectile.h"
 
 class Scene
 {
@@ -30,12 +31,15 @@ class Scene
         GLvoid initFog();
 
         GLvoid mouseMapping(int, int);
-        GLvoid updateObjectRotation(vec3* target);
+        GLvoid updateObjectRotation(vec3* object, vec3* target);
 
         GLvoid t_switch();
 
         GLvoid insertObject(char* tex_file, char* mdl_file); // Custom Models
         GLvoid insertObject(int);                           // Premade
+
+        GLvoid Launch_Duck();
+        GLvoid Kill_Duck();
 
         GLvoid insertLight();
 
