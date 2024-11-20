@@ -18,9 +18,9 @@ void _Skybox::skyBoxInit(char* fileName)
     tMax.x = tMax.y = 1;
     tMin.x = tMin.y = 0.0;
 
-    scale.x = 200;
-    scale.y = 200;
-    scale.z = 200; //scaler value
+    scale.x = 1700;
+    scale.y = 1700;
+    scale.z = 1700; //scaler value
 
     trans.x = trans.y = trans.z = 0; //Translation
     rot.x = rot.y = rot.z = 0; //Rotations

@@ -26,6 +26,11 @@ Scene::Scene()
 
     state_change = false;
     transform_trigger = TRANSFORM;
+
+    doneLoading = false;
+    liveLevel11 = true;
+    liveLevel12 = false;
+    liveLevel13 = false;
 }
 
 Scene::~Scene()
@@ -64,6 +69,25 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
                         break;
                 }
             }
+            // keyboard cases to switch levels
+            switch (wParam) {
+        case 0x31: // Key '1'
+            liveLevel11 = true;
+            liveLevel12 = false;
+            liveLevel13 = false;
+            break;
+        case 0x32: // Key '2'
+            liveLevel11 = false;
+            liveLevel12 = true;
+            liveLevel13 = false;
+            break;
+        case 0x33: // Key '3'
+            liveLevel11 = false;
+            liveLevel12 = false;
+            liveLevel13 = true;
+            break;
+    }
+    break;
             ////////////////////////////////////////////////////////////////////////
 
             break;
@@ -94,6 +118,8 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
         case WM_MOUSEMOVE:
             mouseMapping(LOWORD(lParam), HIWORD(lParam));
             break;
+
+
     }
 }
 
@@ -114,7 +140,7 @@ GLint Scene::initGL()   // Initalize Scene
     glEnable(GL_TEXTURE_2D);  //enable textures
 
     // World
-    initFog();
+    //initFog();
 
     terrain->initTerrain("images/pond.png");   // Water?
     terrain->scale.x = 40;
@@ -125,6 +151,15 @@ GLint Scene::initGL()   // Initalize Scene
 
     // Shotgun Model
     insertObject("models/gun_color.png", "models/c.md2");
+
+    // Initialize the appropriate skybox texture
+    if (liveLevel11) {
+        sky->skyBoxInit("images/forestMorning.jfif");
+    } else if (liveLevel12) {
+        sky->skyBoxInit("images/forestEvening.jfif");
+    } else if (liveLevel13) {
+        sky->skyBoxInit("images/forestNight.jfif");
+    }
 
     // Duck Model
     insertObject("models/gun_color.png", "models/duck/d.md2");
@@ -216,8 +251,18 @@ GLint Scene::drawScene()
         //terrain->drawTerrain();
     glPopMatrix();
 
+    // Update skybox if level has changed
+    if (liveLevel11) {
+        sky->skyBoxInit("images/forestMorning.jfif");
+    } else if (liveLevel12) {
+        sky->skyBoxInit("images/forestEvening.jfif");
+    } else if (liveLevel13) {
+        sky->skyBoxInit("images/forestNight.jfif");
+    }
+
+    // Draw the skybox
     glPushMatrix();
-    sky->skyBoxDraw();
+        sky->skyBoxDraw();
     glPopMatrix();
 
     objectHierarchy[1]->mdl->actionTrigger = objectHierarchy[1]->mdl->DYING;
@@ -419,14 +464,14 @@ GLvoid Scene::updateObjectRotation(vec3* target)
 
     //cout << "X: " << directionX << "Y: " << directionY << "Z: " << directionZ << endl;
 }
-
+/*
 GLvoid Scene::initFog()
 {
     glEnable(GL_FOG); // Enable fog
     glFogi(GL_FOG_MODE, GL_LINEAR); // Linear mode
     glFogfv(GL_FOG_COLOR, fogColor); // Set fog color
-    glFogf(GL_FOG_DENSITY, 0.25f); // Set density (for GL_EXP or GL_EXP2)
+    glFogf(GL_FOG_DENSITY, 0.19f); // Set density (for GL_EXP or GL_EXP2)
     glFogf(GL_FOG_START, 100.0f); // Set start distance (for GL_LINEAR)
     glFogf(GL_FOG_END, 200.0f); // Set end distance (for GL_LINEAR)
     glHint(GL_FOG_HINT, GL_DONT_CARE); // Let OpenGL choose the quality
-}
+}*/

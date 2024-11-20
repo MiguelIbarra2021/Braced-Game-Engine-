@@ -177,6 +177,9 @@
 	"_Skybox.h"
 	"_ModelLoaderMD2.h"
 	"_Skybox.h"
+	"_KbMs.h"
+	"_Shotgun.h"
+	"_Shotgun.h"
 
 1731623588 source:c:\github\braced-game-engine-\src\_shotgun.cpp
 	"_Shotgun.h"
@@ -200,7 +203,7 @@
 	<gl/gl.h>
 	<time.h>
 
-1732081372 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_scene.h
+1732141054 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_scene.h
 	<vector>
 	"_Scene.h"
 	"_LightSetup.h"
@@ -211,7 +214,16 @@
 	"_Camera.h"
 	"_Skybox.h"
 
-1732080153 shed changes
+1668639208 shed changes
+	<vector>
+	"_Scene.h"
+	"_LightSetup.h"
+	"_Models.h"
+	"_KbMs.h"
+	"_TerrainGenerator.h"
+	"_Common.h"
+	"_Camera.h"
+	"_Skybox.h"
 	<vector>
 	"_Scene.h"
 	"_LightSetup.h"
@@ -241,8 +253,15 @@
 	"Anorms.h"
 	"_KbMs.h"
 	"_TerrainGenerator.h"
+	"_Scene.h"
+	"_Skybox.h"
+	"_TextureLoader.h"
 
 1730932738 c:\users\bryan\desktop\csci 191t\common\include\gl\glut.h
+	<windows.h>
+	<stdlib.h>
+	<GL/gl.h>
+	<GL/glu.h>
 	<windows.h>
 	<stdlib.h>
 	<GL/gl.h>
@@ -269,6 +288,9 @@
 1732080153 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_modelloadermd2.h
 
 1668639208 c:\users\bryan\desktop\csci 191t\common\include\soil.h
+	<_Common.h>
+	<_TextureLoader.h>
+	"Anorms.h"
 
 1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\anorms.h
 
@@ -303,27 +325,30 @@
 	"_Models.h"
 	"_Models.h"
 	"_Models.h"
+	"_Models.h"
 
-1732080153 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_scene.cpp
+1732141158 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_scene.cpp
 	"_Scene.h"
-	"_Scene.h"
+
+1732080153 
+
+1732080153 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_modelloadermd2.cpp
+	"_ModelLoaderMD2.h"
+	"_ModelLoaderMD2.h"
+	"_ModelLoaderMD2.h"
 
 1732080153 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_shotgun.cpp
 	"_Shotgun.h"
-	"_Shotgun.h"
-	"_Shotgun.h"
+
+1732080153 h"
 
 1732080153 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_shotgun.h
 	"_Common.h"
 	"_Models.h"
 
-1732080153 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_modelloadermd2.cpp
-	"_ModelLoaderMD2.h"
-	"_ModelLoaderMD2.h"
-
 1732080115 derMD2.h"
 
-1731556260 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_skybox.cpp
+1732141054 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_skybox.cpp
 	"_Skybox.h"
 
 1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_skybox.h
@@ -336,8 +361,8 @@
 
 1732080153 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_terraingenerator.cpp
 
-1731556260 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_textureloader.cpp
-	"_TextureLoader.h"
+1732138094 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_textureloader.cpp
+	"_TerrainGenerator.h"
 
 1731556260 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_timer.cpp
 	"_Timer.h"
