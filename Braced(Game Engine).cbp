@@ -47,30 +47,32 @@
 			<Add directory="../../Common/lib" />
 		</Linker>
 		<Unit filename="include/Anorms.h" />
+		<Unit filename="include/_Camera.h" />
 		<Unit filename="include/_Collision.h" />
 		<Unit filename="include/_Common.h" />
 		<Unit filename="include/_KbMs.h" />
-		<Unit filename="include/_LightSetup.h" />
 		<Unit filename="include/_ModelLoaderMD2.h" />
 		<Unit filename="include/_Models.h" />
 		<Unit filename="include/_Scene.h" />
+		<Unit filename="include/_Shotgun.h" />
 		<Unit filename="include/_Skybox.h" />
 		<Unit filename="include/_TerrainGenerator.h" />
-		<Unit filename="include/_TextureLoader.h" />
 		<Unit filename="include/_Timer.h" />
 		<Unit filename="include/_lightSetup.h" />
 		<Unit filename="include/_textureLoader.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/_Camera.cpp" />
 		<Unit filename="src/_Collision.cpp" />
 		<Unit filename="src/_KbMs.cpp" />
 		<Unit filename="src/_ModelLoaderMD2.cpp" />
 		<Unit filename="src/_Models.cpp" />
 		<Unit filename="src/_Scene.cpp" />
+		<Unit filename="src/_Shotgun.cpp" />
 		<Unit filename="src/_Skybox.cpp" />
 		<Unit filename="src/_TerrainGenerator.cpp" />
-		<Unit filename="src/_TextureLoader.cpp" />
 		<Unit filename="src/_Timer.cpp" />
 		<Unit filename="src/_lightSetup.cpp" />
+		<Unit filename="src/_textureLoader.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

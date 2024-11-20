@@ -26,38 +26,40 @@ void _KbMs::keyPress(_Camera* cam)
 {
     switch(wParam)
     {
-    case VK_UP:  // Up Arrow
-        cam->mode = false;
-        cam->angleY += 0.05;
-        break;
-    case VK_DOWN:  // Down Arrow
-        cam->mode = false;
-        cam->angleY -= 0.05;
-        break;
-    case VK_LEFT:  // Left Arrow
-        cam->mode = false;
-        cam->angleX -= 0.05;
-        break;
-    case VK_RIGHT:  // Right Arrow
-        cam->mode = false;
-        cam->angleX += 0.05;
-        break;
-    case 0x57:  // W
-        cam->mode = true;
-        cam->angleY += 0.05;
-        break;
-    case 0x53:  // S
-        cam->mode = true;
-        cam->angleY -= 0.05;
-        break;
-    case 0x44:  // D
-        cam->mode = true;
-        cam->angleX -= 0.05;
-        break;
-    case 0x41:  // A
-        cam->mode = true;
-        cam->angleX += 0.05;
-        break;
+        // Orbital Camera
+        case VK_UP:  // Up Arrow
+            cam->mode = false;
+            cam->angleY += 0.05;
+            break;
+        case VK_DOWN:  // Down Arrow
+            cam->mode = false;
+            cam->angleY -= 0.05;
+            break;
+        case VK_LEFT:  // Left Arrow
+            cam->mode = false;
+            cam->angleX -= 0.05;
+            break;
+        case VK_RIGHT:  // Right Arrow
+            cam->mode = false;
+            cam->angleX += 0.05;
+            break;
+        // FPS Camera
+        case 0x57:  // W
+            cam->mode = true;
+            cam->angleY += 0.05;
+            break;
+        case 0x53:  // S
+            cam->mode = true;
+            cam->angleY -= 0.05;
+            break;
+        case 0x44:  // D
+            cam->mode = true;
+            cam->angleX -= 0.05;
+            break;
+        case 0x41:  // A
+            cam->mode = true;
+            cam->angleX += 0.05;
+            break;
     }
 
     if(!cam->mode)

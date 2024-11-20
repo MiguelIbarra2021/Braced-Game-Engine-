@@ -12,7 +12,6 @@
 #include "_TerrainGenerator.h"
 #include "_Common.h"
 #include "_Camera.h"
-#include "_ModelLoaderMD2.h"
 #include "_Skybox.h"
 
 class Scene
@@ -29,6 +28,11 @@ class Scene
         WPARAM wParam;
 
         // Game Engine Functions
+        GLvoid initFog();
+
+        GLvoid mouseMapping(int, int);
+        GLvoid updateObjectRotation(vec3* target);
+
         GLvoid t_switch();
 
         GLvoid insertObject(char* tex_file, char* mdl_file); // Custom Models
@@ -37,6 +41,9 @@ class Scene
         GLvoid insertLight();
 
         // Game Engine Variables
+        GLdouble mouseX, mouseY, mouseZ;
+        float screenWidth, screenHeight;
+
         enum mode{ TRANSFORM, ROTATE, SCALE };   // Used to switch between what edit will happen to object
         mode transform_trigger;
 
