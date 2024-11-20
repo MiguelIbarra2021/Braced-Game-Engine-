@@ -11,6 +11,8 @@ _Camera* camera = new _Camera();
 int objects;                            // # of objects in Scene
 int lights;                            // # of lights in Scene
 
+GLfloat fogColor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+
 Scene::Scene()
 {
     // Initalize Variables
@@ -90,7 +92,6 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
             break;
         case WM_MOUSEMOVE:
             mouseMapping(LOWORD(lParam), HIWORD(lParam));
-            //sysControl->mouseMove(objectHierarchy[0], LOWORD(lParam), HIWORD(lParam));
             break;
     }
 }
@@ -104,10 +105,23 @@ GLint Scene::initGL()   // Initalize Scene
     glDepthFunc(GL_LEQUAL);                 // LEqual -> <=; Depth Function Type
 
     glEnable(GL_COLOR_MATERIAL);
-    glEnable(GL_TEXTURE_2D);                // Enables textures in the scene
 
-    terrain->initTerrain("");
-    terrain->scale.x = terrain->scale.y = terrain->scale.z = 100;
+    // Textures
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);   // PNG alpha
+
+    glEnable(GL_TEXTURE_2D);  //enable textures
+
+    // World
+    initFog();
+
+    terrain->initTerrain("images/pond.png");   // Water?
+    terrain->scale.x = 40;
+    terrain->scale.y = 1;
+    terrain->scale.z = 40;
+    terrain->position.z = 40;
+    terrain->position.y = -4;
+
     // Shotgun Model
     insertObject("models/gun_color.png", "models/c.md2");
 
@@ -126,6 +140,8 @@ GLint Scene::initGL()   // Initalize Scene
 
     insertLight();
 
+
+    // Initalize Lights
     for(int i = 0; i < lights; i++)
     {
         switch(i + 1)
@@ -157,6 +173,7 @@ GLint Scene::initGL()   // Initalize Scene
         }
     }
 
+    // Camera
     camera->camInit();
 
     return true;
@@ -194,7 +211,7 @@ GLint Scene::drawScene()
     glPopMatrix();
 
     glPushMatrix();
-        terrain->drawTerrain();
+        //terrain->drawTerrain();
     glPopMatrix();
 
     objectHierarchy[1]->mdl->actionTrigger = objectHierarchy[1]->mdl->DYING;
@@ -216,6 +233,7 @@ GLvoid Scene::resizeScene(GLsizei width, GLsizei height)
     glLoadIdentity();
 }
 
+// Temp Positon
 GLvoid Scene::mouseMapping(int x, int y) //x&y are mouse coords
 {
     screenHeight = GetSystemMetrics(SM_CYSCREEN);
@@ -278,6 +296,7 @@ GLvoid Scene::insertObject(char* tex_file, char* mdl_file)             // Insert
     objects++;                                 // Objects in scene increased by one
 }
 
+// Game Engine Functions
 GLvoid Scene::insertObject(int sel)             // Inserts selected object into the scene; Tempory
 {
     if(objects == 0)                            // If Hierarchy is empty create a new one
@@ -393,4 +412,15 @@ GLvoid Scene::updateObjectRotation(vec3* target)
     target->z = axis.z * angle;
 
     //cout << "X: " << directionX << "Y: " << directionY << "Z: " << directionZ << endl;
+}
+
+GLvoid Scene::initFog()
+{
+    glEnable(GL_FOG); // Enable fog
+    glFogi(GL_FOG_MODE, GL_LINEAR); // Linear mode
+    glFogfv(GL_FOG_COLOR, fogColor); // Set fog color
+    glFogf(GL_FOG_DENSITY, 0.25f); // Set density (for GL_EXP or GL_EXP2)
+    glFogf(GL_FOG_START, 100.0f); // Set start distance (for GL_LINEAR)
+    glFogf(GL_FOG_END, 200.0f); // Set end distance (for GL_LINEAR)
+    glHint(GL_FOG_HINT, GL_DONT_CARE); // Let OpenGL choose the quality
 }

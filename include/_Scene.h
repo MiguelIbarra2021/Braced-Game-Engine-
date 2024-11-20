@@ -27,6 +27,8 @@ class Scene
         WPARAM wParam;
 
         // Game Engine Functions
+        GLvoid initFog();
+
         GLvoid mouseMapping(int, int);
         GLvoid updateObjectRotation(vec3* target);
 
