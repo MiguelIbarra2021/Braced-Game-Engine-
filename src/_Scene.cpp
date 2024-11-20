@@ -7,10 +7,26 @@ _KbMs* sysControl = new _KbMs();            // Mouse and Key Control
 _TerrainGenerator* terrain = new _TerrainGenerator();
 _ModelLoaderMD2* md = new _ModelLoaderMD2();
 _Camera* camera = new _Camera();
+_Collision* hit = new _Collision();
+_Skybox* sky = new _Skybox();
 _Sounds *snds = new _Sounds();
 
+// Shotgun
+_Projectile bullets[20];
+
+// Target Ducks
+vec3 desPos[4];   // Destination
+vec3 lanPos[4];   // Launch Position
+vec3 lanRot[4];   // Launch Rotation
+_Projectile ducks[4];
+
+int active_duck = 0;
+
+int mouseClicks;
 int objects;                            // # of objects in Scene
 int lights;                            // # of lights in Scene
+
+bool shot = false;
 
 GLfloat fogColor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 
@@ -20,12 +36,69 @@ Scene::Scene()
     screenHeight = GetSystemMetrics(SM_CYSCREEN);
     screenWidth =   GetSystemMetrics(SM_CXSCREEN);
 
+    mouseClicks = 0;
     objects = 0;
     lights = 0;
     editmode = false;
 
     state_change = false;
     transform_trigger = TRANSFORM;
+
+    // Initalize Duck Launcher: Launch Position
+    lanPos[0].x = 20;
+    lanPos[0].y = -20;
+    lanPos[0].z = 40;
+
+    lanPos[1].x = 10;
+    lanPos[1].y = -20;
+    lanPos[1].z = 40;
+
+    lanPos[2].x = -10;
+    lanPos[2].y = -20;
+    lanPos[2].z = 40;
+
+    lanPos[3].x = -20;
+    lanPos[3].y = -20;
+    lanPos[3].z = 40;
+
+    // Initalize Duck Launcher: Launch Rotation
+    lanRot[0].x = -20;
+    lanRot[0].y = -10;
+    lanRot[0].z = 20;
+
+    lanRot[1].x = -5;
+    lanRot[1].y = -10;
+    lanRot[1].z = 20;
+
+    lanRot[2].x = 5;
+    lanRot[2].y = -10;
+    lanRot[2].z = 20;
+
+    lanRot[3].x = 20;
+    lanRot[3].y = -10;
+    lanRot[3].z = 20;
+
+    // Initalize Duck Launcher: Destination Position
+    desPos[0].x = 15;
+    desPos[0].y = 100;
+    desPos[0].z = 100;
+
+    desPos[1].x = 5;
+    desPos[1].y = 100;
+    desPos[1].z = 100;
+
+    desPos[2].x = -5;
+    desPos[2].y = 100;
+    desPos[2].z = 100;
+
+    desPos[3].x = -15;
+    desPos[3].y = 100;
+    desPos[3].z = 100;
+
+    doneLoading = false;
+    liveLevel11 = true;
+    liveLevel12 = false;
+    liveLevel13 = false;
 }
 
 Scene::~Scene()
@@ -56,42 +129,93 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
                     case TRANSFORM:
                         sysControl->keyPress(&objectHierarchy[0]->position);
                         break;
+
                     case ROTATE:
                         sysControl->keyPress(&objectHierarchy[0]->rotation);
                         break;
+
                     case SCALE:
                         sysControl->keyPress(&objectHierarchy[0]->scale);
                         break;
                 }
             }
+            // keyboard cases to switch levels
+            switch (wParam) {
+                case 0x31: // Key '1'
+                    liveLevel11 = true;
+                    liveLevel12 = false;
+                    liveLevel13 = false;
+                    break;
+
+                case 0x32: // Key '2'
+                    liveLevel11 = false;
+                    liveLevel12 = true;
+                    liveLevel13 = false;
+                    break;
+
+                case 0x33: // Key '3'
+                    liveLevel11 = false;
+                    liveLevel12 = false;
+                    liveLevel13 = true;
+                    break;
+            }
+            break;
             ////////////////////////////////////////////////////////////////////////
 
             break;
         case WM_KEYUP:
             //sysControl->keyUp();
             break;
+
         case WM_MOUSEWHEEL:
             //sysControl->mouseWheel(objectHierarchy[0], (double)GET_WHEEL_DELTA_WPARAM(wParam));
             break;
+
         case WM_LBUTTONDOWN:
             sysControl->mouseEventDown(LOWORD(lParam), HIWORD(lParam));
+            shot = true;
             snds->playSound("sounds/Shoot.mp3");
             break;
+
         case WM_RBUTTONDOWN:
             sysControl->mouseEventDown(LOWORD(lParam), HIWORD(lParam));
             break;
+
         case WM_MBUTTONDOWN:
             sysControl->mouseEventDown(LOWORD(lParam), HIWORD(lParam));
             break;
+
         case WM_LBUTTONUP:
             sysControl->mouseEventUp();
+
+            bullets[mouseClicks].src.x = objectHierarchy[0]->position.x;
+            bullets[mouseClicks].src.y = objectHierarchy[0]->position.y;
+            bullets[mouseClicks].src.z = objectHierarchy[0]->position.z;
+
+            bullets[mouseClicks].des.x = mouseX;
+            bullets[mouseClicks].des.y = mouseY;
+            bullets[mouseClicks].des.z = mouseZ;
+
+            bullets[mouseClicks].t = 0;
+            bullets[mouseClicks].actionTrigger = bullets[mouseClicks].SHOOT;
+            bullets[mouseClicks].live = true;
+            mouseClicks = (mouseClicks+1)%20;
+
+            if(shot)
+            {
+                Launch_Duck();
+                shot = false;
+            }
             break;
+
         case WM_RBUTTONUP:
             sysControl->mouseEventUp();
             break;
+
         case WM_MBUTTONUP:
             sysControl->mouseEventUp();
             break;
+
         case WM_MOUSEMOVE:
             mouseMapping(LOWORD(lParam), HIWORD(lParam));
             break;
@@ -144,6 +268,17 @@ GLint Scene::initGL()   // Initalize Scene
     // Foliage
     insertObject("", "models/bushes/ah.md2");
 
+    // Initialize the appropriate skybox texture
+    if (liveLevel11) {
+        sky->skyBoxInit("images/forestMorning.jfif");
+    }
+    else if (liveLevel12) {
+        sky->skyBoxInit("images/forestEvening.jfif");
+    }
+    else if (liveLevel13) {
+        sky->skyBoxInit("images/forestNight.jfif");
+    }
+
     objectHierarchy[0]->scale.x = 0.25;
     objectHierarchy[0]->scale.y = 0.25;
     objectHierarchy[0]->scale.z = 0.25;
@@ -152,6 +287,20 @@ GLint Scene::initGL()   // Initalize Scene
     objectHierarchy[0]->position.y = -4;
 
     insertLight();
+
+    // Bullets
+    for(int i = 0; i < 20; i++)
+    {
+        bullets[i].initProjectile(nullptr);
+    }
+
+    // Ducks
+    for(int i = 0; i < 4; i++)
+    {
+        ducks[i].initProjectile("models/duck/d.md2");
+        ducks[i].mdl->actionTrigger = ducks[i].mdl->FLY;
+        ducks[i].mdl->Actions();
+    }
 
 
     // Initalize Lights
@@ -162,24 +311,31 @@ GLint Scene::initGL()   // Initalize Scene
             case 1:
                 lightHierarchy[i]->setLight(GL_LIGHT0);  // One Light
                 break;
+
             case 2:
                 lightHierarchy[i]->setLight(GL_LIGHT1);  // Two
                 break;
+
             case 3:
                 lightHierarchy[i]->setLight(GL_LIGHT2);  // Three
                 break;
+
             case 4:
                 lightHierarchy[i]->setLight(GL_LIGHT3);  // Four
                 break;
+
             case 5:
                 lightHierarchy[i]->setLight(GL_LIGHT4); // Five
                 break;
+
             case 6:
                 lightHierarchy[i]->setLight(GL_LIGHT5); // Six
                 break;
+
             case 7:
                 lightHierarchy[i]->setLight(GL_LIGHT6); // Seven
                 break;
+
             case 8:
                 lightHierarchy[i]->setLight(GL_LIGHT7); // Eight
                 break;
@@ -214,7 +370,7 @@ GLint Scene::drawScene()
 
     // Scene
     glPushMatrix();
-        updateObjectRotation(&objectHierarchy[0]->rotation);
+        updateObjectRotation(&objectHierarchy[0]->rotation, nullptr);
         objectHierarchy[0]->drawModel();
     glPopMatrix();
 
@@ -225,15 +381,47 @@ GLint Scene::drawScene()
     glPopMatrix();
 
     glPushMatrix();
-        objectHierarchy[2]->drawModel();
+        //objectHierarchy[2]->drawModel();
     glPopMatrix();
 
     glPushMatrix();
         //terrain->drawTerrain();
     glPopMatrix();
 
-    objectHierarchy[1]->mdl->actionTrigger = objectHierarchy[1]->mdl->DYING;
+    // Update skybox if level has changed
+    if (liveLevel11) {
+        sky->skyBoxInit("images/forestMorning.jfif");
+    } else if (liveLevel12) {
+        sky->skyBoxInit("images/forestEvening.jfif");
+    } else if (liveLevel13) {
+        sky->skyBoxInit("images/forestNight.jfif");
+    }
+
+    // Draw the skybox
+    glPushMatrix();
+       sky->skyBoxDraw();
+    glPopMatrix();
+
+    objectHierarchy[1]->mdl->actionTrigger = objectHierarchy[1]->mdl->FLY;
     objectHierarchy[1]->mdl->Actions();
+
+    for(int i=0; i < 20; i++)
+    {
+        for(int j = 0; j < 4; j++)
+            if(hit->isSphereCollision(bullets[i].pos, ducks[j].pos, 0.6, 1.4, 0.4))
+            {
+                Kill_Duck(j);
+            }
+
+        bullets[i].drawProjectile(false);
+        bullets[i].ProjectileAction();
+    }
+
+    for(int i=0; i < 4; i++)
+    {
+        ducks[i].drawProjectile(true);
+        ducks[i].ProjectileAction();
+    }
 
     return true;
 
@@ -262,7 +450,7 @@ GLvoid Scene::mouseMapping(int x, int y) //x&y are mouse coords
     GLdouble projectionM[16]; //projection matrix
     GLfloat winX, winY, winZ;
 
-    float scale = 60*(screenWidth/screenHeight); //supposed to give us an estimation of mouse coords
+    float scale = 60 *(screenWidth/screenHeight); //supposed to give us an estimation of mouse coords
 
     glGetDoublev(GL_MODELVIEW_MATRIX, modelViewM); //gets values from arg1 and stores them in arg2
     glGetDoublev(GL_PROJECTION_MATRIX, projectionM);
@@ -271,6 +459,15 @@ GLvoid Scene::mouseMapping(int x, int y) //x&y are mouse coords
     winX = (GLfloat)x;
     winY = (GLfloat)(viewPort[3] - y);
     glReadPixels(x,int(winY), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ); //takes all that bs and stores it into winZ
+
+    // Read depth value at the current mouse position
+    glReadPixels(x, int(winY), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ);
+
+    // Depth thresholding to ignore unintended objects
+    if (winZ < 0.01f || winZ > 0.99f) {
+        // Ignore out-of-range depth values
+        winZ = 1.0f; // Default depth (far plane)
+    }
 
     //init mouse coords
     mouseX = (GLfloat)(x - screenWidth/2.0)/scale;
@@ -281,7 +478,6 @@ GLvoid Scene::mouseMapping(int x, int y) //x&y are mouse coords
 }
 
 // Game Engine Functions
-
 GLvoid Scene::insertObject(char* tex_file, char* mdl_file)             // Inserts selected object into the scene; Tempory
 {
     if(objects == 0)                            // If Hierarchy is empty create a new one
@@ -314,34 +510,6 @@ GLvoid Scene::insertObject(char* tex_file, char* mdl_file)             // Insert
     objects++;                                 // Objects in scene increased by one
 }
 
-// Game Engine Functions
-GLvoid Scene::insertObject(int sel)             // Inserts selected object into the scene; Tempory
-{
-    if(objects == 0)                            // If Hierarchy is empty create a new one
-    {
-        objectHierarchy = new _Models*[1];      // Create new hierarchy with one object in it
-        objectHierarchy[0] = new _Models();     // New Model at first hierarchy
-    }
-    else                                        // If hierarchy is established increase it by one
-    {
-        _Models** temp = new _Models*[objects];
-
-        for(int i = 0; i < objects; i++)        // Transfer objects to temp
-            temp[i] = objectHierarchy[i];
-
-        delete[] objectHierarchy;
-        _Models** objectHierarchy = new _Models*[objects + 1];
-
-        for(int i = 0; i < objects; i++)        // Transfer objects back to hierarchy
-            objectHierarchy[i] = temp[i];
-
-        delete[] temp;
-
-        objectHierarchy[objects] = new _Models();
-    }
-
-    objects++;                                 // Objects in scene increased by one
-}
 
 GLvoid Scene::insertLight()             // Inserts selected object into the scene; Tempory
 {
@@ -379,14 +547,32 @@ GLvoid Scene::t_switch()
 {
     transform_trigger = static_cast<mode>((transform_trigger + 1) % (SCALE + 1));
     state_change = false;
+
+    cout << "dec" << endl;
+
+    //Kill_Duck();
 }
 
-GLvoid Scene::updateObjectRotation(vec3* target)
+GLvoid Scene::updateObjectRotation(vec3* object, vec3* target)
 {
-    // Calculate the direction vector
-    float directionX = mouseX - target->x;
-    float directionY = mouseY - target->y;
-    float directionZ = mouseZ - target->z;
+    float directionX = 0;
+    float directionY = 0;
+    float directionZ = 0;
+
+    if(target == nullptr)
+    {
+        // Calculate the direction vector
+        directionX = mouseX - object->x;
+        directionY = mouseY - object->y;
+        directionZ = mouseZ - object->z;
+    }
+    else
+    {
+        // Calculate the direction vector
+        directionX = target->x - object->x;
+        directionY = target->y - object->y;
+        directionZ = target->z - object->z;
+    }
 
     // Normalize the direction vector
     float length = sqrt(directionX * directionX + directionY * directionY + directionZ * directionZ);
@@ -425,9 +611,9 @@ GLvoid Scene::updateObjectRotation(vec3* target)
     float angle = acos(dot) * (180.0f / 3.1415926); // Convert to degrees
 
     // Update object's rotation (assuming object has a rotation field)
-    target->x = axis.x * angle;
-    target->y = axis.y * angle;
-    target->z = axis.z * angle;
+    object->x = axis.x * angle;
+    object->y = axis.y * angle;
+    object->z = axis.z * angle;
 
     //cout << "X: " << directionX << "Y: " << directionY << "Z: " << directionZ << endl;
 }
@@ -441,4 +627,39 @@ GLvoid Scene::initFog()
     glFogf(GL_FOG_START, 100.0f); // Set start distance (for GL_LINEAR)
     glFogf(GL_FOG_END, 200.0f); // Set end distance (for GL_LINEAR)
     glHint(GL_FOG_HINT, GL_DONT_CARE); // Let OpenGL choose the quality
+}
+
+void Scene::Launch_Duck()
+{
+    updateObjectRotation(&lanRot[active_duck], &desPos[active_duck]);
+
+    ducks[active_duck].src.x = lanPos[active_duck].x;
+    ducks[active_duck].src.y = lanPos[active_duck].y;
+    ducks[active_duck].src.z = lanPos[active_duck].z;
+
+    ducks[active_duck].rot.x = lanRot[active_duck].x;
+    ducks[active_duck].rot.y = lanRot[active_duck].y;
+    ducks[active_duck].rot.z = lanRot[active_duck].z;
+
+    ducks[active_duck].des.x = desPos[active_duck].x;
+    ducks[active_duck].des.y = desPos[active_duck].y;
+    ducks[active_duck].des.z = desPos[active_duck].z;
+
+    ducks[active_duck].t = 0;
+
+    ducks[active_duck].actionTrigger = ducks[active_duck].SHOOT;
+
+    ducks[active_duck].live = true;
+
+    cout << "spawned" << endl;
+
+    active_duck = (active_duck + 1) % 4;
+}
+
+GLvoid Scene::Kill_Duck(int duck)
+{
+    ducks[active_duck].actionTrigger = ducks[active_duck].DEAD;
+    ducks[active_duck].rot.x = 90;
+
+    active_duck = (active_duck + 1) % 4;
 }

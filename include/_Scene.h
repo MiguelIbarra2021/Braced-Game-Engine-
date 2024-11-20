@@ -12,6 +12,9 @@
 #include "_TerrainGenerator.h"
 #include "_Common.h"
 #include "_Camera.h"
+#include "_Skybox.h"
+#include "_Collision.h"
+#include "_Projectile.h"
 #include "_Sounds.h"
 
 class Scene
@@ -31,12 +34,15 @@ class Scene
         GLvoid initFog();
 
         GLvoid mouseMapping(int, int);
-        GLvoid updateObjectRotation(vec3* target);
+         GLvoid updateObjectRotation(vec3* object, vec3* target); //updated
 
         GLvoid t_switch();
 
         GLvoid insertObject(char* tex_file, char* mdl_file); // Custom Models
         GLvoid insertObject(int);                           // Premade
+
+        GLvoid Launch_Duck(); //updated
+        GLvoid Kill_Duck(int); //updated
 
         GLvoid insertLight();
 
@@ -49,6 +55,12 @@ class Scene
 
         bool state_change;
         bool editmode;
+
+        //boolean values used to determine levels
+        bool doneLoading;
+        bool liveLevel11;
+        bool liveLevel12;
+        bool liveLevel13;
 
     protected:
 
