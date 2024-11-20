@@ -11,6 +11,7 @@
 #include "_KbMs.h"
 #include "_TerrainGenerator.h"
 #include "_Common.h"
+#include "_Collision.h"
 #include "_Camera.h"
 #include "_Projectile.h"
 
@@ -39,7 +40,7 @@ class Scene
         GLvoid insertObject(int);                           // Premade
 
         GLvoid Launch_Duck();
-        GLvoid Kill_Duck();
+        GLvoid Kill_Duck(int duck);
 
         GLvoid insertLight();
 

@@ -5,6 +5,10 @@ _Models** objectHierarchy = nullptr;        // Hierarchy of objects
 _KbMs* sysControl = new _KbMs();            // Mouse and Key Control
 _TerrainGenerator* terrain = new _TerrainGenerator();
 _Camera* camera = new _Camera();
+_Collision* hit = new _Collision();
+
+// Shotgun
+_Projectile bullets[20];
 
 // Target Ducks
 vec3 desPos[4];   // Destination
@@ -147,6 +151,19 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
         case WM_LBUTTONUP:
             sysControl->mouseEventUp();
 
+            bullets[mouseClicks].src.x = objectHierarchy[0]->position.x;
+            bullets[mouseClicks].src.y = objectHierarchy[0]->position.y;
+            bullets[mouseClicks].src.z = objectHierarchy[0]->position.z;
+
+            bullets[mouseClicks].des.x = mouseX;
+            bullets[mouseClicks].des.y = mouseY;
+            bullets[mouseClicks].des.z = mouseZ;
+
+            bullets[mouseClicks].t = 0;
+            bullets[mouseClicks].actionTrigger = bullets[mouseClicks].SHOOT;
+            bullets[mouseClicks].live = true;
+            mouseClicks = (mouseClicks+1)%20;
+
             if(shot)
             {
                 Launch_Duck();
@@ -208,6 +225,12 @@ GLint Scene::initGL()   // Initalize Scene
     objectHierarchy[0]->position.y = -4;
 
     insertLight();
+
+    // Bullets
+    for(int i = 0; i < 20; i++)
+    {
+        bullets[i].initProjectile(nullptr);
+    }
 
     // Ducks
     for(int i = 0; i < 4; i++)
@@ -292,6 +315,18 @@ GLint Scene::drawScene()
 
     objectHierarchy[1]->mdl->actionTrigger = objectHierarchy[1]->mdl->FLY;
     objectHierarchy[1]->mdl->Actions();
+
+    for(int i=0; i < 20; i++)
+    {
+        for(int j = 0; j < 4; j++)
+            if(hit->isSphereCollision(bullets[i].pos, ducks[j].pos, 0.6, 1.4, 0.4))
+            {
+                Kill_Duck(j);
+            }
+
+        bullets[i].drawProjectile(false);
+        bullets[i].ProjectileAction();
+    }
 
     for(int i=0; i < 4; i++)
     {
@@ -456,7 +491,7 @@ GLvoid Scene::t_switch()
 
     cout << "dec" << endl;
 
-    Kill_Duck();
+    //Kill_Duck();
 }
 
 GLvoid Scene::updateObjectRotation(vec3* object, vec3* target)
@@ -562,10 +597,10 @@ void Scene::Launch_Duck()
     active_duck = (active_duck + 1) % 4;
 }
 
-GLvoid Scene::Kill_Duck()
+GLvoid Scene::Kill_Duck(int duck)
 {
-    ducks[active_duck].actionTrigger = ducks[active_duck].DEAD;
-    ducks[active_duck].rot.x = 90;
+    ducks[duck].actionTrigger = ducks[active_duck].DEAD;
+    ducks[duck].rot.x = 90;
 
-    active_duck = (active_duck + 1) % 4;
+    //active_duck = (active_duck + 1) % 4;
 }

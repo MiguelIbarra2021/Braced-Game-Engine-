@@ -12,8 +12,11 @@ _Projectile::~_Projectile()
 
 void _Projectile::initProjectile(char* fileName)
 {
-    model_file = fileName;
-    mdl->initModel(fileName);
+    if(fileName != nullptr)
+    {
+        model_file = fileName;
+        mdl->initModel(fileName);
+    }
 
     pos.x = 0; pos.y = 0; pos.z = 0;
     t = 0;

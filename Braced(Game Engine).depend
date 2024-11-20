@@ -107,7 +107,7 @@
 	"_Common.h"
 	<SOIL.h>
 
-1732140300 c:\github\braced-game-engine-\include\_scene.h
+1732142347 c:\github\braced-game-engine-\include\_scene.h
 	<vector>
 	"_Scene.h"
 	"_LightSetup.h"
@@ -115,6 +115,7 @@
 	"_KbMs.h"
 	"_TerrainGenerator.h"
 	"_Common.h"
+	"_Collision.h"
 	"_Camera.h"
 	"_Projectile.h"
 
@@ -123,7 +124,7 @@
 	<_TextureLoader.h>
 	<_ModelLoaderMD2.h>
 
-1732141537 source:c:\github\braced-game-engine-\src\_scene.cpp
+1732141969 source:c:\github\braced-game-engine-\src\_scene.cpp
 	"_Scene.h"
 
 1731545406 source:c:\github\braced-game-engine-\src\_timer.cpp
@@ -180,7 +181,7 @@
 	"_Common.h"
 	"_Models.h"
 
-1732139827 source:c:\github\braced-game-engine-\src\_projectile.cpp
+1732141954 source:c:\github\braced-game-engine-\src\_projectile.cpp
 	"_Projectile.h"
 
 1732130006 c:\github\braced-game-engine-\include\_projectile.h
