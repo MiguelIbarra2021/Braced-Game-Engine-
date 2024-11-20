@@ -14,6 +14,7 @@ class _Sounds
 
         ISoundEngine *engine = createIrrKlangDevice();
         ISound* snd;
+        ISoundSource* wav;
 
         void playMusic(char *);
         void playSound(char *);

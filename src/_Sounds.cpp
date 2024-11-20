@@ -25,8 +25,12 @@ int _Sounds::initSounds()
 
 void _Sounds::playMusic(char *Filename)
 {
+    wav = engine->addSoundSourceFromFile(Filename);
+    wav->setDefaultVolume(0.2f);
     //engine->setSoundVolume(0.02); //worked, but changed volume for all sounds... which makes sense from the name...
     engine->play2D(Filename, true); //file will repeat
+
+
 }
 
 void _Sounds::playSound(char *Filename)

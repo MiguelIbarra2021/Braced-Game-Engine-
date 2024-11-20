@@ -192,7 +192,7 @@ GLint Scene::initGL()   // Initalize Scene
     // Sounds
     snds->initSounds();
     //snds->playMusic("C:/Users/user/Desktop/CSCI 191/Braced-Game-Engine-/sounds/Sonic Riders Zero Gravity Main Menu Theme.mp3");
-    snds->playMusic("sounds/Sonic Riders Zero Gravity Main Menu Theme.mp3");
+    snds->playMusic("sounds/Super Smash Bros. 4 For Wii U OST - Duck Hunt Medley.mp3");
 
     return true;
 }

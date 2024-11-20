@@ -177,7 +177,7 @@
 	<_Common.h>
 	<_Scene.h>
 
-1731556060 c:\users\user\documents\github\braced-game-engine-\include\_common.h
+1732064002 c:\users\user\documents\github\braced-game-engine-\include\_common.h
 	<string.h>
 	<cmath>
 	<GL/glut.h>
@@ -193,7 +193,7 @@
 	<GL/gl.h>
 	<GL/glu.h>
 
-1731556060 c:\users\user\documents\github\braced-game-engine-\include\_scene.h
+1732066878 c:\users\user\documents\github\braced-game-engine-\include\_scene.h
 	<vector>
 	"_Scene.h"
 	"_LightSetup.h"
@@ -218,7 +218,7 @@
 
 1726701387 c:\users\user\desktop\csci 191\common\include\soil.h
 
-1731555193 c:\users\user\documents\github\braced-game-engine-\include\_modelloadermd2.h
+1732064004 c:\users\user\documents\github\braced-game-engine-\include\_modelloadermd2.h
 	<_Common.h>
 	<_TextureLoader.h>
 	"Anorms.h"
@@ -238,7 +238,7 @@
 	<_Common.h>
 	<_TextureLoader.h>
 
-1731555195 c:\users\user\documents\github\braced-game-engine-\include\_sounds.h
+1732083607 c:\users\user\documents\github\braced-game-engine-\include\_sounds.h
 	"SNDS/irrKlang.h"
 	"_Common.h"
 
@@ -344,7 +344,7 @@
 
 1731555195 c:\users\user\documents\github\braced-game-engine-\include\__models.h
 
-1731555194 source:c:\users\user\documents\github\braced-game-engine-\src\_camera.cpp
+1732064005 source:c:\users\user\documents\github\braced-game-engine-\src\_camera.cpp
 	"_Camera.h"
 
 1731555192 source:c:\users\user\documents\github\braced-game-engine-\src\_collision.cpp
@@ -353,22 +353,22 @@
 1731555192 c:\users\user\documents\github\braced-game-engine-\include\_collision.h
 	<_Common.h>
 
-1731555194 source:c:\users\user\documents\github\braced-game-engine-\src\_kbms.cpp
+1732064005 source:c:\users\user\documents\github\braced-game-engine-\src\_kbms.cpp
 	"_KbMs.h"
 
 1731555192 source:c:\users\user\documents\github\braced-game-engine-\src\_lightsetup.cpp
 	"_LightSetup.h"
 
-1731555194 source:c:\users\user\documents\github\braced-game-engine-\src\_modelloadermd2.cpp
+1732064005 source:c:\users\user\documents\github\braced-game-engine-\src\_modelloadermd2.cpp
 	"_ModelLoaderMD2.h"
 
 1731555194 source:c:\users\user\documents\github\braced-game-engine-\src\_models.cpp
 	"_Models.h"
 
-1731555194 source:c:\users\user\documents\github\braced-game-engine-\src\_shotgun.cpp
+1732064005 source:c:\users\user\documents\github\braced-game-engine-\src\_shotgun.cpp
 	"_Shotgun.h"
 
-1731555193 c:\users\user\documents\github\braced-game-engine-\include\_shotgun.h
+1732064004 c:\users\user\documents\github\braced-game-engine-\include\_shotgun.h
 	"_Common.h"
 	"_Models.h"
 
@@ -386,7 +386,7 @@
 1731555195 source:c:\users\user\documents\github\braced-game-engine-\src\_sounds.cpp
 	"_Sounds.h"
 
-1731555192 source:c:\users\user\documents\github\braced-game-engine-\src\_terraingenerator.cpp
+1732064005 source:c:\users\user\documents\github\braced-game-engine-\src\_terraingenerator.cpp
 	"_TerrainGenerator.h"
 
 1731555192 source:c:\users\user\documents\github\braced-game-engine-\src\_textureloader.cpp
@@ -395,7 +395,7 @@
 1731555192 source:c:\users\user\documents\github\braced-game-engine-\src\_timer.cpp
 	"_Timer.h"
 
-1731559901 source:c:\users\user\documents\github\braced-game-engine-\src\_scene.cpp
+1732082487 source:c:\users\user\documents\github\braced-game-engine-\src\_scene.cpp
 	"_Scene.h"
 
 1731555192 source:c:\users\user\desktop\csci 191\braced-game-engine-\main.cpp
