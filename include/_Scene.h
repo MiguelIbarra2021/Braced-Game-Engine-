@@ -54,6 +54,12 @@ class Scene
         bool state_change;
         bool editmode;
 
+        //boolean values used to determine levels
+        bool doneLoading;
+        bool liveLevel11;
+        bool liveLevel12;
+        bool liveLevel13;
+
     protected:
 
     private:
