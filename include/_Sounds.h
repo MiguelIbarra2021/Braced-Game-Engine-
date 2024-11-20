@@ -13,6 +13,7 @@ class _Sounds
         virtual ~_Sounds();
 
         ISoundEngine *engine = createIrrKlangDevice();
+        ISound* snd;
 
         void playMusic(char *);
         void playSound(char *);

@@ -7,13 +7,19 @@ _KbMs* sysControl = new _KbMs();            // Mouse and Key Control
 _TerrainGenerator* terrain = new _TerrainGenerator();
 _ModelLoaderMD2* md = new _ModelLoaderMD2();
 _Camera* camera = new _Camera();
+_Sounds *snds = new _Sounds();
 
 int objects;                            // # of objects in Scene
 int lights;                            // # of lights in Scene
 
+GLfloat fogColor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+
 Scene::Scene()
 {
     // Initalize Variables
+    screenHeight = GetSystemMetrics(SM_CYSCREEN);
+    screenWidth =   GetSystemMetrics(SM_CXSCREEN);
+
     objects = 0;
     lights = 0;
     editmode = false;
@@ -48,13 +54,13 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
                 switch(transform_trigger)
                 {
                     case TRANSFORM:
-                        sysControl->keyPress(&terrain->position);
+                        sysControl->keyPress(&objectHierarchy[0]->position);
                         break;
                     case ROTATE:
-                        sysControl->keyPress(&terrain->rotation);
+                        sysControl->keyPress(&objectHierarchy[0]->rotation);
                         break;
                     case SCALE:
-                        sysControl->keyPress(&terrain->scale);
+                        sysControl->keyPress(&objectHierarchy[0]->scale);
                         break;
                 }
             }
@@ -69,6 +75,7 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
             break;
         case WM_LBUTTONDOWN:
             sysControl->mouseEventDown(LOWORD(lParam), HIWORD(lParam));
+            snds->playSound("sounds/Shoot.mp3");
             break;
         case WM_RBUTTONDOWN:
             sysControl->mouseEventDown(LOWORD(lParam), HIWORD(lParam));
@@ -86,7 +93,7 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
             sysControl->mouseEventUp();
             break;
         case WM_MOUSEMOVE:
-            //sysControl->mouseMove(objectHierarchy[0], LOWORD(lParam), HIWORD(lParam));
+            mouseMapping(LOWORD(lParam), HIWORD(lParam));
             break;
     }
 }
@@ -100,14 +107,54 @@ GLint Scene::initGL()   // Initalize Scene
     glDepthFunc(GL_LEQUAL);                 // LEqual -> <=; Depth Function Type
 
     glEnable(GL_COLOR_MATERIAL);
-    glEnable(GL_TEXTURE_2D);                // Enables textures in the scene
 
-    terrain->initTerrain("");
-    terrain->scale.x = terrain->scale.y = terrain->scale.z = 100;
-    insertObject("models/gun_color.png", "models/c.md2");
+    // Textures
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);   // PNG alpha
+
+    glEnable(GL_TEXTURE_2D);  //enable textures
+
+    // World
+    initFog();
+
+   //terrain->initTerrain("C:/Users/user/Desktop/CSCI 191/Braced-Game-Engine-/images/pond.png");   // Water?
+    terrain->initTerrain("images/pond.png");   // Water?
+    terrain->scale.x = 40;
+    terrain->scale.y = 1;
+    terrain->scale.z = 40;
+    terrain->position.z = 40;
+    terrain->position.y = -4;
+/*
+    // Shotgun Model
+    insertObject("C:/Users/user/Desktop/CSCI 191/Braced-Game-Engine-/models/gun_color.png", "C:/Users/user/Desktop/CSCI 191/Braced-Game-Engine-/models/C.md2");
+
+    // Duck Model
+    insertObject("C:/Users/user/Desktop/CSCI 191/Braced-Game-Engine-/models/gun_color.png", "C:/Users/user/Desktop/CSCI 191/Braced-Game-Engine-/models/duck/d.md2");
+
+    // Foliage
+    insertObject("", "C:/Users/user/Desktop/CSCI 191/Braced-Game-Engine-/models/bushes/ah.md2");
+*/
+
+    // Shotgun Model
+    insertObject("models/gun_color.png", "models/C.md2");
+
+    // Duck Model
+    insertObject("models/gun_color.png", "models/duck/d.md2");
+
+    // Foliage
+    insertObject("", "models/bushes/ah.md2");
+
+    objectHierarchy[0]->scale.x = 0.25;
+    objectHierarchy[0]->scale.y = 0.25;
+    objectHierarchy[0]->scale.z = 0.25;
+
+    objectHierarchy[0]->position.z = 7;
+    objectHierarchy[0]->position.y = -4;
 
     insertLight();
 
+
+    // Initalize Lights
     for(int i = 0; i < lights; i++)
     {
         switch(i + 1)
@@ -139,7 +186,13 @@ GLint Scene::initGL()   // Initalize Scene
         }
     }
 
+    // Camera
     camera->camInit();
+
+    // Sounds
+    snds->initSounds();
+    //snds->playMusic("C:/Users/user/Desktop/CSCI 191/Braced-Game-Engine-/sounds/Sonic Riders Zero Gravity Main Menu Theme.mp3");
+    snds->playMusic("sounds/Sonic Riders Zero Gravity Main Menu Theme.mp3");
 
     return true;
 }
@@ -153,19 +206,34 @@ GLint Scene::drawScene()
     if(state_change)
         t_switch();
 
-    // Scene
+    // Camera
     if(!camera->mode)
         camera->setUpCam();
     else
         camera->updateViewDirection();
 
+    // Scene
     glPushMatrix();
+        updateObjectRotation(&objectHierarchy[0]->rotation);
         objectHierarchy[0]->drawModel();
     glPopMatrix();
 
     glPushMatrix();
-        terrain->drawTerrain();
+        glDisable(GL_LIGHTING);
+        objectHierarchy[1]->drawModel();
+        glEnable(GL_LIGHTING);
     glPopMatrix();
+
+    glPushMatrix();
+        objectHierarchy[2]->drawModel();
+    glPopMatrix();
+
+    glPushMatrix();
+        //terrain->drawTerrain();
+    glPopMatrix();
+
+    objectHierarchy[1]->mdl->actionTrigger = objectHierarchy[1]->mdl->DYING;
+    objectHierarchy[1]->mdl->Actions();
 
     return true;
 
@@ -181,6 +249,35 @@ GLvoid Scene::resizeScene(GLsizei width, GLsizei height)
     gluPerspective(45, aspectRatio, 0.1, 2000);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+}
+
+// Temp Positon
+GLvoid Scene::mouseMapping(int x, int y) //x&y are mouse coords
+{
+    screenHeight = GetSystemMetrics(SM_CYSCREEN);
+    screenWidth =   GetSystemMetrics(SM_CXSCREEN);
+
+    GLint viewPort[4];
+    GLdouble modelViewM[16]; //modelView Matrix; 4x4 matrix???
+    GLdouble projectionM[16]; //projection matrix
+    GLfloat winX, winY, winZ;
+
+    float scale = 60*(screenWidth/screenHeight); //supposed to give us an estimation of mouse coords
+
+    glGetDoublev(GL_MODELVIEW_MATRIX, modelViewM); //gets values from arg1 and stores them in arg2
+    glGetDoublev(GL_PROJECTION_MATRIX, projectionM);
+    glGetIntegerv(GL_VIEWPORT, viewPort);
+
+    winX = (GLfloat)x;
+    winY = (GLfloat)(viewPort[3] - y);
+    glReadPixels(x,int(winY), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ); //takes all that bs and stores it into winZ
+
+    //init mouse coords
+    mouseX = (GLfloat)(x - screenWidth/2.0)/scale;
+    mouseY = (GLfloat)(screenHeight/2.0 - y)/scale;
+    mouseZ = -100.0;
+
+    gluUnProject(winX, winY, winZ, modelViewM, projectionM, viewPort, &mouseX, &mouseY, &mouseZ);
 }
 
 // Game Engine Functions
@@ -202,7 +299,7 @@ GLvoid Scene::insertObject(char* tex_file, char* mdl_file)             // Insert
             temp[i] = objectHierarchy[i];
 
         delete[] objectHierarchy;
-        _Models** objectHierarchy = new _Models*[objects + 1];
+        objectHierarchy = new _Models*[objects + 1];
 
         for(int i = 0; i < objects; i++)        // Transfer objects back to hierarchy
             objectHierarchy[i] = temp[i];
@@ -217,6 +314,7 @@ GLvoid Scene::insertObject(char* tex_file, char* mdl_file)             // Insert
     objects++;                                 // Objects in scene increased by one
 }
 
+// Game Engine Functions
 GLvoid Scene::insertObject(int sel)             // Inserts selected object into the scene; Tempory
 {
     if(objects == 0)                            // If Hierarchy is empty create a new one
@@ -281,4 +379,66 @@ GLvoid Scene::t_switch()
 {
     transform_trigger = static_cast<mode>((transform_trigger + 1) % (SCALE + 1));
     state_change = false;
+}
+
+GLvoid Scene::updateObjectRotation(vec3* target)
+{
+    // Calculate the direction vector
+    float directionX = mouseX - target->x;
+    float directionY = mouseY - target->y;
+    float directionZ = mouseZ - target->z;
+
+    // Normalize the direction vector
+    float length = sqrt(directionX * directionX + directionY * directionY + directionZ * directionZ);
+
+    //cout << length << endl;
+
+    if (length == 0)
+        return; // Avoid division by zero
+
+    directionX /= length;
+    directionY /= length;
+    directionZ /= length;
+
+    // Assume default forward vector is (0, 0, -1)
+    vec3 forward = { 0.0f, 0.0f, 1.0f };
+
+    // Calculate rotation axis using cross product
+    vec3 axis = {
+        forward.y * directionZ - forward.z * directionY,
+        forward.z * directionX - forward.x * directionZ,
+        forward.x * directionY - forward.y * directionX
+    };
+
+    // Normalize axis
+    float axisLength = sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z);
+
+    if (axisLength != 0)
+    {
+        axis.x /= axisLength;
+        axis.y /= axisLength;
+        axis.z /= axisLength;
+    }
+
+    // Calculate rotation angle using dot product
+    float dot = std::max(-1.0f, std::min(1.0f, forward.x * directionX + forward.y * directionY + forward.z * directionZ));
+    float angle = acos(dot) * (180.0f / 3.1415926); // Convert to degrees
+
+    // Update object's rotation (assuming object has a rotation field)
+    target->x = axis.x * angle;
+    target->y = axis.y * angle;
+    target->z = axis.z * angle;
+
+    //cout << "X: " << directionX << "Y: " << directionY << "Z: " << directionZ << endl;
+}
+
+GLvoid Scene::initFog()
+{
+    glEnable(GL_FOG); // Enable fog
+    glFogi(GL_FOG_MODE, GL_LINEAR); // Linear mode
+    glFogfv(GL_FOG_COLOR, fogColor); // Set fog color
+    glFogf(GL_FOG_DENSITY, 0.25f); // Set density (for GL_EXP or GL_EXP2)
+    glFogf(GL_FOG_START, 100.0f); // Set start distance (for GL_LINEAR)
+    glFogf(GL_FOG_END, 200.0f); // Set end distance (for GL_LINEAR)
+    glHint(GL_FOG_HINT, GL_DONT_CARE); // Let OpenGL choose the quality
 }

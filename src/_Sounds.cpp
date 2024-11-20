@@ -11,23 +11,6 @@ _Sounds::~_Sounds()
     engine->drop();
 }
 
-void _Sounds::playMusic(char *Filename)
-{
-    engine->play2D(Filename, true); //file will repeat
-}
-
-void _Sounds::playSound(char *Filename)
-{
-    if(!engine->isCurrentlyPlaying(Filename)){
-        engine->play2D(Filename, false, false); //file will only play it once
-    }
-}
-
-void _Sounds::pauseSound(char *Filename)
-{
-    engine->play2D(Filename, true, false); //?
-}
-
 int _Sounds::initSounds()
 {
     if(!engine)
@@ -39,3 +22,22 @@ int _Sounds::initSounds()
     return 1; //if all good
 
 }
+
+void _Sounds::playMusic(char *Filename)
+{
+    //engine->setSoundVolume(0.02); //worked, but changed volume for all sounds... which makes sense from the name...
+    engine->play2D(Filename, true); //file will repeat
+}
+
+void _Sounds::playSound(char *Filename)
+{
+    //if(!engine->isCurrentlyPlaying(Filename)){
+        engine->play2D(Filename, false, false); //file will only play it once
+    //}
+}
+
+void _Sounds::pauseSound(char *Filename)
+{
+    engine->play2D(Filename, true, false); //?
+}
+

@@ -111,11 +111,11 @@ int _ModelLoaderMD2::ReadMD2Model(const char* filename, struct md2_model_t* mdl)
       cout<<mdl->frames[i].name<<endl;
     }
 
-    for(int i =0; i<mdl->header.num_skins; i++){
+    /*for(int i =0; i<mdl->header.num_skins; i++){
         cout<<mdl->skins[i].name<<endl;
         myTex->loadTexture("models/Tekk/blade.jpg");
         mdl->tex_id = myTex->tex;
-    }
+    }*/
      EndFrame = mdl->header.num_frames-1;
 
   fclose (fp);
@@ -283,3 +283,29 @@ void _ModelLoaderMD2::Draw()
    RenderFrameItpWithGLCmds (n, interp, &md2file);
 }
 
+void _ModelLoaderMD2::Actions()
+{
+    switch(actionTrigger)
+    {
+        // Gun
+        case SHOOT:
+
+            break;
+        case RELOAD:
+
+            break;
+        // Duck
+        case FLY:
+            StartFrame = 0;
+            EndFrame = 60;
+            break;
+        case DYING:
+            StartFrame = 65;
+            EndFrame = 70;
+            break;
+        case DEAD:
+            StartFrame = 75;
+            EndFrame = 80;
+            break;
+    }
+}

@@ -6,6 +6,8 @@ _Camera::_Camera()
     radius = 100.0f; // Initial radius (distance from the target)
     angleX = 0.0f;   // Initial angle around the Y-axis
     angleY = 0.0f;   // Initial vertical angle
+
+    mode = true;
 }
 
 _Camera::~_Camera()
