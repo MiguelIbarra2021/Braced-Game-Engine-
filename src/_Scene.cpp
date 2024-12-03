@@ -6,6 +6,8 @@ _KbMs* sysControl = new _KbMs();            // Mouse and Key Control
 _TerrainGenerator* terrain = new _TerrainGenerator();
 _Camera* camera = new _Camera();
 _Collision* hit = new _Collision();
+_Skybox* sky = new _Skybox();
+_Sounds *snds = new _Sounds();
 
 // Shotgun
 _Projectile bullets[20];
@@ -24,7 +26,7 @@ int lights;                            // # of lights in Scene
 
 bool shot = false;
 
-GLfloat fogColor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+GLfloat fogColor[4];
 
 Scene::Scene()
 {
@@ -187,6 +189,8 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
             bullets[mouseClicks].live = true;
             mouseClicks = (mouseClicks+1)%20;
 
+            snds->playSound("sounds/Shoot.mp3");
+
             if(shot)
             {
                 //Launch_Duck();
@@ -224,32 +228,52 @@ GLint Scene::initGL()   // Initalize Scene
     glEnable(GL_TEXTURE_2D);  //enable textures
 
     // World
-    //initFog();
+    initFog();
 
     terrain->initTerrain("images/pond.png");   // Water?
     terrain->scale.x = 40;
     terrain->scale.y = 1;
     terrain->scale.z = 40;
     terrain->position.z = 40;
-    terrain->position.y = -4;
+    terrain->position.y = -6;
 
     // Shotgun Model
     insertObject("models/gun_color.png", "models/c.md2");
 
     // Initialize the appropriate skybox texture
-    if (liveLevel11) {
+    if (liveLevel11)
+    {
+        fogColor[0] = 1.0f;
+        fogColor[1] = 1.0f;
+        fogColor[2] = 1.0f;
+        fogColor[3] = 0.5f;
         sky->skyBoxInit("images/forestMorning.jfif");
-    } else if (liveLevel12) {
+
+    }
+    else if (liveLevel12)
+    {
+        fogColor[0] = 0.8f;
+        fogColor[1] = 0.5f;
+        fogColor[2] = 0.5f;
+        fogColor[3] = 0.5f;
         sky->skyBoxInit("images/forestEvening.jfif");
-    } else if (liveLevel13) {
+    }
+    else if (liveLevel13)
+    {
+        fogColor[0] = 0.0f;
+        fogColor[1] = 0.0f;
+        fogColor[2] = 0.0f;
+        fogColor[3] = 0.5f;
         sky->skyBoxInit("images/forestNight.jfif");
     }
 
     // Duck Model
-    insertObject("models/gun_color.png", "models/duck/d.md2");
+    insertObject("models/duck/Duck.png", "models/duck/d.md2");
 
     // Foliage
-    insertObject("", "models/bushes/ah.md2");
+    //insertObject("C:\Github\Braced-Game-Engine-\models\bushes\texture_gradient.png", "models/bushes/forest_nature_set_all_in.md2");
+    insertObject("models/bushes/texture_gradient.png.002.jpg", "models/bushes/ah.md2");
+    insertObject("models/bushes/texture_gradient.png.002.jpg", "models/bushes/ah.md2");
 
     objectHierarchy[0]->scale.x = 0.25;
     objectHierarchy[0]->scale.y = 0.25;
@@ -263,13 +287,13 @@ GLint Scene::initGL()   // Initalize Scene
     // Bullets
     for(int i = 0; i < 20; i++)
     {
-        bullets[i].initProjectile(nullptr);
+        bullets[i].initProjectile(nullptr, nullptr);
     }
 
     // Ducks
     for(int i = 0; i < 4; i++)
     {
-        ducks[i].initProjectile("models/duck/d.md2");
+        ducks[i].initProjectile("models/duck/Duck.png", "models/duck/d.md2");
         ducks[i].mdl->actionTrigger = ducks[i].mdl->FLY;
         ducks[i].mdl->Actions();
     }
@@ -309,6 +333,10 @@ GLint Scene::initGL()   // Initalize Scene
     // Camera
     camera->camInit();
 
+    snds->initSounds();
+    //snds->playMusic("C:/Users/user/Desktop/CSCI 191/Braced-Game-Engine-/sounds/Sonic Riders Zero Gravity Main Menu Theme.mp3");
+    snds->playMusic("sounds/Super Smash Bros. 4 For Wii U OST - Duck Hunt Medley.mp3");
+
     return true;
 }
 
@@ -340,21 +368,58 @@ GLint Scene::drawScene()
     glPopMatrix();
 
     glPushMatrix();
-        //objectHierarchy[2]->drawModel();
+        objectHierarchy[2]->position.x = -15;
+        objectHierarchy[2]->position.y = -5;
+        objectHierarchy[2]->position.z = 0;
+
+        objectHierarchy[2]->drawModel();
     glPopMatrix();
 
     glPushMatrix();
-        //terrain->drawTerrain();
+        objectHierarchy[3]->position.x = -25;
+        objectHierarchy[3]->position.y = -5;
+        objectHierarchy[3]->position.z = 0;
+
+        objectHierarchy[3]->drawModel();
+    glPopMatrix();
+
+    glPushMatrix();
+        terrain->drawTerrain();
     glPopMatrix();
 
     objectHierarchy[1]->mdl->actionTrigger = objectHierarchy[1]->mdl->FLY;
     objectHierarchy[1]->mdl->Actions();
+
     // Update skybox if level has changed
-    if (liveLevel11) {
+    if (liveLevel11)
+    {
+        initFog();
+
+        fogColor[0] = 0.33f;
+        fogColor[1] = 0.33f;
+        fogColor[2] = 0.53f;
+        fogColor[3] = 1.0f;
         sky->skyBoxInit("images/forestMorning.jfif");
-    } else if (liveLevel12) {
+
+    }
+    else if (liveLevel12)
+    {
+        initFog();
+
+        fogColor[0] = 0.8f;
+        fogColor[1] = 0.5f;
+        fogColor[2] = 0.5f;
+        fogColor[3] = 0.5f;
         sky->skyBoxInit("images/forestEvening.jfif");
-    } else if (liveLevel13) {
+    }
+    else if (liveLevel13)
+    {
+        initFog();
+
+        fogColor[0] = 0.0f;
+        fogColor[1] = 0.0f;
+        fogColor[2] = 0.0f;
+        fogColor[3] = 0.5f;
         sky->skyBoxInit("images/forestNight.jfif");
     }
 
@@ -367,9 +432,7 @@ GLint Scene::drawScene()
     {
         for(int j = 0; j < 4; j++)
             if(hit->isSphereCollision(bullets[i].pos, ducks[j].pos, 0.6, 1.4, 0.4))
-            {
                 Kill_Duck(j);
-            }
 
         bullets[i].drawProjectile(false);
         bullets[i].ProjectileAction();
@@ -607,23 +670,28 @@ GLvoid Scene::updateObjectRotation(vec3* object, vec3* target)
 
     //cout << "X: " << directionX << "Y: " << directionY << "Z: " << directionZ << endl;
 }
-/*
+
 GLvoid Scene::initFog()
 {
-    glEnable(GL_FOG); // Enable fog
-    glFogi(GL_FOG_MODE, GL_LINEAR); // Linear mode
-    glFogfv(GL_FOG_COLOR, fogColor); // Set fog color
-    glFogf(GL_FOG_DENSITY, 0.19f); // Set density (for GL_EXP or GL_EXP2)
-    glFogf(GL_FOG_START, 100.0f); // Set start distance (for GL_LINEAR)
-    glFogf(GL_FOG_END, 200.0f); // Set end distance (for GL_LINEAR)
-    glHint(GL_FOG_HINT, GL_DONT_CARE); // Let OpenGL choose the quality
+    glEnable(GL_FOG);
+    glFogi(GL_FOG_MODE, GL_EXP2); // Choose a fog mode (e.g., GL_EXP, GL_EXP2, or GL_LINEAR)
+    glFogfv(GL_FOG_COLOR, fogColor); // Use the fogColor with alpha
+    glFogf(GL_FOG_DENSITY, 0.01f);    // Adjust density for desired thickness
+    glHint(GL_FOG_HINT, GL_NICEST);  // Nicest quality
+    glFogf(GL_FOG_START, 1.0f);      // Start distance (for GL_LINEAR)
+    glFogf(GL_FOG_END, 100.0f);      // End distance (for GL_LINEAR)
 }
 
 GLvoid Scene::Automatic_Launcher()
 {
     for(int i = 0; i < 4; i++)
+    {
+        if(ducks[i].pos.y < -20)
+            ducks[i].actionTrigger = ducks[i].READY;
+
         if(ducks[i].pos.z > desPos[i].z - 30 || ducks[i].actionTrigger == ducks[i].READY)
             Launch_Duck(i);
+    }
 }
 
 GLvoid Scene::Launch_Duck(int current_duck)
@@ -648,7 +716,7 @@ GLvoid Scene::Launch_Duck(int current_duck)
 
     ducks[current_duck].live = true;
 
-    cout << "spawned" << endl;
+    snds->playSound("sounds/Duck_Quack.mp3");
 
     //active_duck = (active_duck + 1) % 4;
 }
@@ -658,6 +726,7 @@ GLvoid Scene::Kill_Duck(int duck)
     ducks[duck].actionTrigger = ducks[active_duck].DEAD;
     ducks[duck].rot.x = 90;
 
+    snds->playSound("sounds/duck_dying.mp3");
+
     //active_duck = (active_duck + 1) % 4;
 }
-}*/

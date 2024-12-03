@@ -14,6 +14,8 @@
 #include "_Collision.h"
 #include "_Camera.h"
 #include "_Projectile.h"
+#include "_Skybox.h"
+#include "_Sounds.h"
 
 class Scene
 {

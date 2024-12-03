@@ -15,8 +15,8 @@ GLvoid _Models::initModel(char* texture)
 
 GLvoid _Models::initModel(char* texture, char* model)
 {
-    tex->loadTexture(texture);
-    mdl->initModel(model);
+    //tex->loadTexture(texture);
+    mdl->initModel(texture, model);
 }
 
 GLvoid _Models::drawModel()
@@ -32,6 +32,7 @@ GLvoid _Models::drawModel()
     glRotatef(rotation.y, 0, 1, 0);
     glRotatef(rotation.z, 0, 0, 1);
 
+    tex->bindTexture();
     mdl->Draw();
 }
 

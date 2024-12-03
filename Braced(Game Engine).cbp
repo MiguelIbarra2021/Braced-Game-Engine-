@@ -38,6 +38,7 @@
 		</Compiler>
 		<Linker>
 			<Add library="../../Users/migue/OneDrive/Desktop/CSCI 191-T/common/lib/libSOIL.a" />
+			<Add library="../../Users/migue/OneDrive/Desktop/CSCI 191-T/common/lib/libirrKlang.a" />
 			<Add library="glut32" />
 			<Add library="opengl32" />
 			<Add library="glu32" />
@@ -57,6 +58,7 @@
 		<Unit filename="include/_Scene.h" />
 		<Unit filename="include/_Shotgun.h" />
 		<Unit filename="include/_Skybox.h" />
+		<Unit filename="include/_Sounds.h" />
 		<Unit filename="include/_TerrainGenerator.h" />
 		<Unit filename="include/_TextureLoader.h" />
 		<Unit filename="include/_Timer.h" />
@@ -71,6 +73,7 @@
 		<Unit filename="src/_Scene.cpp" />
 		<Unit filename="src/_Shotgun.cpp" />
 		<Unit filename="src/_Skybox.cpp" />
+		<Unit filename="src/_Sounds.cpp" />
 		<Unit filename="src/_TerrainGenerator.cpp" />
 		<Unit filename="src/_TextureLoader.cpp" />
 		<Unit filename="src/_Timer.cpp" />

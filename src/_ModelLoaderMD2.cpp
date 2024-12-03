@@ -52,7 +52,7 @@ void _ModelLoaderMD2::FreeModel(struct md2_model_t* mdl)
 }
 
 
-int _ModelLoaderMD2::ReadMD2Model(const char* filename, struct md2_model_t* mdl)
+int _ModelLoaderMD2::ReadMD2Model(char* tex_file, const char* filename, struct md2_model_t* mdl)
 {
    FILE *fp;
 
@@ -108,14 +108,13 @@ int _ModelLoaderMD2::ReadMD2Model(const char* filename, struct md2_model_t* mdl)
       fread (mdl->frames[i].name, sizeof (char), 16, fp);
       fread (mdl->frames[i].verts, sizeof (struct md2_vertex_t),mdl->header.num_vertices, fp);
 
-      cout<<mdl->frames[i].name<<endl;
+      //cout<<mdl->frames[i].name<<endl;
     }
 
-    /*for(int i =0; i<mdl->header.num_skins; i++){
-        cout<<mdl->skins[i].name<<endl;
-        myTex->loadTexture("models/Tekk/blade.jpg");
+    for(int i =0; i<mdl->header.num_skins; i++){
+        myTex->loadTexture(tex_file);
         mdl->tex_id = myTex->tex;
-    }*/
+    }
      EndFrame = mdl->header.num_frames-1;
 
   fclose (fp);
@@ -249,21 +248,16 @@ void _ModelLoaderMD2::Animate(int start, int end, int* frame, float* interp)
     }
 }
 
-void _ModelLoaderMD2::initModel(const char* filename)
+void _ModelLoaderMD2::initModel(char* file, const char* filename)
 {
      /* Load MD2 model file */
-    if (!ReadMD2Model (filename, &md2file))
+    if (!ReadMD2Model (file, filename, &md2file))
     exit (EXIT_FAILURE);
 }
 
 
 void _ModelLoaderMD2::Draw()
 {
-  static int n = 0; /* The current frame */
-  static float interp = 0.0;
-  static double curent_time = 0;
-  static double last_time = 0;
-
   last_time = curent_time;
   curent_time = (double)glutGet (GLUT_ELAPSED_TIME) / 1000.0;
 

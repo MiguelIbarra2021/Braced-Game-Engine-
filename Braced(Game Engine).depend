@@ -12,7 +12,7 @@
 	<windows.h>
 	<gl/gl.h>
 
-1724715331 c:\users\migue\onedrive\desktop\csci 191-t\common\include\gl\glut.h
+1732905292 c:\users\migue\onedrive\desktop\csci 191-t\common\include\gl\glut.h
 	<windows.h>
 	<stdlib.h>
 	<GL/gl.h>
@@ -107,7 +107,7 @@
 	"_Common.h"
 	<SOIL.h>
 
-1732142347 c:\github\braced-game-engine-\include\_scene.h
+1732145968 c:\github\braced-game-engine-\include\_scene.h
 	<vector>
 	"_Scene.h"
 	"_LightSetup.h"
@@ -118,13 +118,15 @@
 	"_Collision.h"
 	"_Camera.h"
 	"_Projectile.h"
+	"_Skybox.h"
+	"_Sounds.h"
 
 1731545406 c:\github\braced-game-engine-\include\_models.h
 	<_Common.h>
 	<_TextureLoader.h>
 	<_ModelLoaderMD2.h>
 
-1732141969 source:c:\github\braced-game-engine-\src\_scene.cpp
+1733194265 source:c:\github\braced-game-engine-\src\_scene.cpp
 	"_Scene.h"
 
 1731545406 source:c:\github\braced-game-engine-\src\_timer.cpp
@@ -133,10 +135,10 @@
 1731545406 c:\github\braced-game-engine-\include\_timer.h
 	"_Common.h"
 
-1731545406 source:c:\github\braced-game-engine-\src\_models.cpp
+1732923267 source:c:\github\braced-game-engine-\src\_models.cpp
 	"_Models.h"
 
-1731545406 source:c:\github\braced-game-engine-\src\_skybox.cpp
+1732143435 source:c:\github\braced-game-engine-\src\_skybox.cpp
 	"_Skybox.h"
 
 1731545406 c:\github\braced-game-engine-\include\_skybox.h
@@ -157,14 +159,14 @@
 	<_Common.h>
 	<_TextureLoader.h>
 
-1731979148 c:\github\braced-game-engine-\include\_modelloadermd2.h
+1732923804 c:\github\braced-game-engine-\include\_modelloadermd2.h
 	<_Common.h>
 	<_TextureLoader.h>
 	"Anorms.h"
 
 1731545406 c:\github\braced-game-engine-\include\anorms.h
 
-1732126808 source:c:\github\braced-game-engine-\src\_modelloadermd2.cpp
+1733194200 source:c:\github\braced-game-engine-\src\_modelloadermd2.cpp
 	"_ModelLoaderMD2.h"
 
 1731545406 c:\github\braced-game-engine-\include\_camera.h
@@ -181,12 +183,116 @@
 	"_Common.h"
 	"_Models.h"
 
-1732141954 source:c:\github\braced-game-engine-\src\_projectile.cpp
+1732923848 source:c:\github\braced-game-engine-\src\_projectile.cpp
 	"_Projectile.h"
 
-1732130006 c:\github\braced-game-engine-\include\_projectile.h
+1733194414 c:\github\braced-game-engine-\include\_projectile.h
 	"_Common.h"
 	"_TextureLoader.h"
 	"_ModelLoaderMD2.h"
 	"_Timer.h"
+
+1732143775 c:\github\braced-game-engine-\include\_sounds.h
+	"SNDS/irrKlang.h"
+	"_Common.h"
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\irrklang.h
+	"ik_irrKlangTypes.h"
+	"ik_vec3d.h"
+	"ik_IRefCounted.h"
+	"ik_IVirtualRefCounted.h"
+	"ik_ESoundOutputDrivers.h"
+	"ik_ESoundEngineOptions.h"
+	"ik_EStreamModes.h"
+	"ik_SAudioStreamFormat.h"
+	"ik_ISoundEngine.h"
+	"ik_ISoundSource.h"
+	"ik_ISound.h"
+	"ik_IAudioStream.h"
+	"ik_IAudioStreamLoader.h"
+	"ik_ISoundEffectControl.h"
+	"ik_ISoundStopEventReceiver.h"
+	"ik_IFileFactory.h"
+	"ik_IFileReader.h"
+	"ik_ISoundDeviceList.h"
+	"ik_IAudioRecorder.h"
+	"ik_ISoundMixedOutputReceiver.h"
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_irrklangtypes.h
+	<wchar.h>
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_vec3d.h
+	<math.h>
+	"ik_irrKlangTypes.h"
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_irefcounted.h
+	"ik_irrKlangTypes.h"
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_ivirtualrefcounted.h
+	"ik_irrKlangTypes.h"
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_esoundoutputdrivers.h
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_esoundengineoptions.h
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_estreammodes.h
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_saudiostreamformat.h
+	"ik_IRefCounted.h"
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_isoundengine.h
+	"ik_IRefCounted.h"
+	"ik_vec3d.h"
+	"ik_ISoundSource.h"
+	"ik_ISound.h"
+	"ik_EStreamModes.h"
+	"ik_IFileFactory.h"
+	"ik_ISoundMixedOutputReceiver.h"
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_isoundsource.h
+	"ik_IVirtualRefCounted.h"
+	"ik_vec3d.h"
+	"ik_EStreamModes.h"
+	"ik_SAudioStreamFormat.h"
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_isound.h
+	"ik_IVirtualRefCounted.h"
+	"ik_ISoundEffectControl.h"
+	"ik_vec3d.h"
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_isoundeffectcontrol.h
+	"ik_IVirtualRefCounted.h"
+	"ik_vec3d.h"
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_ifilefactory.h
+	"ik_IRefCounted.h"
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_isoundmixedoutputreceiver.h
+	"ik_IRefCounted.h"
+	"ik_SAudioStreamFormat.h"
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_iaudiostream.h
+	"ik_IRefCounted.h"
+	"ik_SAudioStreamFormat.h"
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_iaudiostreamloader.h
+	"ik_IRefCounted.h"
+	"ik_IFileReader.h"
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_ifilereader.h
+	"ik_IRefCounted.h"
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_isoundstopeventreceiver.h
+	"ik_IRefCounted.h"
+	"ik_SAudioStreamFormat.h"
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_isounddevicelist.h
+	"ik_IRefCounted.h"
+
+1731548136 c:\users\migue\onedrive\desktop\csci 191-t\common\include\snds\ik_iaudiorecorder.h
+	"ik_IRefCounted.h"
+	"ik_ISoundSource.h"
+
+1732143775 source:c:\github\braced-game-engine-\src\_sounds.cpp
+	"_Sounds.h"
 
