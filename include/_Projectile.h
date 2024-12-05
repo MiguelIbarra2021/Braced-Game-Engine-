@@ -35,9 +35,11 @@ class _Projectile
 
      void initProjectile(char *);
      void drawProjectile(bool is_model);
-     void ProjectileAction();
+     void ProjectileAction(/*float*/);
 
      int actionTrigger = READY;
+     int projSpeed = 0; //Projectile speed
+
 
     protected:
 

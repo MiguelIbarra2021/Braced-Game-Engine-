@@ -1,5 +1,7 @@
 #include "_Scene.h"
 
+const int max_Ducks = 4; //max Ducks (for this Round... >:) )
+
 _LightSetup** lightHierarchy = nullptr;     // Allows for multiple seperate lights
 _LightSetup* myLight = new _LightSetup();   // Original Light
 _Models** objectHierarchy = nullptr;        // Hierarchy of objects
@@ -18,7 +20,7 @@ _Projectile bullets[20];
 vec3 desPos[4];   // Destination
 vec3 lanPos[4];   // Launch Position
 vec3 lanRot[4];   // Launch Rotation
-_Projectile ducks[4];
+_Projectile ducks[max_Ducks];
 
 int active_duck = 0;
 
@@ -196,7 +198,7 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
             bullets[mouseClicks].des.y = mouseY;
             bullets[mouseClicks].des.z = mouseZ;
 
-            bullets[mouseClicks].t = 0;
+            bullets[mouseClicks].t = 0; // where the bullet is heading
             bullets[mouseClicks].actionTrigger = bullets[mouseClicks].SHOOT;
             bullets[mouseClicks].live = true;
             mouseClicks = (mouseClicks+1)%20;
@@ -291,11 +293,16 @@ GLint Scene::initGL()   // Initalize Scene
     // Bullets
     for(int i = 0; i < 20; i++)
     {
+<<<<<<< Updated upstream
         bullets[i].initProjectile(nullptr);
+=======
+        bullets[i].initProjectile(nullptr, nullptr);
+        bullets[i].projSpeed = 1;
+>>>>>>> Stashed changes
     }
 
     // Ducks
-    for(int i = 0; i < 4; i++)
+    for(int i = 0; i < max_Ducks; i++)
     {
         ducks[i].initProjectile("models/duck/d.md2");
         ducks[i].mdl->actionTrigger = ducks[i].mdl->FLY;
@@ -414,7 +421,7 @@ GLint Scene::drawScene()
             }
 
         bullets[i].drawProjectile(false);
-        bullets[i].ProjectileAction();
+        bullets[i].ProjectileAction(/*0.5*/);
     }
 
     for(int i=0; i < 4; i++)
@@ -631,6 +638,7 @@ GLvoid Scene::initFog()
 
 void Scene::Launch_Duck()
 {
+<<<<<<< Updated upstream
     updateObjectRotation(&lanRot[active_duck], &desPos[active_duck]);
 
     ducks[active_duck].src.x = lanPos[active_duck].x;
@@ -640,6 +648,22 @@ void Scene::Launch_Duck()
     ducks[active_duck].rot.x = lanRot[active_duck].x;
     ducks[active_duck].rot.y = lanRot[active_duck].y;
     ducks[active_duck].rot.z = lanRot[active_duck].z;
+=======
+    int speed = 8;
+    for(int i = 0; i < 4; i++)
+    {
+        if(ducks[i].pos.y < -20)
+            ducks[i].actionTrigger = ducks[i].READY;
+
+        if(ducks[i].pos.z > desPos[i].z - 30 || ducks[i].actionTrigger == ducks[i].READY)
+            Launch_Duck(i, speed);
+    }
+}
+
+GLvoid Scene::Launch_Duck(int current_duck, int duck_speed)
+{
+    updateObjectRotation(&lanRot[current_duck], &desPos[current_duck]);
+>>>>>>> Stashed changes
 
     ducks[active_duck].des.x = desPos[active_duck].x;
     ducks[active_duck].des.y = desPos[active_duck].y;
@@ -649,7 +673,12 @@ void Scene::Launch_Duck()
 
     ducks[active_duck].actionTrigger = ducks[active_duck].SHOOT;
 
+<<<<<<< Updated upstream
     ducks[active_duck].live = true;
+=======
+    ducks[current_duck].t = 0.0f; //do not touch this LMAO
+    ducks[current_duck].projSpeed = duck_speed;
+>>>>>>> Stashed changes
 
     cout << "spawned" << endl;
 

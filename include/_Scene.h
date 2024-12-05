@@ -41,8 +41,14 @@ class Scene
         GLvoid insertObject(char* tex_file, char* mdl_file); // Custom Models
         GLvoid insertObject(int);                           // Premade
 
+<<<<<<< Updated upstream
         GLvoid Launch_Duck(); //updated
         GLvoid Kill_Duck(int); //updated
+=======
+        GLvoid Automatic_Launcher();
+        GLvoid Launch_Duck(int, int);
+        GLvoid Kill_Duck(int duck);
+>>>>>>> Stashed changes
 
         GLvoid insertLight();
 

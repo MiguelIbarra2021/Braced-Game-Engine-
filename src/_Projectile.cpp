@@ -16,7 +16,7 @@ void _Projectile::initProjectile(char* fileName)
     mdl->initModel(fileName);
 
     pos.x = 0; pos.y = 0; pos.z = 0;
-    t = 0;
+    t = 0.0;
     des.x = 0; des.y = 20.0; des.z = -50.0;
     src.x = 0.0; src.y = 0.0; src.z = 0.0;
     live = false;
@@ -46,7 +46,7 @@ void _Projectile::drawProjectile(bool is_model)
     glEnable(GL_TEXTURE_2D);
 }
 
-void _Projectile::ProjectileAction()
+void _Projectile::ProjectileAction(/*float speed*/)
 {
     switch(actionTrigger)
     {
@@ -62,11 +62,11 @@ void _Projectile::ProjectileAction()
             //live = 0; //false
             //t = 0;
             //actionTrigger = 0;
-            mdl->actionTrigger = mdl->DEAD;
+            mdl->actionTrigger = mdl->DEAD; //plays dying animation
 
             des.x = pos.x;
             des.z = pos.z;
-            des.y = pos.y - 100;
+            des.y = pos.y - 100; //duck instantly thrown out, but animation doesn't follow hurt/hit-box position??
 
             if(clock() - myTime->startTime > 2)
                 {
@@ -86,14 +86,17 @@ void _Projectile::ProjectileAction()
             //live = true;
             if(live)
             {
-                mdl->actionTrigger = mdl->FLY;
+                mdl->actionTrigger = mdl->FLY; //plays flying animation
 
-                if(clock() - myTime->startTime > 10)
+                if(clock() - myTime->startTime > projSpeed)
                 {
                     if(t < 1) t = 0.001; else actionTrigger = READY;
                     pos.x = src.x + t*(des.x - src.x);
+                        //cout << "X POSITION: " << pos.x << endl;
                     pos.y = src.y + t*(des.y - src.y);
+                        //cout << "Y POSITION: " << pos.y << endl;
                     pos.z = src.z + t*(des.z - src.z);
+                        //cout << "Z POSITION: " << pos.z << endl;
 
                     src.x = pos.x; src.y = pos.y; src.z = pos.z;
 
