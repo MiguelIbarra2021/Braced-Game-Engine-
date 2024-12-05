@@ -19,6 +19,7 @@ vec3 lanRot[4];   // Launch Rotation
 _Projectile ducks[4];
 
 int active_duck = 0;
+int bullets_left = 2;
 
 int mouseClicks;
 int objects;                            // # of objects in Scene
@@ -176,20 +177,29 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
         case WM_LBUTTONUP:
             sysControl->mouseEventUp();
 
-            bullets[mouseClicks].src.x = objectHierarchy[0]->position.x;
-            bullets[mouseClicks].src.y = objectHierarchy[0]->position.y;
-            bullets[mouseClicks].src.z = objectHierarchy[0]->position.z;
+            if(bullets_left > 0 && !objectHierarchy[0]->mdl->In_Animation)
+            {
+                objectHierarchy[0]->mdl->actionTrigger = objectHierarchy[0]->mdl->SHOOT;
 
-            bullets[mouseClicks].des.x = mouseX;
-            bullets[mouseClicks].des.y = mouseY;
-            bullets[mouseClicks].des.z = mouseZ;
+                bullets[mouseClicks].src.x = objectHierarchy[0]->position.x;
+                bullets[mouseClicks].src.y = objectHierarchy[0]->position.y;
+                bullets[mouseClicks].src.z = objectHierarchy[0]->position.z;
 
-            bullets[mouseClicks].t = 0;
-            bullets[mouseClicks].actionTrigger = bullets[mouseClicks].SHOOT;
-            bullets[mouseClicks].live = true;
-            mouseClicks = (mouseClicks+1)%20;
+                bullets[mouseClicks].des.x = mouseX;
+                bullets[mouseClicks].des.y = mouseY;
+                bullets[mouseClicks].des.z = mouseZ;
 
-            snds->playSound("sounds/Shoot.mp3");
+                bullets[mouseClicks].t = 0;
+                bullets[mouseClicks].actionTrigger = bullets[mouseClicks].SHOOT;
+                bullets[mouseClicks].live = true;
+                mouseClicks = (mouseClicks+1)%20;
+
+                snds->playSound("sounds/Shoot.mp3");
+
+                bullets_left--;
+
+                cout << bullets_left << endl;
+            }
 
             if(shot)
             {
@@ -238,7 +248,8 @@ GLint Scene::initGL()   // Initalize Scene
     terrain->position.y = -6;
 
     // Shotgun Model
-    insertObject("models/gun_color.png", "models/c.md2");
+    insertObject("models/gun_color.png", "models/shotgun.md2");
+    objectHierarchy[0]->mdl->actionTrigger = objectHierarchy[0]->mdl->IDLE;
 
     // Initialize the appropriate skybox texture
     if (liveLevel11)
@@ -282,12 +293,11 @@ GLint Scene::initGL()   // Initalize Scene
     objectHierarchy[0]->position.z = 7;
     objectHierarchy[0]->position.y = -4;
 
-    insertLight();
-
     // Bullets
     for(int i = 0; i < 20; i++)
     {
         bullets[i].initProjectile(nullptr, nullptr);
+        bullets[i].projectile_speed = 1;
     }
 
     // Ducks
@@ -340,10 +350,30 @@ GLint Scene::initGL()   // Initalize Scene
     return true;
 }
 
+void Scene::enableCelShading() {
+    // Setup lighting for cel shading
+    GLfloat lightPos[] = { 0.0f, 1.0f, 1.0f, 0.0f };
+    GLfloat diffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    GLfloat ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+
+    // Set material properties
+    GLfloat materialColor[] = { 1.0f, 0.5f, 0.0f, 1.0f };
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, materialColor);
+}
+
 GLint Scene::drawScene()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();           // Clear Matrices
+
+    enableCelShading();
 
     // Edit Mode State //
     if(state_change)
@@ -357,14 +387,20 @@ GLint Scene::drawScene()
 
     // Scene
     glPushMatrix();
+        //objectHierarchy[0]->mdl->Is_Shotgun = true;
         updateObjectRotation(&objectHierarchy[0]->rotation, nullptr);
+        objectHierarchy[0]->mdl->Actions();
         objectHierarchy[0]->drawModel();
     glPopMatrix();
 
+    if(bullets_left <= 0 && !objectHierarchy[0]->mdl->In_Animation)
+    {
+        objectHierarchy[0]->mdl->actionTrigger = objectHierarchy[0]->mdl->RELOAD;
+        bullets_left = 2;
+    }
+
     glPushMatrix();
-        glDisable(GL_LIGHTING);
         objectHierarchy[1]->drawModel();
-        glEnable(GL_LIGHTING);
     glPopMatrix();
 
     glPushMatrix();
@@ -447,7 +483,6 @@ GLint Scene::drawScene()
     }
 
     return true;
-
 }
 
 GLvoid Scene::resizeScene(GLsizei width, GLsizei height)

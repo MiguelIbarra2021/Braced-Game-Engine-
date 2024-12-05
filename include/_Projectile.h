@@ -27,6 +27,7 @@ class _Projectile
      char* model_file = nullptr;
 
      float t = 0.0; //parameter for the Projectile path
+     int projectile_speed = 10;
      bool live = true;
 
      enum{READY, //ready to shoot

@@ -24,6 +24,7 @@ class Scene
         virtual ~Scene();
 
         GLint initGL();
+        void enableCelShading();
         GLint drawScene();
         GLvoid resizeScene(GLsizei, GLsizei);
 

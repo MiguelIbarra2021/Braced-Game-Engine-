@@ -111,9 +111,10 @@ int _ModelLoaderMD2::ReadMD2Model(char* tex_file, const char* filename, struct m
       //cout<<mdl->frames[i].name<<endl;
     }
 
-    for(int i =0; i<mdl->header.num_skins; i++){
+    for(int i = 0; i < mdl->header.num_skins; i++){
         myTex->loadTexture(tex_file);
         mdl->tex_id = myTex->tex;
+        //cout << myTex->image << endl;
     }
      EndFrame = mdl->header.num_frames-1;
 
@@ -259,11 +260,17 @@ void _ModelLoaderMD2::initModel(char* file, const char* filename)
 void _ModelLoaderMD2::Draw()
 {
   last_time = curent_time;
-  curent_time = (double)glutGet (GLUT_ELAPSED_TIME) / 1000.0;
+  curent_time = (double)glutGet (GLUT_ELAPSED_TIME) / 250.0;
 
   /* Animate model from frames 0 to num_frames-1 */
   interp += 10 * (curent_time - last_time);
   Animate (StartFrame, EndFrame, &n, &interp);
+
+  if(In_Animation && n == EndFrame - 1)
+  {
+    In_Animation = false;
+    actionTrigger = IDLE;
+  }
 
   glTranslatef (0.0f, 0.0f, 0.0f);
   glRotatef (-90.0f, 1.0, 0.0, 0.0);
@@ -279,27 +286,51 @@ void _ModelLoaderMD2::Draw()
 
 void _ModelLoaderMD2::Actions()
 {
-    switch(actionTrigger)
+    //cout << actionTrigger << endl;
+
+    if(!In_Animation)
     {
-        // Gun
-        case SHOOT:
+        switch(actionTrigger)
+        {
+            // Gun
+            case IDLE:
+                StartFrame = 0;
+                EndFrame = 5;
 
-            break;
-        case RELOAD:
+                break;
+            case SHOOT:
+                StartFrame = 80;
+                EndFrame = 100;
 
-            break;
-        // Duck
-        case FLY:
-            StartFrame = 0;
-            EndFrame = 60;
-            break;
-        case DYING:
-            StartFrame = 65;
-            EndFrame = 70;
-            break;
-        case DEAD:
-            StartFrame = 75;
-            EndFrame = 80;
-            break;
+                In_Animation = true;
+                break;
+            case EMPTY_SHOOT:
+                StartFrame = 105;
+                EndFrame = 115;
+
+                In_Animation = true;
+                break;
+            case RELOAD:
+                StartFrame = 10;
+                EndFrame = 75;
+
+                cout << "Reload" << endl;
+
+                In_Animation = true;
+                break;
+            // Duck
+            case FLY:
+                StartFrame = 0;
+                EndFrame = 60;
+                break;
+            case DYING:
+                StartFrame = 65;
+                EndFrame = 70;
+                break;
+            case DEAD:
+                StartFrame = 75;
+                EndFrame = 80;
+                break;
+        }
     }
 }

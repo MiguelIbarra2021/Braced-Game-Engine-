@@ -35,7 +35,7 @@ void _Projectile::drawProjectile(bool is_model)
     // Color
     glColor3f(color.r, color.g, color.b); // Custom rgb
 
-    glDisable(GL_TEXTURE_2D);
+    //glDisable(GL_TEXTURE_2D);
     glPushMatrix();
         //if(actionTrigger == SHOOT) //Only draw when on the move
         if(live)
@@ -47,7 +47,6 @@ void _Projectile::drawProjectile(bool is_model)
 
             if(is_model)
             {
-                tex->bindTexture();
                 mdl->Draw();
                 mdl->Actions();
             }
@@ -55,7 +54,7 @@ void _Projectile::drawProjectile(bool is_model)
                 glutSolidSphere(0.5, 20, 20);
         }
     glPopMatrix();
-    glEnable(GL_TEXTURE_2D);
+    //glEnable(GL_TEXTURE_2D);
 }
 
 void _Projectile::ProjectileAction()
@@ -100,7 +99,7 @@ void _Projectile::ProjectileAction()
             {
                 mdl->actionTrigger = mdl->FLY;
 
-                if(clock() - myTime->startTime > 10)
+                if(clock() - myTime->startTime > projectile_speed)
                 {
                     if(t < 1) t = 0.001; else actionTrigger = READY;
                     pos.x = src.x + t*(des.x - src.x);

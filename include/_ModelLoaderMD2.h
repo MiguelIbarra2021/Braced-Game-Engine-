@@ -115,6 +115,7 @@ class _ModelLoaderMD2
           struct md2_glcmd_t *packet;
           struct md2_model_t md2file;
 
+          // Changed to fix animations
           int n = 0; /* The current frame */
           float interp = 0.0;
           double curent_time = 0;
@@ -128,9 +129,11 @@ class _ModelLoaderMD2
           void Draw();
           void FreeModel (struct md2_model_t *mdl);
 
+          bool In_Animation = false;
+          bool Is_Shotgun = false;
           void Actions();
 
-          enum {SHOOT, RELOAD, FLY, DYING, DEAD};
+          enum {IDLE, SHOOT, EMPTY_SHOOT, RELOAD, FLY, DYING, DEAD};
           int actionTrigger =0;
           int StartFrame =0;
           int EndFrame;
