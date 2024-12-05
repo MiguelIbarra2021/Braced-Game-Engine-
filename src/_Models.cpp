@@ -24,6 +24,7 @@ GLvoid _Models::drawModel()
     // Color
     glColor3f(color.r, color.g, color.b); // Custom rgb
 
+    glPushMatrix();
     // Translation goes first
     glTranslated(position.x, position.y, position.z);
 
@@ -32,8 +33,11 @@ GLvoid _Models::drawModel()
     glRotatef(rotation.y, 0, 1, 0);
     glRotatef(rotation.z, 0, 0, 1);
 
+    glScalef(scale.x, scale.y, scale.z);
+
     tex->bindTexture();
     mdl->Draw();
+    glPopMatrix();
 }
 
 GLvoid _Models::drawModel(int sel)

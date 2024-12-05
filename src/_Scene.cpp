@@ -223,7 +223,7 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
 
 GLint Scene::initGL()   // Initalize Scene
 {
-    glShadeModel(GL_SMOOTH);                // Smooth Rendering
+    glShadeModel(GL_FLAT);                // Smooth Rendering
     glClearColor(0, 0, 0, 0);               // BG Color
     glClearDepth(2.0f);                     // Test Depth Layer
     glEnable(GL_DEPTH_TEST);                // Activate Depth Test
@@ -240,10 +240,10 @@ GLint Scene::initGL()   // Initalize Scene
     // World
     initFog();
 
-    terrain->initTerrain("images/pond.png");   // Water?
-    terrain->scale.x = 40;
+    terrain->initTerrain("images/grass_base.jpg");   // Water?
+    terrain->scale.x = 200;
     terrain->scale.y = 1;
-    terrain->scale.z = 40;
+    terrain->scale.z = 200;
     terrain->position.z = 40;
     terrain->position.y = -6;
 
@@ -286,9 +286,12 @@ GLint Scene::initGL()   // Initalize Scene
     insertObject("models/bushes/texture_gradient.png.002.jpg", "models/bushes/ah.md2");
     insertObject("models/bushes/texture_gradient.png.002.jpg", "models/bushes/ah.md2");
 
-    objectHierarchy[0]->scale.x = 0.25;
-    objectHierarchy[0]->scale.y = 0.25;
-    objectHierarchy[0]->scale.z = 0.25;
+    insertObject("models/bushes/texture_gradient.png.002.jpg", "models/trees/tris.md2");
+    insertObject("models/bushes/texture_gradient.png.002.jpg", "models/trees/tris.md2");
+
+    objectHierarchy[0]->scale.x = 1;
+    objectHierarchy[0]->scale.y = 1;
+    objectHierarchy[0]->scale.z = 1;
 
     objectHierarchy[0]->position.z = 7;
     objectHierarchy[0]->position.y = -4;
@@ -408,6 +411,10 @@ GLint Scene::drawScene()
         objectHierarchy[2]->position.y = -5;
         objectHierarchy[2]->position.z = 0;
 
+        objectHierarchy[2]->scale.x = 1;
+        objectHierarchy[2]->scale.y = 1;
+        objectHierarchy[2]->scale.z = 1;
+
         objectHierarchy[2]->drawModel();
     glPopMatrix();
 
@@ -416,7 +423,36 @@ GLint Scene::drawScene()
         objectHierarchy[3]->position.y = -5;
         objectHierarchy[3]->position.z = 0;
 
+        objectHierarchy[3]->scale.x = 1;
+        objectHierarchy[3]->scale.y = 1;
+        objectHierarchy[3]->scale.z = 1;
+
         objectHierarchy[3]->drawModel();
+    glPopMatrix();
+
+    glPushMatrix();
+        objectHierarchy[4]->position.x = -90;
+        objectHierarchy[4]->position.y = -5;
+        objectHierarchy[4]->position.z =100;
+
+        objectHierarchy[4]->scale.x = 2;
+        objectHierarchy[4]->scale.y = 2;
+        objectHierarchy[4]->scale.z = 2;
+
+        objectHierarchy[4]->drawModel();
+    glPopMatrix();
+
+    glPushMatrix();
+        objectHierarchy[5]->position.x = 10;
+        objectHierarchy[5]->position.y = -5;
+        objectHierarchy[5]->position.z = 100;
+        //objectHierarchy[5]->rotation.y = 90;
+
+        objectHierarchy[5]->scale.x = 2;
+        objectHierarchy[5]->scale.y = 2;
+        objectHierarchy[5]->scale.z = 2;
+
+        objectHierarchy[5]->drawModel();
     glPopMatrix();
 
     glPushMatrix();
