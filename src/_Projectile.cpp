@@ -35,9 +35,7 @@ void _Projectile::drawProjectile(bool is_model)
     // Color
     glColor3f(color.r, color.g, color.b); // Custom rgb
 
-    //glDisable(GL_TEXTURE_2D);
     glPushMatrix();
-        //if(actionTrigger == SHOOT) //Only draw when on the move
         if(live)
         {
             glTranslatef(pos.x, pos.y, pos.z);
@@ -54,7 +52,6 @@ void _Projectile::drawProjectile(bool is_model)
                 glutSolidSphere(0.5, 20, 20);
         }
     glPopMatrix();
-    //glEnable(GL_TEXTURE_2D);
 }
 
 void _Projectile::ProjectileAction()

@@ -18,9 +18,9 @@ void _Skybox::skyBoxInit(char* fileName)
     tMax.x = tMax.y = 1;
     tMin.x = tMin.y = 0.0;
 
-    scale.x = 1700;
-    scale.y = 1700;
-    scale.z = 1700; //scaler value
+    scale.x = 100;
+    scale.y = 100;
+    scale.z = 100; //scaler value
 
     trans.x = trans.y = trans.z = 0; //Translation
     rot.x = rot.y = rot.z = 0; //Rotations
@@ -30,11 +30,13 @@ void _Skybox::skyBoxDraw()
 {
     glDisable(GL_LIGHTING); //depends on your skybox
 
-    glTranslatef(trans.x, trans.y, trans.z);
-    glRotatef(rot.x, 1,0,0);
-    glRotatef(rot.y, 0,1,0);
-    glRotatef(rot.z,0,0,1);
-    glScalef(scale.x, scale.y, scale.z);
+    glPushMatrix();
+        glTranslatef(trans.x, trans.y, trans.z);
+        glRotatef(rot.x, 1,0,0);
+        glRotatef(rot.y, 0,1,0);
+        glRotatef(rot.z,0,0,1);
+        glScalef(scale.x, scale.y, scale.z);
+    glPopMatrix();
 
    tex->bindTexture();
 

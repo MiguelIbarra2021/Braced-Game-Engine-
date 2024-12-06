@@ -16,6 +16,7 @@
 #include "_Projectile.h"
 #include "_Skybox.h"
 #include "_Sounds.h"
+#include "_RandomNumber.h"
 
 class Scene
 {
@@ -34,8 +35,17 @@ class Scene
         // Game Engine Functions
         GLvoid initFog();
 
+        GLvoid initDuck();
+
+        GLvoid initFoliage();
+        GLvoid drawFoliage();
+
+        GLvoid initShotgun();
+
+        GLvoid updateSkybox();
+
         GLvoid mouseMapping(int, int);
-        GLvoid updateObjectRotation(vec3* object, vec3* target);
+        GLvoid rotateTowards(vec3* object, vec3* target);
 
         GLvoid t_switch();
 

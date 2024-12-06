@@ -21,22 +21,21 @@ GLvoid _Models::initModel(char* texture, char* model)
 
 GLvoid _Models::drawModel()
 {
-    // Color
-    glColor3f(color.r, color.g, color.b); // Custom rgb
-
     glPushMatrix();
-    // Translation goes first
-    glTranslated(position.x, position.y, position.z);
+        // Color
+        glColor3f(color.r, color.g, color.b); // Custom rgb
+        // Translation goes first
+        glTranslated(position.x, position.y, position.z);
 
-    // Rotate on all 3 axis
-    glRotatef(rotation.x, 1, 0, 0);
-    glRotatef(rotation.y, 0, 1, 0);
-    glRotatef(rotation.z, 0, 0, 1);
+        // Rotate on all 3 axis
+        glRotatef(rotation.x, 1, 0, 0);
+        glRotatef(rotation.y, 0, 1, 0);
+        glRotatef(rotation.z, 0, 0, 1);
 
-    glScalef(scale.x, scale.y, scale.z);
+        glScalef(scale.x, scale.y, scale.z);
 
-    tex->bindTexture();
-    mdl->Draw();
+        tex->bindTexture();
+        mdl->Draw();
     glPopMatrix();
 }
 

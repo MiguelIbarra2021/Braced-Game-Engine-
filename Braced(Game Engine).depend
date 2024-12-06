@@ -71,9 +71,10 @@
 	<_Common.h>
 	<_Scene.h>
 
-1731545406 c:\github\braced-game-engine-\include\_common.h
+1733421673 c:\github\braced-game-engine-\include\_common.h
 	<string.h>
 	<cmath>
+	<vector>
 	<GL/glut.h>
 	<stdlib.h>
 	<iostream>
@@ -107,7 +108,7 @@
 	"_Common.h"
 	<SOIL.h>
 
-1733272059 c:\github\braced-game-engine-\include\_scene.h
+1733444263 c:\github\braced-game-engine-\include\_scene.h
 	<vector>
 	"_Scene.h"
 	"_LightSetup.h"
@@ -120,13 +121,14 @@
 	"_Projectile.h"
 	"_Skybox.h"
 	"_Sounds.h"
+	"_RandomNumber.h"
 
 1731545406 c:\github\braced-game-engine-\include\_models.h
 	<_Common.h>
 	<_TextureLoader.h>
 	<_ModelLoaderMD2.h>
 
-1733378297 source:c:\github\braced-game-engine-\src\_scene.cpp
+1733422439 source:c:\github\braced-game-engine-\src\_scene.cpp
 	"_Scene.h"
 
 1731545406 source:c:\github\braced-game-engine-\src\_timer.cpp
@@ -135,10 +137,10 @@
 1731545406 c:\github\braced-game-engine-\include\_timer.h
 	"_Common.h"
 
-1733378173 source:c:\github\braced-game-engine-\src\_models.cpp
+1733417630 source:c:\github\braced-game-engine-\src\_models.cpp
 	"_Models.h"
 
-1732143435 source:c:\github\braced-game-engine-\src\_skybox.cpp
+1733419018 source:c:\github\braced-game-engine-\src\_skybox.cpp
 	"_Skybox.h"
 
 1731545406 c:\github\braced-game-engine-\include\_skybox.h
@@ -183,7 +185,7 @@
 	"_Common.h"
 	"_Models.h"
 
-1733375181 source:c:\github\braced-game-engine-\src\_projectile.cpp
+1733422916 source:c:\github\braced-game-engine-\src\_projectile.cpp
 	"_Projectile.h"
 
 1733375157 c:\github\braced-game-engine-\include\_projectile.h
@@ -299,4 +301,10 @@
 1733271962 source:c:\github\braced-game-engine-\src\_celshader.cpp
 	"_Common.h"
 	<cmath>
+
+1733421659 c:\github\braced-game-engine-\include\_randomnumber.h
+	"_Common.h"
+
+1733421538 source:c:\github\braced-game-engine-\src\_randomnumber.cpp
+	"_RandomNumber.h"
 
