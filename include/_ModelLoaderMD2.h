@@ -115,11 +115,16 @@ class _ModelLoaderMD2
           struct md2_glcmd_t *packet;
           struct md2_model_t md2file;
 
-          int ReadMD2Model (const char *filename, struct md2_model_t *mdl);
+          int n = 0; /* The current frame */
+          float interp = 0.0;
+          double curent_time = 0;
+          double last_time = 0;
+
+          int ReadMD2Model (char* file, const char *filename, struct md2_model_t *mdl);
           void RenderFrame (int n, const struct md2_model_t *mdl);
           void RenderFrameItpWithGLCmds (int n, float interp, const struct md2_model_t *mdl);
           void Animate (int start, int end, int *frame, float *interp);
-          void initModel(const char *filename);
+          void initModel(char* file, const char *filename);
           void Draw();
           void FreeModel (struct md2_model_t *mdl);
 

@@ -177,11 +177,7 @@
 	<_Common.h>
 	<_Scene.h>
 
-<<<<<<< Updated upstream
-1732064002 c:\users\user\documents\github\braced-game-engine-\include\_common.h
-=======
 1731556060 c:\users\user\documents\github\braced-game-engine-\include\_common.h
->>>>>>> Stashed changes
 	<string.h>
 	<cmath>
 	<GL/glut.h>
@@ -197,11 +193,7 @@
 	<GL/gl.h>
 	<GL/glu.h>
 
-<<<<<<< Updated upstream
-1732066878 c:\users\user\documents\github\braced-game-engine-\include\_scene.h
-=======
 1731556060 c:\users\user\documents\github\braced-game-engine-\include\_scene.h
->>>>>>> Stashed changes
 	<vector>
 	"_Scene.h"
 	"_LightSetup.h"
@@ -226,11 +218,7 @@
 
 1726701387 c:\users\user\desktop\csci 191\common\include\soil.h
 
-<<<<<<< Updated upstream
-1732064004 c:\users\user\documents\github\braced-game-engine-\include\_modelloadermd2.h
-=======
 1731555193 c:\users\user\documents\github\braced-game-engine-\include\_modelloadermd2.h
->>>>>>> Stashed changes
 	<_Common.h>
 	<_TextureLoader.h>
 	"Anorms.h"
@@ -250,11 +238,7 @@
 	<_Common.h>
 	<_TextureLoader.h>
 
-<<<<<<< Updated upstream
-1732083607 c:\users\user\documents\github\braced-game-engine-\include\_sounds.h
-=======
 1731555195 c:\users\user\documents\github\braced-game-engine-\include\_sounds.h
->>>>>>> Stashed changes
 	"SNDS/irrKlang.h"
 	"_Common.h"
 
@@ -360,11 +344,7 @@
 
 1731555195 c:\users\user\documents\github\braced-game-engine-\include\__models.h
 
-<<<<<<< Updated upstream
-1732064005 source:c:\users\user\documents\github\braced-game-engine-\src\_camera.cpp
-=======
 1731555194 source:c:\users\user\documents\github\braced-game-engine-\src\_camera.cpp
->>>>>>> Stashed changes
 	"_Camera.h"
 
 1731555192 source:c:\users\user\documents\github\braced-game-engine-\src\_collision.cpp
@@ -373,37 +353,22 @@
 1731555192 c:\users\user\documents\github\braced-game-engine-\include\_collision.h
 	<_Common.h>
 
-<<<<<<< Updated upstream
-1732064005 source:c:\users\user\documents\github\braced-game-engine-\src\_kbms.cpp
-=======
 1731555194 source:c:\users\user\documents\github\braced-game-engine-\src\_kbms.cpp
->>>>>>> Stashed changes
 	"_KbMs.h"
 
 1731555192 source:c:\users\user\documents\github\braced-game-engine-\src\_lightsetup.cpp
 	"_LightSetup.h"
 
-<<<<<<< Updated upstream
-1732064005 source:c:\users\user\documents\github\braced-game-engine-\src\_modelloadermd2.cpp
-=======
 1731555194 source:c:\users\user\documents\github\braced-game-engine-\src\_modelloadermd2.cpp
->>>>>>> Stashed changes
 	"_ModelLoaderMD2.h"
 
 1731555194 source:c:\users\user\documents\github\braced-game-engine-\src\_models.cpp
 	"_Models.h"
 
-<<<<<<< Updated upstream
-1732064005 source:c:\users\user\documents\github\braced-game-engine-\src\_shotgun.cpp
-	"_Shotgun.h"
-
-1732064004 c:\users\user\documents\github\braced-game-engine-\include\_shotgun.h
-=======
 1731555194 source:c:\users\user\documents\github\braced-game-engine-\src\_shotgun.cpp
 	"_Shotgun.h"
 
 1731555193 c:\users\user\documents\github\braced-game-engine-\include\_shotgun.h
->>>>>>> Stashed changes
 	"_Common.h"
 	"_Models.h"
 
@@ -421,11 +386,7 @@
 1731555195 source:c:\users\user\documents\github\braced-game-engine-\src\_sounds.cpp
 	"_Sounds.h"
 
-<<<<<<< Updated upstream
-1732064005 source:c:\users\user\documents\github\braced-game-engine-\src\_terraingenerator.cpp
-=======
 1731555192 source:c:\users\user\documents\github\braced-game-engine-\src\_terraingenerator.cpp
->>>>>>> Stashed changes
 	"_TerrainGenerator.h"
 
 1731555192 source:c:\users\user\documents\github\braced-game-engine-\src\_textureloader.cpp
@@ -434,26 +395,15 @@
 1731555192 source:c:\users\user\documents\github\braced-game-engine-\src\_timer.cpp
 	"_Timer.h"
 
-<<<<<<< Updated upstream
-1732082487 source:c:\users\user\documents\github\braced-game-engine-\src\_scene.cpp
-	"_Scene.h"
-
-1731555192 source:c:\users\user\desktop\csci 191\braced-game-engine-\main.cpp
-=======
 1731559901 source:c:\users\user\documents\github\braced-game-engine-\src\_scene.cpp
 	"_Scene.h"
 
 1733370176 source:c:\users\user\desktop\csci 191\braced-game-engine-\main.cpp
->>>>>>> Stashed changes
 	<windows.h>
 	<_Common.h>
 	<_Scene.h>
 
-<<<<<<< Updated upstream
-1732064002 c:\users\user\desktop\csci 191\braced-game-engine-\include\_common.h
-=======
 1733370177 c:\users\user\desktop\csci 191\braced-game-engine-\include\_common.h
->>>>>>> Stashed changes
 	<string.h>
 	<cmath>
 	<GL/glut.h>
@@ -463,11 +413,7 @@
 	<gl/gl.h>
 	<time.h>
 
-<<<<<<< Updated upstream
-1732066878 c:\users\user\desktop\csci 191\braced-game-engine-\include\_scene.h
-=======
-1733376523 c:\users\user\desktop\csci 191\braced-game-engine-\include\_scene.h
->>>>>>> Stashed changes
+1733616331 c:\users\user\desktop\csci 191\braced-game-engine-\include\_scene.h
 	<vector>
 	"_Scene.h"
 	"_LightSetup.h"
@@ -475,15 +421,6 @@
 	"_KbMs.h"
 	"_TerrainGenerator.h"
 	"_Common.h"
-<<<<<<< Updated upstream
-	"_Camera.h"
-	"_Sounds.h"
-
-1731555192 c:\users\user\desktop\csci 191\braced-game-engine-\include\_lightsetup.h
-	<_Common.h>
-
-1731555193 c:\users\user\desktop\csci 191\braced-game-engine-\include\_models.h
-=======
 	"_Collision.h"
 	"_Camera.h"
 	"_Projectile.h"
@@ -494,54 +431,31 @@
 	<_Common.h>
 
 1733370177 c:\users\user\desktop\csci 191\braced-game-engine-\include\_models.h
->>>>>>> Stashed changes
 	<_Common.h>
 	<_TextureLoader.h>
 	<_ModelLoaderMD2.h>
 
-<<<<<<< Updated upstream
-1731555192 c:\users\user\desktop\csci 191\braced-game-engine-\include\_textureloader.h
-	"_Common.h"
-	<SOIL.h>
-
-1732064004 c:\users\user\desktop\csci 191\braced-game-engine-\include\_modelloadermd2.h
-=======
 1733370177 c:\users\user\desktop\csci 191\braced-game-engine-\include\_textureloader.h
 	"_Common.h"
 	<SOIL.h>
 
 1733370177 c:\users\user\desktop\csci 191\braced-game-engine-\include\_modelloadermd2.h
->>>>>>> Stashed changes
 	<_Common.h>
 	<_TextureLoader.h>
 	"Anorms.h"
 
-<<<<<<< Updated upstream
-1731555193 c:\users\user\desktop\csci 191\braced-game-engine-\include\anorms.h
-
-1731555193 c:\users\user\desktop\csci 191\braced-game-engine-\include\_kbms.h
-=======
 1733370177 c:\users\user\desktop\csci 191\braced-game-engine-\include\anorms.h
 
 1733370177 c:\users\user\desktop\csci 191\braced-game-engine-\include\_kbms.h
->>>>>>> Stashed changes
 	<_Common.h>
 	<_Models.h>
 	<_Camera.h>
 
-<<<<<<< Updated upstream
-1731555193 c:\users\user\desktop\csci 191\braced-game-engine-\include\_camera.h
-	<_Common.h>
-	<cmath>
-
-1731555192 c:\users\user\desktop\csci 191\braced-game-engine-\include\_terraingenerator.h
-=======
 1733370177 c:\users\user\desktop\csci 191\braced-game-engine-\include\_camera.h
 	<_Common.h>
 	<cmath>
 
 1733370177 c:\users\user\desktop\csci 191\braced-game-engine-\include\_terraingenerator.h
->>>>>>> Stashed changes
 	<_Common.h>
 	<_TextureLoader.h>
 
@@ -550,24 +464,6 @@
 
 1731555195 c:\users\user\desktop\csci 191\braced-game-engine-\include\__models.h
 
-<<<<<<< Updated upstream
-1731555192 source:c:\users\user\desktop\csci 191\braced-game-engine-\src\_collision.cpp
-	"_Collision.h"
-
-1731555192 c:\users\user\desktop\csci 191\braced-game-engine-\include\_collision.h
-	<_Common.h>
-
-1731555192 source:c:\users\user\desktop\csci 191\braced-game-engine-\src\_lightsetup.cpp
-	"_LightSetup.h"
-
-1731555194 source:c:\users\user\desktop\csci 191\braced-game-engine-\src\_models.cpp
-	"_Models.h"
-
-1731555192 source:c:\users\user\desktop\csci 191\braced-game-engine-\src\_skybox.cpp
-	"_Skybox.h"
-
-1731555192 c:\users\user\desktop\csci 191\braced-game-engine-\include\_skybox.h
-=======
 1733370181 source:c:\users\user\desktop\csci 191\braced-game-engine-\src\_collision.cpp
 	"_Collision.h"
 
@@ -584,51 +480,10 @@
 	"_Skybox.h"
 
 1733370177 c:\users\user\desktop\csci 191\braced-game-engine-\include\_skybox.h
->>>>>>> Stashed changes
 	"_Common.h"
 	"_TextureLoader.h"
 	"_Timer.h"
 
-<<<<<<< Updated upstream
-1731555192 c:\users\user\desktop\csci 191\braced-game-engine-\include\_timer.h
-	"_Common.h"
-
-1732083082 source:c:\users\user\desktop\csci 191\braced-game-engine-\src\_sounds.cpp
-	"_Sounds.h"
-
-1732083607 c:\users\user\desktop\csci 191\braced-game-engine-\include\_sounds.h
-	"SNDS/irrKlang.h"
-	"_Common.h"
-
-1731555192 source:c:\users\user\desktop\csci 191\braced-game-engine-\src\_textureloader.cpp
-	"_TextureLoader.h"
-
-1731555192 source:c:\users\user\desktop\csci 191\braced-game-engine-\src\_timer.cpp
-	"_Timer.h"
-
-1732064005 source:c:\users\user\desktop\csci 191\braced-game-engine-\src\_camera.cpp
-	"_Camera.h"
-
-1732064005 source:c:\users\user\desktop\csci 191\braced-game-engine-\src\_kbms.cpp
-	"_KbMs.h"
-
-1732064005 source:c:\users\user\desktop\csci 191\braced-game-engine-\src\_modelloadermd2.cpp
-	"_ModelLoaderMD2.h"
-
-1732064005 source:c:\users\user\desktop\csci 191\braced-game-engine-\src\_shotgun.cpp
-	"_Shotgun.h"
-
-1732064004 c:\users\user\desktop\csci 191\braced-game-engine-\include\_shotgun.h
-	"_Common.h"
-	"_Models.h"
-
-1732064005 source:c:\users\user\desktop\csci 191\braced-game-engine-\src\_terraingenerator.cpp
-	"_TerrainGenerator.h"
-
-1732082487 source:c:\users\user\desktop\csci 191\braced-game-engine-\src\_scene.cpp
-	"_Scene.h"
-
-=======
 1733370177 c:\users\user\desktop\csci 191\braced-game-engine-\include\_timer.h
 	"_Common.h"
 
@@ -664,7 +519,7 @@
 1733370181 source:c:\users\user\desktop\csci 191\braced-game-engine-\src\_terraingenerator.cpp
 	"_TerrainGenerator.h"
 
-1733373730 source:c:\users\user\desktop\csci 191\braced-game-engine-\src\_scene.cpp
+1733616365 source:c:\users\user\desktop\csci 191\braced-game-engine-\src\_scene.cpp
 	"_Scene.h"
 
 1733375230 c:\users\user\desktop\csci 191\braced-game-engine-\include\_projectile.h
@@ -676,4 +531,3 @@
 1733375301 source:c:\users\user\desktop\csci 191\braced-game-engine-\src\_projectile.cpp
 	"_Projectile.h"
 
->>>>>>> Stashed changes

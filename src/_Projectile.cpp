@@ -3,6 +3,9 @@
 _Projectile::_Projectile()
 {
     //ctor
+    color.r = 1.0;
+    color.g = 1.0;
+    color.b = 1.0;
 }
 
 _Projectile::~_Projectile()
@@ -10,10 +13,15 @@ _Projectile::~_Projectile()
     //dtor
 }
 
-void _Projectile::initProjectile(char* fileName)
+void _Projectile::initProjectile(char* file, char* fileName)
 {
-    model_file = fileName;
-    mdl->initModel(fileName);
+    if(fileName != nullptr)
+    {
+        model_file = fileName;
+        mdl->initModel(file, fileName);
+
+        //cout << file << endl;
+    }
 
     pos.x = 0; pos.y = 0; pos.z = 0;
     t = 0.0;
@@ -24,6 +32,9 @@ void _Projectile::initProjectile(char* fileName)
 
 void _Projectile::drawProjectile(bool is_model)
 {
+    // Color
+    glColor3f(color.r, color.g, color.b); // Custom rgb
+
     glDisable(GL_TEXTURE_2D);
     glPushMatrix();
         //if(actionTrigger == SHOOT) //Only draw when on the move
@@ -36,6 +47,7 @@ void _Projectile::drawProjectile(bool is_model)
 
             if(is_model)
             {
+                tex->bindTexture();
                 mdl->Draw();
                 mdl->Actions();
             }

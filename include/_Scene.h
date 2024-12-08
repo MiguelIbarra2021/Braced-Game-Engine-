@@ -11,10 +11,10 @@
 #include "_KbMs.h"
 #include "_TerrainGenerator.h"
 #include "_Common.h"
-#include "_Camera.h"
-#include "_Skybox.h"
 #include "_Collision.h"
+#include "_Camera.h"
 #include "_Projectile.h"
+#include "_Skybox.h"
 #include "_Sounds.h"
 
 class Scene
@@ -31,24 +31,19 @@ class Scene
         WPARAM wParam;
 
         // Game Engine Functions
-        GLvoid initFog();
+        GLvoid initFog(float);
 
         GLvoid mouseMapping(int, int);
-         GLvoid updateObjectRotation(vec3* object, vec3* target); //updated
+        GLvoid updateObjectRotation(vec3* object, vec3* target);
 
         GLvoid t_switch();
 
         GLvoid insertObject(char* tex_file, char* mdl_file); // Custom Models
         GLvoid insertObject(int);                           // Premade
 
-<<<<<<< Updated upstream
-        GLvoid Launch_Duck(); //updated
-        GLvoid Kill_Duck(int); //updated
-=======
         GLvoid Automatic_Launcher();
         GLvoid Launch_Duck(int, int);
         GLvoid Kill_Duck(int duck);
->>>>>>> Stashed changes
 
         GLvoid insertLight();
 

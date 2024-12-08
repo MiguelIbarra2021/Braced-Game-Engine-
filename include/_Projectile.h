@@ -17,6 +17,7 @@ class _Projectile
      _ModelLoaderMD2* mdl = new _ModelLoaderMD2();
      _Timer *myTime = new _Timer();
 
+     rgb color;
      vec3 rot;
      vec3 pos;
      vec3 des;
@@ -33,7 +34,7 @@ class _Projectile
             SHOOT,
             HIT};
 
-     void initProjectile(char *);
+     void initProjectile(char*, char *);
      void drawProjectile(bool is_model);
      void ProjectileAction(/*float*/);
 

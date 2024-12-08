@@ -57,6 +57,7 @@
 		<Unit filename="include/_KbMs.h" />
 		<Unit filename="include/_ModelLoaderMD2.h" />
 		<Unit filename="include/_Models.h" />
+		<Unit filename="include/_Projectile.h" />
 		<Unit filename="include/_Scene.h" />
 		<Unit filename="include/_Shotgun.h" />
 		<Unit filename="include/_Skybox.h" />
@@ -72,6 +73,7 @@
 		<Unit filename="src/_KbMs.cpp" />
 		<Unit filename="src/_ModelLoaderMD2.cpp" />
 		<Unit filename="src/_Models.cpp" />
+		<Unit filename="src/_Projectile.cpp" />
 		<Unit filename="src/_Scene.cpp" />
 		<Unit filename="src/_Shotgun.cpp" />
 		<Unit filename="src/_Skybox.cpp" />
