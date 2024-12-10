@@ -34,13 +34,11 @@ class Scene
 
         // Game Engine Functions
         GLvoid initFog();
-
-        GLvoid initDuck();
-
         GLvoid initFoliage();
         GLvoid drawFoliage();
 
         GLvoid initShotgun();
+        GLvoid initDuck();
 
         GLvoid updateSkybox();
 
