@@ -733,6 +733,7 @@ GLvoid Scene::Kill_Duck(int duck)
 {
     ducks[duck].actionTrigger = ducks[active_duck].DEAD;
     ducks[duck].rot.x = 90;
+   // fog_Density += 0.02;
 
     snds->playSound("sounds/duck_dying.mp3");
 
