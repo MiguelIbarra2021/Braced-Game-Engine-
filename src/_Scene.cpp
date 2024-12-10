@@ -8,6 +8,8 @@ _Camera* camera = new _Camera();
 _Collision* hit = new _Collision();
 _Skybox* sky = new _Skybox();
 _Sounds *snds = new _Sounds();
+_Particles particleSystem[4]; // One particle system for each duck
+
 
 // Shotgun
 _Projectile bullets[20];
@@ -221,7 +223,7 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
     }
 }
 
-GLint Scene::initGL()   // Initalize Scene
+GLint Scene::initGL()   // Initialize Scene
 {
     glShadeModel(GL_SMOOTH);                // Smooth Rendering
     glClearColor(0, 0, 0, 0);               // BG Color
@@ -233,14 +235,14 @@ GLint Scene::initGL()   // Initalize Scene
 
     // Textures
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);   // PNG alpha
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);   // PNG alpha
 
-    glEnable(GL_TEXTURE_2D);  //enable textures
+    glEnable(GL_TEXTURE_2D);  // Enable textures
 
     // World
     initFog();
 
-    terrain->initTerrain("images/pond.png");   // Water?
+    terrain->initTerrain("images/pond.png");   // Initialize terrain
     terrain->scale.x = 40;
     terrain->scale.y = 1;
     terrain->scale.z = 40;
@@ -259,7 +261,6 @@ GLint Scene::initGL()   // Initalize Scene
         fogColor[2] = 1.0f;
         fogColor[3] = 0.5f;
         sky->skyBoxInit("images/forestMorning.jfif");
-
     }
     else if (liveLevel12)
     {
@@ -282,7 +283,6 @@ GLint Scene::initGL()   // Initalize Scene
     insertObject("models/duck/Duck.png", "models/duck/d.md2");
 
     // Foliage
-    //insertObject("C:\Github\Braced-Game-Engine-\models\bushes\texture_gradient.png", "models/bushes/forest_nature_set_all_in.md2");
     insertObject("models/bushes/texture_gradient.png.002.jpg", "models/bushes/ah.md2");
     insertObject("models/bushes/texture_gradient.png.002.jpg", "models/bushes/ah.md2");
 
@@ -294,25 +294,21 @@ GLint Scene::initGL()   // Initalize Scene
     objectHierarchy[0]->position.y = -4;
 
     // Bullets
-    for(int i = 0; i < 20; i++)
-    {
+    for (int i = 0; i < 20; i++) {
         bullets[i].initProjectile(nullptr, nullptr);
         bullets[i].projectile_speed = 1;
     }
 
     // Ducks
-    for(int i = 0; i < 4; i++)
-    {
+    for (int i = 0; i < 4; i++) {
         ducks[i].initProjectile("models/duck/Duck.png", "models/duck/d.md2");
         ducks[i].mdl->actionTrigger = ducks[i].mdl->FLY;
         ducks[i].mdl->Actions();
     }
 
-    // Initalize Lights
-    for(int i = 0; i < lights; i++)
-    {
-        switch(i + 1)
-        {
+    // Initialize Lights
+    for (int i = 0; i < lights; i++) {
+        switch (i + 1) {
             case 1:
                 lightHierarchy[i]->setLight(GL_LIGHT0);  // One Light
                 break;
@@ -326,16 +322,16 @@ GLint Scene::initGL()   // Initalize Scene
                 lightHierarchy[i]->setLight(GL_LIGHT3);  // Four
                 break;
             case 5:
-                lightHierarchy[i]->setLight(GL_LIGHT4); // Five
+                lightHierarchy[i]->setLight(GL_LIGHT4);  // Five
                 break;
             case 6:
-                lightHierarchy[i]->setLight(GL_LIGHT5); // Six
+                lightHierarchy[i]->setLight(GL_LIGHT5);  // Six
                 break;
             case 7:
-                lightHierarchy[i]->setLight(GL_LIGHT6); // Seven
+                lightHierarchy[i]->setLight(GL_LIGHT6);  // Seven
                 break;
             case 8:
-                lightHierarchy[i]->setLight(GL_LIGHT7); // Eight
+                lightHierarchy[i]->setLight(GL_LIGHT7);  // Eight
                 break;
         }
     }
@@ -344,11 +340,11 @@ GLint Scene::initGL()   // Initalize Scene
     camera->camInit();
 
     snds->initSounds();
-    //snds->playMusic("C:/Users/user/Desktop/CSCI 191/Braced-Game-Engine-/sounds/Sonic Riders Zero Gravity Main Menu Theme.mp3");
     snds->playMusic("sounds/Super Smash Bros. 4 For Wii U OST - Duck Hunt Medley.mp3");
 
     return true;
 }
+
 
 void Scene::enableCelShading() {
     // Setup lighting for cel shading
@@ -464,6 +460,16 @@ GLint Scene::drawScene()
         sky->skyBoxDraw();
     glPopMatrix();
 
+    glDisable(GL_TEXTURE_2D); // Disable skybox texture
+    glEnable(GL_LIGHTING);    // Re-enable lighting
+
+
+    // Update and draw particles for each duck
+    for (int i = 0; i < 4; ++i) {
+        particleSystem[i].update(0.016f); // Assuming 60 FPS
+        particleSystem[i].draw();
+    }
+
     for(int i=0; i < 20; i++)
     {
         for(int j = 0; j < 4; j++)
@@ -481,7 +487,6 @@ GLint Scene::drawScene()
         ducks[i].drawProjectile(true);
         ducks[i].ProjectileAction();
     }
-
     return true;
 }
 
@@ -758,8 +763,11 @@ GLvoid Scene::Launch_Duck(int current_duck)
 
 GLvoid Scene::Kill_Duck(int duck)
 {
-    ducks[duck].actionTrigger = ducks[active_duck].DEAD;
+     ducks[duck].actionTrigger = ducks[active_duck].DEAD;
     ducks[duck].rot.x = 90;
+
+    // Trigger particle effect at the duck's position
+    particleSystem[duck].init(ducks[duck].pos, "images/feathers.png");
 
     snds->playSound("sounds/duck_dying.mp3");
 

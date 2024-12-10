@@ -300,3 +300,244 @@
 	"_Common.h"
 	<cmath>
 
+1731556260 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\main.cpp
+	<windows.h>
+	<_Common.h>
+	<_Scene.h>
+
+1733784679 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_common.h
+	<string.h>
+	<cmath>
+	<GL/glut.h>
+	<stdlib.h>
+	<iostream>
+	<windows.h>
+	<gl/gl.h>
+	<time.h>
+
+1733785768 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_scene.h
+	<vector>
+	"_Scene.h"
+	"_LightSetup.h"
+	"_Models.h"
+	"_KbMs.h"
+	"_TerrainGenerator.h"
+	"_Common.h"
+	"_Collision.h"
+	"_Camera.h"
+	"_Projectile.h"
+	"_Skybox.h"
+	"_Sounds.h"
+	"_Particles.h"
+
+1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_lightsetup.h
+	<_Common.h>
+
+1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_models.h
+	<_Common.h>
+	<_TextureLoader.h>
+	<_ModelLoaderMD2.h>
+
+1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_textureloader.h
+	"_Common.h"
+	<SOIL.h>
+
+1733376958 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_modelloadermd2.h
+	<_Common.h>
+	<_TextureLoader.h>
+	"Anorms.h"
+
+1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\anorms.h
+
+1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_kbms.h
+	<_Common.h>
+	<_Models.h>
+	<_Camera.h>
+
+1732050235 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_camera.h
+	<_Common.h>
+	<cmath>
+
+1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_terraingenerator.h
+	<_Common.h>
+	<_TextureLoader.h>
+
+1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_collision.h
+	<_Common.h>
+
+1733376958 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_projectile.h
+	"_Common.h"
+	"_TextureLoader.h"
+	"_ModelLoaderMD2.h"
+	"_Timer.h"
+
+1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_timer.h
+	"_Common.h"
+
+1731556260 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_skybox.h
+	"_Common.h"
+	"_TextureLoader.h"
+	"_Timer.h"
+
+1733376958 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_sounds.h
+	"SNDS/irrKlang.h"
+	"_Common.h"
+
+1732080153 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_camera.cpp
+	"_Camera.h"
+
+1731556260 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_collision.cpp
+	"_Collision.h"
+
+1732080153 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_kbms.cpp
+	"_KbMs.h"
+
+1731556260 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_lightsetup.cpp
+	"_LightSetup.h"
+
+1732080153 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_shotgun.cpp
+	"_Shotgun.h"
+
+1732080153 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_shotgun.h
+	"_Common.h"
+	"_Models.h"
+
+1732143425 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_skybox.cpp
+	"_Skybox.h"
+
+1732080153 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_terraingenerator.cpp
+	"_TerrainGenerator.h"
+
+1732138094 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_textureloader.cpp
+	"_TextureLoader.h"
+
+1731556260 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_timer.cpp
+	"_Timer.h"
+
+1730932738 c:\users\bryan\desktop\csci 191t\common\include\gl\glut.h
+	<windows.h>
+	<stdlib.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1668639208 c:\users\bryan\desktop\csci 191t\common\include\soil.h
+
+1731548181 c:\users\bryan\desktop\csci 191t\common\include\snds\irrklang.h
+	"ik_irrKlangTypes.h"
+	"ik_vec3d.h"
+	"ik_IRefCounted.h"
+	"ik_IVirtualRefCounted.h"
+	"ik_ESoundOutputDrivers.h"
+	"ik_ESoundEngineOptions.h"
+	"ik_EStreamModes.h"
+	"ik_SAudioStreamFormat.h"
+	"ik_ISoundEngine.h"
+	"ik_ISoundSource.h"
+	"ik_ISound.h"
+	"ik_IAudioStream.h"
+	"ik_IAudioStreamLoader.h"
+	"ik_ISoundEffectControl.h"
+	"ik_ISoundStopEventReceiver.h"
+	"ik_IFileFactory.h"
+	"ik_IFileReader.h"
+	"ik_ISoundDeviceList.h"
+	"ik_IAudioRecorder.h"
+	"ik_ISoundMixedOutputReceiver.h"
+
+1731548180 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_irrklangtypes.h
+	<wchar.h>
+
+1731548181 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_vec3d.h
+	<math.h>
+	"ik_irrKlangTypes.h"
+
+1731548180 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_irefcounted.h
+	"ik_irrKlangTypes.h"
+
+1731548181 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_ivirtualrefcounted.h
+	"ik_irrKlangTypes.h"
+
+1731548180 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_esoundoutputdrivers.h
+
+1731548180 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_esoundengineoptions.h
+
+1731548180 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_estreammodes.h
+
+1731548181 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_saudiostreamformat.h
+	"ik_IRefCounted.h"
+
+1731548181 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_isoundengine.h
+	"ik_IRefCounted.h"
+	"ik_vec3d.h"
+	"ik_ISoundSource.h"
+	"ik_ISound.h"
+	"ik_EStreamModes.h"
+	"ik_IFileFactory.h"
+	"ik_ISoundMixedOutputReceiver.h"
+
+1731548181 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_isoundsource.h
+	"ik_IVirtualRefCounted.h"
+	"ik_vec3d.h"
+	"ik_EStreamModes.h"
+	"ik_SAudioStreamFormat.h"
+
+1731548180 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_isound.h
+	"ik_IVirtualRefCounted.h"
+	"ik_ISoundEffectControl.h"
+	"ik_vec3d.h"
+
+1731548180 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_isoundeffectcontrol.h
+	"ik_IVirtualRefCounted.h"
+	"ik_vec3d.h"
+
+1731548180 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_ifilefactory.h
+	"ik_IRefCounted.h"
+
+1731548181 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_isoundmixedoutputreceiver.h
+	"ik_IRefCounted.h"
+	"ik_SAudioStreamFormat.h"
+
+1731548180 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_iaudiostream.h
+	"ik_IRefCounted.h"
+	"ik_SAudioStreamFormat.h"
+
+1731548180 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_iaudiostreamloader.h
+	"ik_IRefCounted.h"
+	"ik_IFileReader.h"
+
+1731548180 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_ifilereader.h
+	"ik_IRefCounted.h"
+
+1731548181 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_isoundstopeventreceiver.h
+	"ik_IRefCounted.h"
+	"ik_SAudioStreamFormat.h"
+
+1731548180 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_isounddevicelist.h
+	"ik_IRefCounted.h"
+
+1731548180 c:\users\bryan\desktop\csci 191t\common\include\snds\ik_iaudiorecorder.h
+	"ik_IRefCounted.h"
+	"ik_ISoundSource.h"
+
+1733376959 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_modelloadermd2.cpp
+	"_ModelLoaderMD2.h"
+
+1733376959 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_models.cpp
+	"_Models.h"
+
+1733376959 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_projectile.cpp
+	"_Projectile.h"
+
+1733792016 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_scene.cpp
+	"_Scene.h"
+
+1733376959 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_sounds.cpp
+	"_Sounds.h"
+
+1733792849 source:c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\src\_particles.cpp
+	"_Particles.h"
+
+1733787414 c:\users\bryan\desktop\csci 191t\project\braced-game-engine-\include\_particles.h
+	"_Common.h"
+	"_TextureLoader.h"
+

@@ -16,6 +16,7 @@
 #include "_Projectile.h"
 #include "_Skybox.h"
 #include "_Sounds.h"
+#include "_Particles.h"
 
 class Scene
 {
