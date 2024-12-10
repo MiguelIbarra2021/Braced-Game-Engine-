@@ -20,6 +20,7 @@ vec3 lanPos[4];   // Launch Position
 vec3 lanRot[4];   // Launch Rotation
 vec3 downPos;
 _Projectile ducks[4];
+_Particles particleSystem[4]; // One particle system for each duck
 
 int active_duck = 0;
 int bullets_left = 2;
@@ -52,10 +53,53 @@ Scene::Scene()
     liveLevel11 = true;
     liveLevel12 = false;
     liveLevel13 = false;
+
+    // added this
+    landingPage = new LandingPage();
+    currentState = LANDING_PAGE;
+
+    // fonts
+    font = new _Fonts();
+    //font->makeRasterFont(); // init raster font
+
+    // init HUD vars
+    shotsLeft = 2; // testing
+    pointsHit = 0;
+    pointsMissed = 0;
+
+    // HUD
+    hud = new _HUD();
+    minutes = 5; // timer
+    seconds = 0;
+    lastTime = 0.0f;
+
+    // timer
+    gameTimer = new _Timer();
+    //gameTimer->start(); // start the game timer, move it to init if not working
+
+    // set for now
+    int minutes = getMinutes();
+    int seconds = getSeconds();
 }
 
 Scene::~Scene()
-{}
+{
+    delete lightHierarchy;
+    delete objectHierarchy;
+    delete sysControl;
+    delete terrain;
+    delete camera;
+    delete hit;
+    delete sky;
+    delete snds;
+    delete duck_timer;
+    delete rnd;
+    delete landingPage;
+    delete font;
+    delete hud;
+    delete gameTimer;
+    // delete all pointers
+}
 
 int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
                   UINT	uMsg,			    // Message For This Window
@@ -69,7 +113,7 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
         sysControl->wParam = wParam;
 
         case WM_KEYDOWN:
-
+            // sysControl->wParam = wParam; // added this
             sysControl->keyPress(camera);
             sysControl->keyPress(&state_change);
 
@@ -112,52 +156,156 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
 
             ////////////////////////////////////////////////////////////////////////
 
-            break;
-        case WM_KEYUP:
+            // added this, landing page stuff
+            if (currentState == LANDING_PAGE && wParam == VK_RETURN) { currentState = MENU_PAGE; }
 
+            if (currentState == MENU_PAGE) {
+                if (wParam == 'N') { currentState = GAME_PLAY; }
+                else if (wParam == 'H') { currentState = HELP_PAGE; }
+                else if (wParam == 'E') { PostQuitMessage(0); }
+                else if (wParam == 'T')
+                { currentState = TEST_HUD;
+                    //std::cout << "Switched to TEST_HUD state" << std::endl; // for debugging
+                } // test HUD
+            }
+
+            if (currentState == HELP_PAGE && wParam == VK_ESCAPE) {
+                currentState = MENU_PAGE; // Return to menu page
+                return 0; // Stop further processing of this message
+            }
+
+            if (currentState == GAME_PLAY)
+            {
+                if (wParam == VK_ESCAPE)
+                {
+                    if (isPaused) {
+                        resumeGame(); // Resume the game
+                    } else {
+                        pauseGame(); // Pause the game
+                    }
+                }
+                else if (isPaused && VK_RETURN)
+                {
+                    PostQuitMessage(0); // Quit the game if Enter is pressed during pause
+                }
+                //isPaused = !isPaused; // Toggle pause state
+                return 0; // Stop further processing of this message
+            }
+
+            break; // WM_KEYDOWN ends
+
+        // modified this
+        case WM_KEYUP:
+            sysControl->wParam = wParam;
+            sysControl->keyUp(); // Call the keyUp method to handle key releases
             break;
+
         case WM_MOUSEWHEEL:
 
             break;
         case WM_LBUTTONDOWN:
-            sysControl->mouseEventDown(LOWORD(lParam), HIWORD(lParam));
+            sysControl->wParam = wParam;
+            bMouseX = static_cast<float>(LOWORD(lParam)); // getting X-coord pos
+            bMouseY = static_cast<float>(HIWORD(lParam)); // getting Y-coord pos
+            //sysControl->mouseEventDown(LOWORD(lParam), HIWORD(lParam)); // Map mouse coordinates
+            mouseMapping(bMouseX, bMouseY); // Map mouse coordinates
+
+            //std::cout << "MouseX after mouseMapping: " << mouseX << std::endl;
+            //std::cout << "MouseY after mouseMapping: " << mouseY << std::endl;
+
+            // debugging
+            /*if (isBtn1Clicked()) { std::cout << "Button 1 has been clicked!" << std::endl; }
+            if (isBtn2Clicked()) { std::cout << "Button 2 has been clicked!" << std::endl; }
+            if (isBtn3Clicked()) { std::cout << "Button 3 has been clicked!" << std::endl; }*/
+
+            sysControl->mouseEventDown(mouseX, mouseY);
+
+            // added this
+            if (currentState == LANDING_PAGE)
+            {
+                currentState = MENU_PAGE;
+            }
+            else if (currentState == MENU_PAGE)
+            {
+                if      (isBtn1Clicked()) { goToGamePlay(); }
+                else if (isBtn2Clicked()) { showHelpPage(); }
+                else if (isBtn3Clicked()) { exitApplication(); }
+            }
 
             shot = true;
-            break;
+            break;  // WM_LBUTTONDOWN ends
+
         case WM_RBUTTONDOWN:
+            //sysControl->wParam = wParam;
             sysControl->mouseEventDown(LOWORD(lParam), HIWORD(lParam));
             break;
         case WM_MBUTTONDOWN:
             sysControl->mouseEventDown(LOWORD(lParam), HIWORD(lParam));
             break;
+
+        // bullets handled here with mouseclicks (src & des)
         case WM_LBUTTONUP:
             sysControl->mouseEventUp();
 
-            if(bullets_left > 0 && !objectHierarchy[0]->mdl->In_Animation)
-            {
+            if (bullets_left > 0 && !objectHierarchy[0]->mdl->In_Animation) {
                 objectHierarchy[0]->mdl->actionTrigger = objectHierarchy[0]->mdl->SHOOT;
 
-                bullets[mouseClicks].src.x = objectHierarchy[0]->position.x;
-                bullets[mouseClicks].src.y = objectHierarchy[0]->position.y;
-                bullets[mouseClicks].src.z = objectHierarchy[0]->position.z;
+                // Assuming objectHierarchy[0] is the gun model
+                gunBarrelPosition = objectHierarchy[0]->position;
 
-                bullets[mouseClicks].des.x = mouseX;
-                bullets[mouseClicks].des.y = mouseY;
-                bullets[mouseClicks].des.z = mouseZ;
+                // Offset for the barrel (adjust as needed)
+                gunBarrelOffset = { 0.5f, 0.0f, 0.0f }; // Example offset
+
+                // Calculate bullet initial position
+                bullets[mouseClicks].src.x = gunBarrelPosition.x + gunBarrelOffset.x;
+                bullets[mouseClicks].src.y = gunBarrelPosition.y + gunBarrelOffset.y;
+                bullets[mouseClicks].src.z = gunBarrelPosition.z + gunBarrelOffset.z;
+
+                // Calculate direction vector for the bullet
+                vec3 bulletDirection;
+                bulletDirection.x = mouseX - bullets[mouseClicks].src.x;
+                bulletDirection.y = mouseY - bullets[mouseClicks].src.y;
+                bulletDirection.z = mouseZ - bullets[mouseClicks].src.z;
+
+                // Normalize the direction vector
+                float length = sqrt(bulletDirection.x * bulletDirection.x + bulletDirection.y * bulletDirection.y + bulletDirection.z * bulletDirection.z);
+                bulletDirection.x /= length;
+                bulletDirection.y /= length;
+                bulletDirection.z /= length;
+
+                // Set bullet destination based on direction and a multiplier for distance
+                float distanceMultiplier = 2000.0f;
+                bullets[mouseClicks].des.x = bullets[mouseClicks].src.x + bulletDirection.x * -distanceMultiplier;
+                bullets[mouseClicks].des.y = bullets[mouseClicks].src.y + bulletDirection.y * distanceMultiplier;
+                bullets[mouseClicks].des.z = bullets[mouseClicks].src.z + bulletDirection.z * -distanceMultiplier;
 
                 bullets[mouseClicks].t = 0;
                 bullets[mouseClicks].actionTrigger = bullets[mouseClicks].SHOOT;
                 bullets[mouseClicks].live = true;
-                mouseClicks = (mouseClicks+1)%20;
 
                 snds->playSound("sounds/Shoot.mp3");
 
                 bullets_left--;
+
+                // Debugging output
+                std::cout << "Bullet " << mouseClicks << " Initialized: "
+                          << "Src X: " << bullets[mouseClicks].src.x
+                          << " Y: " << bullets[mouseClicks].src.y
+                          << " Z: " << bullets[mouseClicks].src.z
+                          << " Des X: " << bullets[mouseClicks].des.x
+                          << " Y: " << bullets[mouseClicks].des.y
+                          << " Z: " << bullets[mouseClicks].des.z
+                          << " Live: " << bullets[mouseClicks].live
+                          << std::endl;
+
+                mouseClicks = (mouseClicks + 1) % 20;
             }
 
-            if(shot)
+            if (shot) {
                 shot = false;
+            }
             break;
+
         case WM_RBUTTONUP:
             sysControl->mouseEventUp();
             break;
@@ -165,31 +313,56 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
             sysControl->mouseEventUp();
             break;
         case WM_MOUSEMOVE:
+            //sysControl->wParam = wParam;
+            //sysControl->mouseTranslation = true;
             mouseMapping(LOWORD(lParam), HIWORD(lParam));
             break;
 
 
     }
+    return 0; // added this
 }
+
+// added this **************** Bullets initial
+void Scene::initBullets() {
+    for (int i = 0; i < 20; i++) {
+        bullets[i].initProjectile(nullptr, nullptr);
+        bullets[i].projectile_speed = 1;
+        bullets[i].live = false;
+        bullets[i].pos = gunBarrelPosition; // Initialize position
+    }
+}
+
 
 GLint Scene::initGL()   // Initalize Scene
 {
     glShadeModel(GL_FLAT);                // Smooth Rendering
-    glClearColor(0, 0, 0, 0);               // BG Color
+    glClearColor(0, 0, 0, 1.0);             // added this
+    // glClearColor(0, 0, 0, 0);               // BG Color, original
     glClearDepth(2.0f);                     // Test Depth Layer
     glEnable(GL_DEPTH_TEST);                // Activate Depth Test
     glDepthFunc(GL_LEQUAL);                 // LEqual -> <=; Depth Function Type
-
     glEnable(GL_COLOR_MATERIAL);
 
     // Textures
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);   // PNG alpha
-
     glEnable(GL_TEXTURE_2D);  //enable textures
 
     // World
-    initFog();
+    //initFog();
+
+     // added this, menu and button textures
+    landingPage->initPageTextures
+    (
+        (char*)"images/LPage.png",
+        (char*)"images/MPage.png",
+        (char*)"images/HPage.png",
+        (char*)"images/PMenu.png",
+        (char*)"images/New_Button.png",
+        (char*)"images/Help_Button.png",
+        (char*)"images/Exit_Button.png"
+    );
 
     terrain->initTerrain("images/grass_base.jpg");   // Water?
     terrain->scale.x = 200;
@@ -244,15 +417,19 @@ GLint Scene::initGL()   // Initalize Scene
 
     initFoliage();
 
-    // Bullets
+    /* turned this off
+    // Bullets ************************
     for(int i = 0; i < 20; i++)
     {
         bullets[i].initProjectile(nullptr, nullptr);
         bullets[i].projectile_speed = 1;
+        bullets[i].live = false; // Ensure bullets are not live initially
     }
+    */
 
-    // Ducks
+    initBullets();
 
+    // Ducks ****************************
     rnd->initializeNumbers(0, 4);
 
     for(int i = 0; i < 4; i++)
@@ -301,12 +478,20 @@ GLint Scene::initGL()   // Initalize Scene
     //snds->playMusic("C:/Users/user/Desktop/CSCI 191/Braced-Game-Engine-/sounds/Sonic Riders Zero Gravity Main Menu Theme.mp3");
     snds->playMusic("sounds/Super Smash Bros. 4 For Wii U OST - Duck Hunt Medley.mp3");
 
+    // init timers, can modify: original was => duck_timer->startTimer;
+    duck_timer->initTimer();
+
+    font->makeRasterFont(); // init raster font
+    hud->initFonts(); // init HUD fonts
+    gameTimer->initTimer(); // start the game timer, move it to init if not working
+
     return true;
 }
 
-GLvoid Scene::initDuck()
-{
-    // Initalize Duck Launcher: Launch Position
+// modified this
+// **************   DUCKS ********************
+GLvoid Scene::initDuck() {
+    // Initialize Duck Launcher: Launch Position
     lanPos[0].x = 20;
     lanPos[0].y = -20;
     lanPos[0].z = 40;
@@ -323,24 +508,29 @@ GLvoid Scene::initDuck()
     lanPos[3].y = -20;
     lanPos[3].z = 40;
 
-    // Initalize Duck Launcher: Launch Rotation
-    lanRot[0].x = -20;
-    lanRot[0].y = -10;
-    lanRot[0].z = 20;
+    // Initialize Duck Launcher: Launch Rotation
+    // Adjusted rotations to face forward
+    lanRot[0].x = 0; // No tilt up or down
+    lanRot[0].y = 0; // Face forward
+    lanRot[0].z = 0; // No roll
+    // Old values: lanRot[0].x = -20; lanRot[0].y = -10; lanRot[0].z = 20;
 
-    lanRot[1].x = -5;
-    lanRot[1].y = -10;
-    lanRot[1].z = 20;
+    lanRot[1].x = 0;
+    lanRot[1].y = 0;
+    lanRot[1].z = 0;
+    // Old values: lanRot[1].x = -5; lanRot[1].y = -10; lanRot[1].z = 20;
 
-    lanRot[2].x = 5;
-    lanRot[2].y = -10;
-    lanRot[2].z = 20;
+    lanRot[2].x = 0;
+    lanRot[2].y = 0;
+    lanRot[2].z = 0;
+    // Old values: lanRot[2].x = 5; lanRot[2].y = -10; lanRot[2].z = 20;
 
-    lanRot[3].x = 20;
-    lanRot[3].y = -10;
-    lanRot[3].z = 20;
+    lanRot[3].x = 0;
+    lanRot[3].y = 0;
+    lanRot[3].z = 0;
+    // Old values: lanRot[3].x = 20; lanRot[3].y = -10; lanRot[3].z = 20;
 
-    // Initalize Duck Launcher: Destination Position
+    // Initialize Duck Launcher: Destination Position
     desPos[0].x = 15;
     desPos[0].y = 100;
     desPos[0].z = 100;
@@ -356,11 +546,20 @@ GLvoid Scene::initDuck()
     desPos[3].x = -15;
     desPos[3].y = 100;
     desPos[3].z = 100;
+
+    // Debugging output
+    for (int i = 0; i < 4; i++) {
+        std::cout << "Init Duck Launcher " << i << " Rotation: "
+                  << "X: " << lanRot[i].x
+                  << " Y: " << lanRot[i].y
+                  << " Z: " << lanRot[i].z
+                  << std::endl;
+    }
 }
 
-
-GLvoid Scene::initShotgun()
-{
+// **********  Gun Position ***************
+// also modified
+GLvoid Scene::initShotgun() {
     insertObject("models/gun_color.png", "models/shotgun.md2");
     objectHierarchy[0]->mdl->actionTrigger = objectHierarchy[0]->mdl->IDLE;
 
@@ -370,6 +569,23 @@ GLvoid Scene::initShotgun()
 
     objectHierarchy[0]->position.z = 7;
     objectHierarchy[0]->position.y = -4;
+
+    // Initial rotation to ensure the gun points towards the horizon
+    objectHierarchy[0]->rotation.x = 0.0f; // No tilt up or down
+    objectHierarchy[0]->rotation.y = 0.0f; // Rotate 180 degrees around Y-axis to point forward
+    objectHierarchy[0]->rotation.z = 0.0f; // No roll
+
+    // Debugging output
+    std::cout << "Init Shotgun Position: "
+              << "X: " << objectHierarchy[0]->position.x
+              << " Y: " << objectHierarchy[0]->position.y
+              << " Z: " << objectHierarchy[0]->position.z
+              << std::endl;
+    std::cout << "Init Shotgun Rotation: "
+              << "X: " << objectHierarchy[0]->rotation.x
+              << " Y: " << objectHierarchy[0]->rotation.y
+              << " Z: " << objectHierarchy[0]->rotation.z
+              << std::endl;
 }
 
 void Scene::enableCelShading() {
@@ -390,10 +606,136 @@ void Scene::enableCelShading() {
     glMaterialfv(GL_FRONT, GL_DIFFUSE, materialColor);
 }
 
-GLint Scene::drawScene()
-{
+// Modified drawScene
+GLint Scene::drawScene() {
+    glClearColor(0.0, 0.0, 0.0, 0.0); // Ensure the alpha is set to 0 for transparency (Pause Menu)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();           // Clear Matrices
+
+    wireFrame ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // added this
+
+    // Lighting
+    enableCelShading();
+
+    // Edit Mode State //
+    if(state_change)
+    {
+        t_switch();
+    }
+
+    glPushMatrix();
+    switch (currentState) {
+        case LANDING_PAGE:
+            landingPage->drawLandingPage(screenWidth, screenHeight);
+            break;
+
+        case MENU_PAGE:
+            glDisable(GL_LIGHTING); // Disable for text rendering
+            glColor3f(1.0, 1.0, 1.0); // Keep original color
+            landingPage->drawMenuPage(screenWidth, screenHeight);
+            glEnable(GL_LIGHTING); // Re-enable after text rendering
+            break;
+
+        case HELP_PAGE:
+            landingPage->drawHelpPage(screenWidth, screenHeight);
+            break;
+
+        case GAME_PLAY:
+            camera->updateViewDirection(); // Camera
+            if (!isPaused)
+                GamePlay();
+
+            // Always render the game scene
+            GamePlay(); // Only this should render, not update logic
+
+            if (isPaused)
+            {
+                //camera->updateViewDirection(); // Camera
+                // Switch to orthogonal projection for the pause menu
+                glMatrixMode(GL_PROJECTION);
+                glPushMatrix();
+                    glLoadIdentity();
+                    gluOrtho2D(0, screenWidth, screenHeight, 0);
+
+                    glMatrixMode(GL_MODELVIEW);
+
+                    glPushMatrix();
+                        glLoadIdentity();
+                        // Enable blending for transparency
+                        glEnable(GL_BLEND);
+                        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+                        // Render the pause menu overlay
+                        landingPage->drawPausePage(screenWidth, screenHeight);
+
+                        // Restore the original projection
+                        glDisable(GL_BLEND);
+                        glMatrixMode(GL_PROJECTION);
+                    glPopMatrix();
+
+                    glMatrixMode(GL_MODELVIEW);
+                glPopMatrix();
+            }
+
+            RenderHUD(); // Draw the HUD
+
+            break;
+
+        /* original
+        case GAME_PLAY:
+            camera->updateViewDirection(); // Camera
+            GamePlay(); // added this (Draw Scene Game play)
+            RenderHUD(); // Draw the HUD
+             break;
+
+        case PAUSE_MENU:
+            // Render the paused game scene
+            camera->updateViewDirection(); // Camera
+            GamePlay(); // added this (Draw Scene Game Play)
+
+            // Switch to orthogonal projection for the pause menu
+            glMatrixMode(GL_PROJECTION);
+            glPushMatrix();
+            glLoadIdentity();
+            gluOrtho2D(0, screenWidth, screenHeight, 0);
+
+            glMatrixMode(GL_MODELVIEW);
+            glPushMatrix();
+            glLoadIdentity();
+
+            // Render the pause menu overlay
+            landingPage->drawPausePage(screenWidth, screenHeight);
+
+            // Restore the original projection
+            glMatrixMode(GL_PROJECTION);
+            glPopMatrix();
+            glMatrixMode(GL_MODELVIEW);
+            glPopMatrix();
+            break;
+        */
+
+        case TEST_HUD: // state for testing HUD
+            RenderHUD();
+            break;
+
+        default: // Exits
+            break;
+    }
+    glPopMatrix();
+
+    return true;
+}
+
+/*Original drawScene()
+GLint Scene::drawScene()
+{
+    // added this
+    glClearColor(0.0, 0.0, 0.0, 0.0); // Ensure the alpha is set to 0 for transparency (Pause Menu)
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();           // Clear Matrices
+
+    wireFrame ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // added this
 
     // Lighting
     enableCelShading();
@@ -405,7 +747,7 @@ GLint Scene::drawScene()
     // Camera
     camera->updateViewDirection();
 
-    // Scene
+    // Scene (GamePlay)
     rotateTowards(&objectHierarchy[0]->rotation, nullptr);
     objectHierarchy[0]->mdl->Actions();
     objectHierarchy[0]->drawModel();
@@ -448,6 +790,166 @@ GLint Scene::drawScene()
 
     return true;
 }
+Original Scene ends */
+
+// added this
+// objectHierarchy[0]->mdl => gun model
+// objectHierarchy[1]->mdl => duck model
+
+void Scene::GamePlay() {
+    // Update and draw the gun model
+    rotateTowards(&objectHierarchy[0]->rotation, nullptr);
+    objectHierarchy[0]->mdl->Actions();
+    objectHierarchy[0]->drawModel();
+
+    // Get the updated gun barrel position after rotation
+    gunBarrelPosition = objectHierarchy[0]->position;
+
+    // Update and draw duck models
+    for (int i = 0; i < 4; i++)
+        if(ducks[i].actionTrigger == ducks[i].SHOOT)
+            rotateDuck(&ducks[i].rot, desPos[i]);
+
+    //cout << bullets[0].pos.x << " " << bullets[0].pos.y << " " << bullets[0].pos.z << endl;
+
+    // Temp Reload
+    if(bullets_left <= 0 && !objectHierarchy[0]->mdl->In_Animation) {
+        objectHierarchy[0]->mdl->actionTrigger = objectHierarchy[0]->mdl->RELOAD;
+        bullets_left = 2;
+    }
+
+    // Update projectiles
+    for (int i = 0; i < 20; i++) {
+            bullets[i].ProjectileAction(isPaused);
+            bullets[i].drawProjectile(false);
+
+        // Debugging output
+        /*
+        std::cout << "Bullet " << i << " Position: "
+                  << "X: " << bullets[i].pos.x
+                  << " Y: " << bullets[i].pos.y
+                  << " Z: " << bullets[i].pos.z
+                  << " Live: " << bullets[i].live
+                  << std::endl;
+        */
+    }
+
+    // World Generating
+    terrain->drawTerrain();
+    drawFoliage();
+
+    // Update skybox if level has changed
+    updateSkybox();
+
+    // Draw the skybox
+    sky->skyBoxDraw();
+
+    // Update and draw particles for each duck
+    for (int i = 0; i < 4; ++i)
+    {
+        particleSystem[i].update(0.016f); // Assuming 60 FPS
+        particleSystem[i].draw();
+    }
+
+    // Test for duck collision
+    for(int i = 0; i < 20; i++) {
+        for(int j = 0; j < 4; j++) {
+            if(hit->isSphereCollision(bullets[i].pos, ducks[j].pos, 0.6, 1.4, 0.4)) {
+                Kill_Duck(j);
+            }
+        }
+    }
+
+    // Launch Ducks
+    Automatic_Launcher();
+}
+
+/* original modified somewhat worked but no bullets drawn
+void Scene::GamePlay()
+{
+    // start ideas
+
+    // update and draw the duck models
+
+    // update and draw the gun model
+
+    // Temp reload
+
+    // Update projectiles
+
+    // Scene (GamePlay)
+
+    // World Generating
+
+    // Update skybox if level has changed
+
+    // Draw the skybox
+
+    // Test for duck collision
+
+    // Launch Ducks
+
+    // done ideas
+
+    // Update and draw duck models
+    for (int i = 0; i < 4; i++) { // Call rotateDuck method for each duck
+            //rotateDuck(&ducks[i].rot, nullptr); // Adjust target if needed
+            rotateDuck(&ducks[i].rot, desPos[i]); // Ensure ducks rotate towards their destination
+            //ducks[i].drawModel();
+    }
+
+    // gun model
+    rotateTowards(&objectHierarchy[0]->rotation, nullptr);
+    objectHierarchy[0]->mdl->Actions();
+    objectHierarchy[0]->drawModel();
+
+    // Temp Reload, gun model
+    if(bullets_left <= 0 && !objectHierarchy[0]->mdl->In_Animation)
+    {
+        objectHierarchy[0]->mdl->actionTrigger = objectHierarchy[0]->mdl->RELOAD;
+        bullets_left = 2;
+    }
+
+    // Duck Debug - Ensure it's for debugging only
+    if (duckDebug) {
+        objectHierarchy[1]->mdl->actionTrigger = objectHierarchy[1]->mdl->FLY;
+        objectHierarchy[1]->mdl->Actions();
+        objectHierarchy[1]->drawModel();
+    }
+
+    // added this
+    // Update projectiles
+    for (int i = 0; i < 20; i++) {
+        ducks[i].ProjectileAction(isPaused);
+        ducks[i].drawProjectile(false);
+    }
+
+    // World Generating
+    terrain->drawTerrain();
+    drawFoliage();
+
+    // Update skybox if level has changed
+    updateSkybox();
+
+    // Draw the skybox
+    sky->skyBoxDraw();
+
+    // Test for duck collision
+    for(int i=0; i < 20; i++)
+    {
+        for(int j = 0; j < 4; j++)
+            if(hit->isSphereCollision(bullets[i].pos, ducks[j].pos, 0.6, 1.4, 0.4))
+                Kill_Duck(j);
+
+        bullets[i].drawProjectile(true);
+        bullets[i].ProjectileAction(isPaused);
+    }
+
+    // Launch Ducks
+    Automatic_Launcher();
+} // Draw Scene (Game Play done)
+*/
+
 
 GLvoid Scene::resizeScene(GLsizei width, GLsizei height)
 {
@@ -497,6 +999,9 @@ GLvoid Scene::mouseMapping(int x, int y) // x & y are mouse coords
 
     // Perform unprojection to get world coordinates
     gluUnProject(winX, winY, winZ, modelViewM, projectionM, viewPort, &mouseX, &mouseY, &mouseZ);
+
+    // Debug: Print unprojected coordinates, to find out buttons clickable area
+    //std::cout << "Mapped mouse coordinates: (" << mouseX << ", " << mouseY << ", " << mouseZ << ")" << std::endl;
 }
 
 
@@ -601,24 +1106,27 @@ GLvoid Scene::t_switch()
     state_change = false;
 }
 
-GLvoid Scene::rotateTowards(vec3* object, vec3* target)
-{
+// modified this
+GLvoid Scene::rotateTowards(vec3* object, vec3* target) {
+    if (isPaused) {
+        return;
+    }
+
     float directionX = 0;
     float directionY = 0;
     float directionZ = 0;
 
-    if(target == nullptr)
-    {
+    if (target == nullptr) {
         // Calculate the direction vector
         directionX = mouseX - object->x;
-        directionY = mouseY - object->y;
+        directionY = object->y - mouseY; // Adjust to correct inversion
+        //directionY = -(mouseY - object->y); // Invert the Y-axis
         directionZ = mouseZ - object->z;
-    }
-    else
-    {
+    } else {
         // Calculate the direction vector
         directionX = target->x - object->x;
-        directionY = target->y - object->y;
+        directionY = object->y - target->y; // Adjust to correct inversion
+        //directionY = -(target->y - object->y); // Invert the Y-axis
         directionZ = target->z - object->z;
     }
 
@@ -633,18 +1141,19 @@ GLvoid Scene::rotateTowards(vec3* object, vec3* target)
     directionZ /= length;
 
     // Assume default forward vector is (0, 0, -1)
-    vec3 forward = { 0.0f, 0.0f, 1.0f };
+    vec3 forward = { 0.0f, 0.0f, -1.0f };
 
     // Calculate rotation axis using cross product
-    vec3 axis = {forward.y * directionZ - forward.z * directionY,
-                 forward.z * directionX - forward.x * directionZ,
-                 forward.x * directionY - forward.y * directionX};
+    vec3 axis = {
+        forward.y * directionZ - forward.z * directionY,
+        forward.z * directionX - forward.x * directionZ,
+        forward.x * directionY - forward.y * directionX
+    };
 
     // Normalize axis
     float axisLength = sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z);
 
-    if (axisLength != 0)
-    {
+    if (axisLength != 0) {
         axis.x /= axisLength;
         axis.y /= axisLength;
         axis.z /= axisLength;
@@ -658,6 +1167,78 @@ GLvoid Scene::rotateTowards(vec3* object, vec3* target)
     object->x = axis.x * angle;
     object->y = axis.y * angle;
     object->z = axis.z * angle;
+
+    // Debugging output
+    /*
+    std::cout << "Rotate Towards Position: "
+              << "X: " << object->x
+              << " Y: " << object->y
+              << " Z: " << object->z
+              << std::endl;
+    */
+}
+
+// added for duck rotation adjustment
+GLvoid Scene::rotateDuck(vec3* duck, vec3 target) {
+    if (isPaused) {
+        return; // Skip updating rotation if the game is paused
+    }
+
+    // Calculate the direction vector to follow their destination
+    float directionX = target.x - duck->x;
+    float directionY = target.y - duck->y;
+    float directionZ = target.z - duck->z;
+
+    // Normalize the direction vector
+    float length = sqrt(directionX * directionX + directionY * directionY + directionZ * directionZ);
+    if (length == 0) {
+        return; // Avoid division by zero
+    }
+    directionX /= length;
+    directionY /= length;
+    directionZ /= length;
+
+    // Assume default forward vector is (0, 0, 1) pointing forward
+    vec3 forward = {0.0f, 0.0f, 1.0f};
+
+    // Calculate rotation axis using cross product
+    vec3 axis = {
+        forward.y * directionZ - forward.z * directionY,
+        forward.z * directionX - forward.x * directionZ,
+        forward.x * directionY - forward.y * directionX
+    };
+
+    // Normalize axis
+    float axisLength = sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z);
+    if (axisLength != 0) {
+        axis.x /= axisLength;
+        axis.y /= axisLength;
+        axis.z /= axisLength;
+    }
+
+    // Calculate rotation angle using dot product
+    float dot = std::max(-1.0f, std::min(1.0f, forward.x * directionX + forward.y * directionY + forward.z * directionZ));
+    float angle = acos(dot) * (180.0f / 3.1415926); // Convert to degrees
+
+    // Update duck's rotation with a smooth transition
+    duck->x = duck->x * 0.5f + axis.x * angle * 0.1f; // Adjust smoothing factor (0.9 and 0.1) as needed
+    duck->y = duck->y * 0.9f + axis.y * angle * 0.1f;
+    duck->z = duck->z * 0.9f + axis.z * angle * 0.1f;
+
+    // Debugging output
+    /*
+    std::cout << "Rotate Duck Position: "
+              << "X: " << duck->x
+              << " Y: " << duck->y
+              << " Z: " << duck->z
+              << std::endl;
+    std::cout << "Rotate Duck Direction: "
+              << "X: " << directionX
+              << " Y: " << directionY
+              << " Z: " << directionZ
+              << std::endl;
+    std::cout << "Rotate Duck Angle: " << angle << std::endl;
+    */
 }
 
 GLvoid Scene::initFog()
@@ -665,7 +1246,7 @@ GLvoid Scene::initFog()
     glEnable(GL_FOG);
     glFogi(GL_FOG_MODE, GL_EXP2); // Choose a fog mode (e.g., GL_EXP, GL_EXP2, or GL_LINEAR)
     glFogfv(GL_FOG_COLOR, fogColor); // Use the fogColor with alpha
-    glFogf(GL_FOG_DENSITY, 0.005f);    // Adjust density for desired thickness
+    glFogf(GL_FOG_DENSITY, 0.001f);    // Adjust density for desired thickness
     glHint(GL_FOG_HINT, GL_NICEST);  // Nicest quality
     glFogf(GL_FOG_START, 1.0f);      // Start distance (for GL_LINEAR)
     glFogf(GL_FOG_END, 100.0f);      // End distance (for GL_LINEAR)
@@ -673,6 +1254,7 @@ GLvoid Scene::initFog()
 
 GLvoid Scene::Automatic_Launcher()
 {
+    // if(clock() - duck_timer->startTime > 1000)
     if(clock() - duck_timer->startTime > 1000)
     {
         int i = rnd->pickNumber();
@@ -689,7 +1271,8 @@ GLvoid Scene::Automatic_Launcher()
     for(int i=0; i < 4; i++)
     {
         ducks[i].drawProjectile(true);
-        ducks[i].ProjectileAction();
+        // ducks[i].ProjectileAction(); original
+        ducks[i].ProjectileAction(isPaused);
     }
 }
 
@@ -723,6 +1306,7 @@ GLvoid Scene::Kill_Duck(int duck)
     ducks[duck].actionTrigger = ducks[active_duck].DEAD;
     ducks[duck].rot.x = 90;
 
+    particleSystem[duck].init(ducks[duck].pos, "images/feathers.png");
     snds->playSound("sounds/duck_dying.mp3");
 }
 
@@ -814,5 +1398,231 @@ GLvoid Scene::updateSkybox()
         fogColor[2] = 0.0f;
         fogColor[3] = 0.5f;
         sky->skyBoxInit("images/forestNight.jfif");
+    }
+}
+
+// added this
+// added this for button clicks:
+GLboolean Scene::isBtn1Clicked()
+{
+    return ((mouseX >= btn1Xmin && mouseX <= btn1Xmax) && (mouseY <= btn1Ymin && mouseY >= btn1Ymax)) ? GL_TRUE : GL_FALSE;
+}
+
+GLboolean Scene::isBtn2Clicked()
+{
+    return ((mouseX >= btn2Xmin && mouseX <= btn2Xmax) && (mouseY <= btn2Ymin && mouseY >= btn2Ymax)) ? GL_TRUE : GL_FALSE;
+}
+
+GLboolean Scene::isBtn3Clicked()
+{
+    return ((mouseX >= btn3Xmin && mouseX <= btn3Xmax) && (mouseY <= btn3Ymin && mouseY >= btn3Ymax)) ? GL_TRUE : GL_FALSE;
+}
+
+// added all 3 methods for buttons functionality
+void Scene::goToGamePlay()
+{
+    currentState = GAME_PLAY;
+    std::cout << "Transitioning to Game Play state..." << std::endl;
+}
+
+void Scene::showHelpPage()
+{
+    currentState = HELP_PAGE;
+    std::cout << "Transitioning to Help Page..." << std::endl;
+}
+
+void Scene::exitApplication()
+{
+    PostQuitMessage(0); // Exit the application
+    std::cout << "Exiting application..." << std::endl;
+}
+
+void Scene::updateTimer()
+{
+    // may turn it off
+    //gameTimer->stop(); // Update the timer by stopping it briefly
+
+    double elapsedTime = gameTimer->getElapsedTime(); // Get the elapsed time in seconds
+    //std::cout << "Elapsed time: " << elapsedTime << std::endl; // Debug output
+
+    if (elapsedTime - lastTime >= 1.0f) // If a second has passed
+    {
+        lastTime = elapsedTime;
+        if (seconds > 0)
+        {
+            seconds--;
+        }
+        else if (minutes > 0)
+        {
+            minutes--;
+            seconds = 59;
+        }
+        //std::cout << "Timer updated: " << minutes << ":" << seconds << std::endl; // Debug output
+    }
+    gameTimer->start(); // Restart the timer after updating
+}
+
+void Scene::RenderHUD() // use as template to work with drawHUD()
+{
+    // Save the current matrix mode and projection
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+
+    // Set up an orthogonal projection
+    gluOrtho2D(0, screenWidth, screenHeight, 0); // left, right, bottom, top
+    glMatrixMode(GL_MODELVIEW); // Switch to modelview matrix
+
+    glPushMatrix();
+        glLoadIdentity();
+
+        // Disable lighting and textures to avoid conflicts
+        glDisable(GL_LIGHTING);
+        glDisable(GL_TEXTURE_2D);
+        glColor3f(1.0, 0.0, 0.0); // Set text color to red for visibility
+
+        // Update the timer
+        updateTimer();
+
+        // Get HUD-related data
+        int ammo = getAmmo();
+        int score = getScore();
+        //int minutes = getMinutes();
+        //int seconds = getSeconds();
+        const char* notification = getNotification();
+
+        // Render the HUD
+        hud->draw(ammo, score, minutes, seconds, notification);
+
+        glEnable(GL_LIGHTING);
+        glEnable(GL_TEXTURE_2D);
+
+    // Restore the original modelview matrix
+    glPopMatrix();
+
+    // Restore the original projection matrix
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+
+    // Switch back to modelview matrix
+    glMatrixMode(GL_MODELVIEW);
+}
+
+// getter methods
+int Scene::GetShotsLeft()
+{
+    return shotsLeft;
+}
+
+int Scene::GetPointsHit()
+{
+    return pointsHit;
+}
+
+int Scene::GetPointsMissed()
+{
+    return pointsMissed;
+}
+
+int Scene::getAmmo() const { return bullets_left; } // Implement the logic to retrieve the ammo value
+int Scene::getScore() const { return 150; } // Implement the logic to retrieve the score value
+int Scene::getMinutes() const { return 5; } // Implement the logic to retrieve the minutes value, can be used for start up
+int Scene::getSeconds() const { return 30; } // Implement the logic to retrieve the seconds value, this can be use for start up
+const char* Scene::getNotification() const { return "READY TO SHOOT!"; } // Implement the logic to retrieve the notification message
+
+void Scene::pauseGame() {
+     if (!isPaused) {
+        // Save camera state
+        savedViewDirectionX = camera->eye.x;
+        savedViewDirectionY = camera->eye.y;
+        savedViewDirectionZ = camera->eye.z;
+
+        // Save game timer state
+        savedStartTime = gameTimer->startTime;
+        savedMinutes = minutes;
+        savedSeconds = seconds;
+
+        // Save gun state
+        savedGunPosition = objectHierarchy[0]->position;
+        savedGunRotation = objectHierarchy[0]->rotation;
+        objectHierarchy[0]->mdl->actionTrigger = objectHierarchy[0]->mdl->IDLE;
+
+        // Save ducks timer state
+        savedDuckTimer = duck_timer->startTime;
+        wasDuckTimerRunning = duck_timer->running;
+
+        // Pause other game mechanics
+        // Save state of ducks
+        for (int i = 0; i < 4; i++) {
+            savedDuckPositions[i] = ducks[i].pos;
+            savedDuckRotations[i] = ducks[i].rot;
+            savedDuckActions[i] = ducks[i].actionTrigger;
+        }
+
+        // Save state of bullets
+        for (int i = 0; i < 20; i++) {
+            savedBulletPositions[i] = bullets[i].pos;
+            savedBulletLiveState[i] = bullets[i].live;
+        }
+
+        // Pause game timers
+        savedGameTimer = clock();
+        wasGameTimerRunning = gameTimer->running;
+
+        if (gameTimer->running) { gameTimer->stop(); }
+
+        if (duck_timer->running) { duck_timer->stop(); }
+
+        // Pause any other relevant game mechanics, timers, etc.
+
+        isPaused = true;
+    }
+}
+
+void Scene::resumeGame() {
+    if (isPaused) {
+        // Restore camera state
+        camera->eye.x = savedViewDirectionX;
+        camera->eye.y = savedViewDirectionY;
+        camera->eye.z = savedViewDirectionZ;
+
+        // Restore gun state
+        objectHierarchy[0]->position = savedGunPosition;
+        objectHierarchy[0]->rotation = savedGunRotation;
+
+        // Restore game timer state
+        gameTimer->startTime = savedStartTime;
+        minutes = savedMinutes;
+        seconds = savedSeconds;
+
+        // Restore ducks timer state
+        duck_timer->startTime = savedDuckTimer;
+
+        // Restore state of ducks
+        for (int i = 0; i < 4; i++) {
+            ducks[i].pos = savedDuckPositions[i];
+            ducks[i].rot = savedDuckRotations[i];
+            ducks[i].actionTrigger = savedDuckActions[i];
+        }
+
+        // Restore state of bullets
+        for (int i = 0; i < 20; i++) {
+            bullets[i].pos = savedBulletPositions[i];
+            bullets[i].live = savedBulletLiveState[i];
+        }
+
+        // Resume game timers
+        clock_t currentTime = clock();
+        double elapsedPauseTime = (currentTime - savedGameTimer) / (double)CLOCKS_PER_SEC;
+
+        gameTimer->startTime += elapsedPauseTime * CLOCKS_PER_SEC;
+        duck_timer->startTime += elapsedPauseTime * CLOCKS_PER_SEC;
+
+        if (wasGameTimerRunning) { gameTimer->start(); }
+        if (wasDuckTimerRunning) { duck_timer->start(); }
+
+        // Resume any other relevant game mechanics, timers, etc.
+
+        isPaused = false;
     }
 }

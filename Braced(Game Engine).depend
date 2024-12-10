@@ -66,7 +66,7 @@
 
 1726759669 c:\users\migue\onedrive\desktop\csci 191-t\braced(game engine)\include\__models.h
 
-1731545406 source:c:\github\braced-game-engine-\main.cpp
+1733847248 source:c:\github\braced-game-engine-\main.cpp
 	<windows.h>
 	<_Common.h>
 	<_Scene.h>
@@ -108,7 +108,7 @@
 	"_Common.h"
 	<SOIL.h>
 
-1733795298 c:\github\braced-game-engine-\include\_scene.h
+1733848425 c:\github\braced-game-engine-\include\_scene.h
 	<vector>
 	"_Scene.h"
 	"_LightSetup.h"
@@ -122,19 +122,25 @@
 	"_Skybox.h"
 	"_Sounds.h"
 	"_RandomNumber.h"
+	"_Particles.h"
+	"_TextureLoader.h"
+	"LandingPage.h"
+	"_Timer.h"
+	"_Fonts.h"
+	"_HUD.h"
 
 1731545406 c:\github\braced-game-engine-\include\_models.h
 	<_Common.h>
 	<_TextureLoader.h>
 	<_ModelLoaderMD2.h>
 
-1733795298 source:c:\github\braced-game-engine-\src\_scene.cpp
+1733862108 source:c:\github\braced-game-engine-\src\_scene.cpp
 	"_Scene.h"
 
-1731545406 source:c:\github\braced-game-engine-\src\_timer.cpp
+1733848306 source:c:\github\braced-game-engine-\src\_timer.cpp
 	"_Timer.h"
 
-1731545406 c:\github\braced-game-engine-\include\_timer.h
+1733848288 c:\github\braced-game-engine-\include\_timer.h
 	"_Common.h"
 
 1733795001 source:c:\github\braced-game-engine-\src\_models.cpp
@@ -185,10 +191,10 @@
 	"_Common.h"
 	"_Models.h"
 
-1733795001 source:c:\github\braced-game-engine-\src\_projectile.cpp
+1733854166 source:c:\github\braced-game-engine-\src\_projectile.cpp
 	"_Projectile.h"
 
-1733795001 c:\github\braced-game-engine-\include\_projectile.h
+1733848478 c:\github\braced-game-engine-\include\_projectile.h
 	"_Common.h"
 	"_TextureLoader.h"
 	"_ModelLoaderMD2.h"
@@ -307,4 +313,32 @@
 
 1733795001 source:c:\github\braced-game-engine-\src\_randomnumber.cpp
 	"_RandomNumber.h"
+
+1733795462 c:\github\braced-game-engine-\include\_particles.h
+	"_Common.h"
+	"_TextureLoader.h"
+
+1733847176 source:c:\github\braced-game-engine-\src\_particles.cpp
+	"_Particles.h"
+
+1732325251 c:\github\braced-game-engine-\include\landingpage.h
+	"_TextureLoader.h"
+	<_Common.h>
+	<iostream>
+
+1733449033 c:\github\braced-game-engine-\include\_fonts.h
+	<_Common.h>
+
+1733473027 c:\github\braced-game-engine-\include\_hud.h
+	<_Common.h>
+	"_Fonts.h"
+
+1733547423 source:c:\github\braced-game-engine-\src\_fonts.cpp
+	"_Fonts.h"
+
+1733862603 source:c:\github\braced-game-engine-\src\_hud.cpp
+	"_HUD.h"
+
+1733552937 source:c:\github\braced-game-engine-\src\landingpage.cpp
+	"LandingPage.h"
 

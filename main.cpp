@@ -312,6 +312,106 @@ int WINAPI WinMain(
 	BOOL	done=FALSE;				    // Bool Variable To Exit Loop
 
 	int	fullscreenWidth  = GetSystemMetrics(SM_CXSCREEN);
+    int	fullscreenHeight = GetSystemMetrics(SM_CYSCREEN);
+
+	// Ask The User Which Screen Mode They Prefer
+//	if (MessageBox(NULL,"Would You Like To Run In Fullscreen Mode?", "Start FullScreen?",MB_YESNO|MB_ICONQUESTION)==IDNO)
+//	{
+//		fullscreen=FALSE;			    // Windowed Mode
+//	}
+//
+	// Create Our OpenGL Window
+
+	if (!CreateGLWindow("Game Engine",fullscreenWidth,fullscreenHeight,256,fullscreen))
+	{
+		return 0;				        // Quit If Window Was Not Created
+	}
+
+	while(!done)					    // Loop That Runs While done=FALSE
+	{
+	  if (PeekMessage(&msg,NULL,0,0,PM_REMOVE))	// Is There A Message Waiting?
+		{
+			if (msg.message==WM_QUIT)	// Have We Received A Quit Message?
+			{
+				done=TRUE;		        // If So done=TRUE
+			}
+			else				        // If Not, Deal With Window Messages
+			{
+				TranslateMessage(&msg);	// Translate The Message
+				DispatchMessage(&msg);	// Dispatch The Message
+			}
+		}
+
+	  else						        // If There Are No Messages
+		{
+			// Draw The Scene.  Watch For ESC Key And Quit Messages From DrawGLScene()
+			// Check if the game is not paused
+			// if (scene->currentState != PAUSE_MENU)
+			if (!scene->isPaused)
+            {
+                if (!active)
+                {
+                    done = TRUE;
+                    KillGLWindow();
+                }
+                else
+                {
+                    scene->drawScene(); // game is paused
+
+                    //Update game logic here, only if not paused
+                    // Scene->updateGameLogic(); work in progress
+                    SwapBuffers(hDC);
+                }
+
+                if (keys[VK_F1])
+                {
+                    keys[VK_F1] = FALSE;
+                    KillGLWindow();
+                    fullscreen = !fullscreen;
+
+                    if (!CreateGLWindow("Game Engine", fullscreenWidth, fullscreenHeight, 256, fullscreen))
+                    {
+                        return 0;
+                    }
+                }
+
+                if (keys[VK_F3])
+                {
+                    scene->wireFrame = !scene->wireFrame;
+                }
+            }
+            else
+            {
+                // When the game is paused, only draw the pause menu
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                    scene->drawScene();
+                    SwapBuffers(hDC);
+                glDisable(GL_BLEND);
+            }
+		}
+    }
+
+    KillGLWindow();
+    return (msg.wParam);				// Exit The Program
+}
+
+/*
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//				THE WINMAIN
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+int WINAPI WinMain(
+
+            HINSTANCE	hInstance,	    // Instance
+		    HINSTANCE	hPrevInstance,	// Previous Instance
+		    LPSTR	lpCmdLine,		    // Command Line Parameters
+		    int		nCmdShow)	    	// Window Show State
+   {
+ 	MSG	msg;					        // Windows Message Structure
+	BOOL	done=FALSE;				    // Bool Variable To Exit Loop
+
+	int	fullscreenWidth  = GetSystemMetrics(SM_CXSCREEN);
     	int	fullscreenHeight = GetSystemMetrics(SM_CYSCREEN);
 
 	// Create Our OpenGL Window
@@ -372,3 +472,4 @@ int WINAPI WinMain(
 	KillGLWindow();					    // Kill The Window
 	return (msg.wParam);				// Exit The Program
 }
+*/

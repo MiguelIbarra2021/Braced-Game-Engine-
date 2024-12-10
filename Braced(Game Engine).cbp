@@ -44,6 +44,7 @@
 			<Add library="glu32" />
 			<Add library="winmm" />
 			<Add library="gdi32" />
+			<Add library="../../Users/migue/OneDrive/Desktop/CSCI 191-T/common/lib/glew32.lib" />
 			<Add directory="C:/Users/migue/OneDrive/Desktop/CSCI 191-T/common/lib" />
 		</Linker>
 		<Unit filename="include/Anorms.h" />
@@ -55,6 +56,7 @@
 		<Unit filename="include/_LightSetup.h" />
 		<Unit filename="include/_ModelLoaderMD2.h" />
 		<Unit filename="include/_Models.h" />
+		<Unit filename="include/_Particles.h" />
 		<Unit filename="include/_Projectile.h" />
 		<Unit filename="include/_RandomNumber.h" />
 		<Unit filename="include/_Scene.h" />
@@ -72,6 +74,7 @@
 		<Unit filename="src/_LightSetup.cpp" />
 		<Unit filename="src/_ModelLoaderMD2.cpp" />
 		<Unit filename="src/_Models.cpp" />
+		<Unit filename="src/_Particles.cpp" />
 		<Unit filename="src/_Projectile.cpp" />
 		<Unit filename="src/_RandomNumber.cpp" />
 		<Unit filename="src/_Scene.cpp" />

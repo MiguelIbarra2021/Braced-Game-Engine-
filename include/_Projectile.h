@@ -27,7 +27,7 @@ class _Projectile
      char* model_file = nullptr;
 
      float t = 0.0; //parameter for the Projectile path
-     int projectile_speed = 10;
+     int projectile_speed = 10; // original = 10
      bool live = true;
 
      enum{READY, //ready to shoot
@@ -37,7 +37,10 @@ class _Projectile
 
      void initProjectile(char*, char *);
      void drawProjectile(bool is_model);
-     void ProjectileAction();
+     // void ProjectileAction(); // original
+
+     // Added this
+     void ProjectileAction(bool isPaused); // Updated method for pausing
 
      int actionTrigger = READY;
 

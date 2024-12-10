@@ -9,7 +9,18 @@ class _Timer
         _Timer();
         virtual ~_Timer();
 
+        // added this
+        void initTimer(); // init start Timer
+        void start();
+        void stop();
+        void reset();
+        double getElapsedTime() const;
+
         clock_t startTime;
+
+        // added this
+        clock_t endTime;
+        bool running;
 
     protected:
 
