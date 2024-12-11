@@ -313,8 +313,9 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
             sysControl->mouseEventUp();
             break;
         case WM_MOUSEMOVE:
-            //sysControl->wParam = wParam;
-            //sysControl->mouseTranslation = true;
+            sysControl->mouseTranslation = true;
+            sysControl->mouseRotation = true;
+            sysControl->mouseMove(hud, LOWORD(lParam), HIWORD(lParam));
             mouseMapping(LOWORD(lParam), HIWORD(lParam));
             break;
 
@@ -641,6 +642,8 @@ GLint Scene::drawScene() {
             break;
 
         case GAME_PLAY:
+            //sysControl->hideMouseCursor(); // hide mouse cursor
+
             camera->updateViewDirection(); // Camera
             if (!isPaused)
                 GamePlay();
@@ -819,19 +822,10 @@ void Scene::GamePlay() {
     }
 
     // Update projectiles
-    for (int i = 0; i < 20; i++) {
-            bullets[i].ProjectileAction(isPaused);
-            bullets[i].drawProjectile(false);
-
-        // Debugging output
-        /*
-        std::cout << "Bullet " << i << " Position: "
-                  << "X: " << bullets[i].pos.x
-                  << " Y: " << bullets[i].pos.y
-                  << " Z: " << bullets[i].pos.z
-                  << " Live: " << bullets[i].live
-                  << std::endl;
-        */
+    for (int i = 0; i < 20; i++)
+    {
+        bullets[i].ProjectileAction(isPaused);
+        bullets[i].drawProjectile(false);
     }
 
     // World Generating
@@ -852,9 +846,12 @@ void Scene::GamePlay() {
     }
 
     // Test for duck collision
-    for(int i = 0; i < 20; i++) {
-        for(int j = 0; j < 4; j++) {
-            if(hit->isSphereCollision(bullets[i].pos, ducks[j].pos, 0.6, 1.4, 0.4)) {
+    for(int i = 0; i < 20; i++)
+    {
+        for(int j = 0; j < 4; j++)
+        {
+            if(hit->isSphereCollision(bullets[i].pos, ducks[j].pos, 0.6, 1.4, 0.4))
+            {
                 Kill_Duck(j);
             }
         }
@@ -986,11 +983,13 @@ GLvoid Scene::mouseMapping(int x, int y) // x & y are mouse coords
     // Read depth value at the current mouse position
     glReadPixels(x, int(winY), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ);
 
-    // Depth thresholding to ignore unintended objects
+    /*// Depth thresholding to ignore unintended objects
     if (winZ < 0.01f || winZ > 0.99f) {
         // Ignore out-of-range depth values
         winZ = 1.0f; // Default depth (far plane)
-    }
+    }*/
+
+    winZ = 1.0f; // Default depth (far plane)
 
     // Initialize mouse coordinates in world space
     mouseX = (GLfloat)(x - screenWidth / 2.0) / scale;

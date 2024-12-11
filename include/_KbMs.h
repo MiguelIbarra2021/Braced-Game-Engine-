@@ -4,6 +4,7 @@
 #include <_Common.h>
 #include <_Models.h>
 #include <_Camera.h>
+#include "_HUD.h"
 
 class _KbMs
 {
@@ -25,7 +26,6 @@ class _KbMs
 
         void mouseEventDown(double, double);
         void mouseEventUp();
-
         void mouseWheel(_Models *, double);
         void mouseMove(_Models *, double, double);
 
@@ -42,7 +42,14 @@ class _KbMs
         double returnMouseX();
         double returnMouseY();
 
-        POINT p;
+        // ++++++++++++++++added this for HUD+++++++++++++
+        // POINT getMousePosition();
+
+        void mouseMove(_HUD*, double, double);
+        void hideMouseCursor();
+        void showMouseCursor();
+        // ++ added ends +++++++++++++++++++++++++++++
+        // POINT p;
 
     protected:
 

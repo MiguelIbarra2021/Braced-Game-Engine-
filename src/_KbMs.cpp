@@ -138,8 +138,27 @@ void _KbMs::keyPress(vec3* m_transform)
     }
 }
 
-void _KbMs::keyUp()
-{
+// Modified this
+void _KbMs::keyUp() {
+    // Reset states or handle specific key releases
+    // Example: If a specific key is released, we can reset the state
+    switch (wParam) {
+        case VK_UP:
+        case VK_DOWN:
+        case VK_LEFT:
+        case VK_RIGHT:
+        case 0x57: // W
+        case 0x53: // S
+        case 0x44: // D
+        case 0x41: // A
+        case 0x51: // Q
+        case 0x45: // E
+            // Reset the state or stop the corresponding action
+            // This could be custom logic based on your application needs
+            // Example: Stop rotation or movement
+            // You can add specific logic here
+            break;
+    }
 }
 
 void _KbMs::mouseEventDown(double x, double y)
@@ -172,6 +191,40 @@ void _KbMs::mouseWheel(_Models* model, double delta)
 {
     model->position.z += delta/100;
 }
+/*
+void _KbMs::mouseMove(_HUD* hud, double x, double y)
+{
+    if (mouseTranslation) {
+        hud->mouseX += (x - prev_MouseX) / 100.0;
+        hud->mouseY -= (y - prev_MouseY) / 100.0;
+    } else if (mouseRotation) {
+        hud->rotationY += (x - prev_MouseX);
+        hud->rotationX += (y - prev_MouseY);
+    }
+
+    prev_MouseX = x;
+    prev_MouseY = y;
+
+    // Debug output for mouse position
+    std::cout << "Mouse Move - X: " << x << ", Y: " << y << std::endl;
+    std::cout << "HUD Mouse Position - X: " << hud->mouseX << ", Y: " << hud->mouseY << std::endl;
+}
+*/
+
+// +++++++++++ added +++++++++++++++++++++++++++
+void _KbMs::mouseMove(_HUD* hud, double x, double y)
+{
+    hud->mouseX = x;
+    hud->mouseY = y;
+
+    prev_MouseX = x;
+    prev_MouseY = y;
+
+    // Debug output for mouse position
+    std::cout << "Mouse Move - X: " << x << ", Y: " << y << std::endl;
+    std::cout << "HUD Mouse Position - X: " << hud->mouseX << ", Y: " << hud->mouseY << std::endl;
+}
+// +++++++++++++++++++ added ++++++++++++++++++++++++++
 
 void _KbMs::mouseMove(_Models* model, double x, double y)
 {
@@ -199,3 +252,25 @@ double _KbMs::returnMouseX()
 
 double _KbMs::returnMouseY()
 { return prev_MouseY; }
+
+// added this for HUD
+/*
+POINT _KbMs::getMousePosition()
+{
+    GetCursorPos(&p); // Get the cursor position in screen coordinates
+    ScreenToClient(GetActiveWindow(), &p); // Convert to window coordinates
+    return p;
+}
+*/
+
+// +++++++++++ added +++++++++++++++++++++++++++++++++++
+void _KbMs::hideMouseCursor()
+{
+    ShowCursor(FALSE); // hide the default mouse cursor
+}
+
+void _KbMs::showMouseCursor()
+{
+    ShowCursor(TRUE); // Show the default mouse cursor
+}
+// +++++++++++++ added +++++++++++++++++++++++++++++++

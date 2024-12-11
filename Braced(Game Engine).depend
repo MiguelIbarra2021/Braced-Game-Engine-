@@ -87,13 +87,14 @@
 
 1726756069 c:\github\braced-game-engine-\include\__models.h
 
-1732128822 source:c:\github\braced-game-engine-\src\_kbms.cpp
+1733875373 source:c:\github\braced-game-engine-\src\_kbms.cpp
 	"_KbMs.h"
 
-1731545406 c:\github\braced-game-engine-\include\_kbms.h
+1733875418 c:\github\braced-game-engine-\include\_kbms.h
 	<_Common.h>
 	<_Models.h>
 	<_Camera.h>
+	"_HUD.h"
 
 1731545406 source:c:\github\braced-game-engine-\src\_lightsetup.cpp
 	"_LightSetup.h"
@@ -134,7 +135,7 @@
 	<_TextureLoader.h>
 	<_ModelLoaderMD2.h>
 
-1733862108 source:c:\github\braced-game-engine-\src\_scene.cpp
+1733875079 source:c:\github\braced-game-engine-\src\_scene.cpp
 	"_Scene.h"
 
 1733848306 source:c:\github\braced-game-engine-\src\_timer.cpp
@@ -329,14 +330,14 @@
 1733449033 c:\github\braced-game-engine-\include\_fonts.h
 	<_Common.h>
 
-1733473027 c:\github\braced-game-engine-\include\_hud.h
+1733875443 c:\github\braced-game-engine-\include\_hud.h
 	<_Common.h>
 	"_Fonts.h"
 
 1733547423 source:c:\github\braced-game-engine-\src\_fonts.cpp
 	"_Fonts.h"
 
-1733862603 source:c:\github\braced-game-engine-\src\_hud.cpp
+1733875457 source:c:\github\braced-game-engine-\src\_hud.cpp
 	"_HUD.h"
 
 1733552937 source:c:\github\braced-game-engine-\src\landingpage.cpp

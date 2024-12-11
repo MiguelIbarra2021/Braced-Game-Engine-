@@ -13,6 +13,7 @@ class _HUD
 
     //void RenderHUD();
     void initFonts();
+    void initHUD(); // ++++++++++++ added ++++++++++++++++
     void draw(int ammo, int score, int minutes, int seconds, const char* notification);
     void drawCrosshair();
     void drawAmmoCount(int ammo);
@@ -23,10 +24,16 @@ class _HUD
     _Fonts* font;
     int screenWidth;
     int screenHeight;
+    // POINT mousePos;
 
     int shotsL;
     int pointsL;
     int pointsM;
+
+    // ++++++++ added +++++++++
+    double mouseX, mouseY, rotationX, rotationY;
+    void update(); // update position
+    // ++++++++ added +++++++++
 
     protected:
 
