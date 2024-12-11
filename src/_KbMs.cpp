@@ -221,8 +221,8 @@ void _KbMs::mouseMove(_HUD* hud, double x, double y)
     prev_MouseY = y;
 
     // Debug output for mouse position
-    std::cout << "Mouse Move - X: " << x << ", Y: " << y << std::endl;
-    std::cout << "HUD Mouse Position - X: " << hud->mouseX << ", Y: " << hud->mouseY << std::endl;
+    //std::cout << "Mouse Move - X: " << x << ", Y: " << y << std::endl;
+    //std::cout << "HUD Mouse Position - X: " << hud->mouseX << ", Y: " << hud->mouseY << std::endl;
 }
 // +++++++++++++++++++ added ++++++++++++++++++++++++++
 

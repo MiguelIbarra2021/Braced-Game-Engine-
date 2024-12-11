@@ -6,7 +6,11 @@ _KbMs* sysControl = new _KbMs();            // Mouse and Key Control
 _TerrainGenerator* terrain = new _TerrainGenerator();
 _Camera* camera = new _Camera();
 _Collision* hit = new _Collision();
-_Skybox* sky = new _Skybox();
+_Skybox* sky = nullptr;
+_Skybox* skyboxes = new _Skybox[3];
+_Skybox* sky1 = new _Skybox();
+_Skybox* sky2 = new _Skybox();
+_Skybox* sky3 = new _Skybox();
 _Sounds *snds = new _Sounds();
 _Timer* duck_timer = new _Timer();
 _RandomNumber* rnd = new _RandomNumber();
@@ -29,6 +33,8 @@ int mouseClicks;
 int objects;                            // # of objects in Scene
 int lights;                            // # of lights in Scene
 
+float fogDensity = 0.005;
+
 bool shot = false;
 
 GLfloat fogColor[4];
@@ -38,6 +44,11 @@ Scene::Scene()
     // Initalize Variables
     screenHeight = GetSystemMetrics(SM_CYSCREEN);
     screenWidth =   GetSystemMetrics(SM_CXSCREEN);
+
+    fogColor[0] = 1.0;
+    fogColor[1] = 1.0;
+    fogColor[2] = 1.0;
+    fogColor[3] = 1.0;
 
     mouseClicks = 0;
     objects = 0;
@@ -69,8 +80,8 @@ Scene::Scene()
 
     // HUD
     hud = new _HUD();
-    minutes = 5; // timer
-    seconds = 0;
+    minutes = 1; // timer
+    seconds = 30;
     lastTime = 0.0f;
 
     // timer
@@ -288,7 +299,7 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
                 bullets_left--;
 
                 // Debugging output
-                std::cout << "Bullet " << mouseClicks << " Initialized: "
+                /*std::cout << "Bullet " << mouseClicks << " Initialized: "
                           << "Src X: " << bullets[mouseClicks].src.x
                           << " Y: " << bullets[mouseClicks].src.y
                           << " Z: " << bullets[mouseClicks].src.z
@@ -296,7 +307,7 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
                           << " Y: " << bullets[mouseClicks].des.y
                           << " Z: " << bullets[mouseClicks].des.z
                           << " Live: " << bullets[mouseClicks].live
-                          << std::endl;
+                          << std::endl;*/
 
                 mouseClicks = (mouseClicks + 1) % 20;
             }
@@ -351,7 +362,13 @@ GLint Scene::initGL()   // Initalize Scene
     glEnable(GL_TEXTURE_2D);  //enable textures
 
     // World
-    //initFog();
+    initFog();
+
+    skyboxes[0].skyBoxInit("images/forestMorning.jfif");
+    skyboxes[1].skyBoxInit("images/forestEvening.jfif");
+    skyboxes[2].skyBoxInit("images/forestNight.jfif");
+
+    sky = &skyboxes[0];
 
      // added this, menu and button textures
     landingPage->initPageTextures
@@ -382,7 +399,7 @@ GLint Scene::initGL()   // Initalize Scene
         fogColor[1] = 1.0f;
         fogColor[2] = 1.0f;
         fogColor[3] = 0.5f;
-        sky->skyBoxInit("images/forestMorning.jfif");
+
         sky->scale.x = 1000;
         sky->scale.y = 1000;
         sky->scale.z = 1000;
@@ -394,7 +411,7 @@ GLint Scene::initGL()   // Initalize Scene
         fogColor[1] = 0.5f;
         fogColor[2] = 0.5f;
         fogColor[3] = 0.5f;
-        sky->skyBoxInit("images/forestEvening.jfif");
+
     }
     else if (liveLevel13)
     {
@@ -402,7 +419,7 @@ GLint Scene::initGL()   // Initalize Scene
         fogColor[1] = 0.0f;
         fogColor[2] = 0.0f;
         fogColor[3] = 0.5f;
-        sky->skyBoxInit("images/forestNight.jfif");
+
     }
 
     // Duck Model
@@ -492,6 +509,12 @@ GLint Scene::initGL()   // Initalize Scene
 // modified this
 // **************   DUCKS ********************
 GLvoid Scene::initDuck() {
+    for(int i = 0; i < 4; i++)
+    {
+        ducks[i].projectile_speed = 15;
+        ducks[i].actionTrigger = ducks[i].READY;
+    }
+
     // Initialize Duck Launcher: Launch Position
     lanPos[0].x = 20;
     lanPos[0].y = -20;
@@ -550,11 +573,11 @@ GLvoid Scene::initDuck() {
 
     // Debugging output
     for (int i = 0; i < 4; i++) {
-        std::cout << "Init Duck Launcher " << i << " Rotation: "
+        /*std::cout << "Init Duck Launcher " << i << " Rotation: "
                   << "X: " << lanRot[i].x
                   << " Y: " << lanRot[i].y
                   << " Z: " << lanRot[i].z
-                  << std::endl;
+                  << std::endl;*/
     }
 }
 
@@ -563,6 +586,7 @@ GLvoid Scene::initDuck() {
 GLvoid Scene::initShotgun() {
     insertObject("models/gun_color.png", "models/shotgun.md2");
     objectHierarchy[0]->mdl->actionTrigger = objectHierarchy[0]->mdl->IDLE;
+    objectHierarchy[0]->mdl->In_Animation = false;
 
     objectHierarchy[0]->scale.x = 1;
     objectHierarchy[0]->scale.y = 1;
@@ -577,7 +601,7 @@ GLvoid Scene::initShotgun() {
     objectHierarchy[0]->rotation.z = 0.0f; // No roll
 
     // Debugging output
-    std::cout << "Init Shotgun Position: "
+    /*std::cout << "Init Shotgun Position: "
               << "X: " << objectHierarchy[0]->position.x
               << " Y: " << objectHierarchy[0]->position.y
               << " Z: " << objectHierarchy[0]->position.z
@@ -586,7 +610,7 @@ GLvoid Scene::initShotgun() {
               << "X: " << objectHierarchy[0]->rotation.x
               << " Y: " << objectHierarchy[0]->rotation.y
               << " Z: " << objectHierarchy[0]->rotation.z
-              << std::endl;
+              << std::endl;*/
 }
 
 void Scene::enableCelShading() {
@@ -609,7 +633,7 @@ void Scene::enableCelShading() {
 
 // Modified drawScene
 GLint Scene::drawScene() {
-    glClearColor(0.0, 0.0, 0.0, 0.0); // Ensure the alpha is set to 0 for transparency (Pause Menu)
+    glClearColor(1.0, 0.0, 0.0, 1.0); // Ensure the alpha is set to 0 for transparency (Pause Menu)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();           // Clear Matrices
 
@@ -642,11 +666,11 @@ GLint Scene::drawScene() {
             break;
 
         case GAME_PLAY:
-            //sysControl->hideMouseCursor(); // hide mouse cursor
+            sysControl->hideMouseCursor(); // hide mouse cursor
 
             camera->updateViewDirection(); // Camera
             if (!isPaused)
-                GamePlay();
+                //GamePlay();
 
             // Always render the game scene
             GamePlay(); // Only this should render, not update logic
@@ -680,43 +704,11 @@ GLint Scene::drawScene() {
                 glPopMatrix();
             }
 
+            glDisable(GL_FOG);
             RenderHUD(); // Draw the HUD
+            glEnable(GL_FOG);
 
             break;
-
-        /* original
-        case GAME_PLAY:
-            camera->updateViewDirection(); // Camera
-            GamePlay(); // added this (Draw Scene Game play)
-            RenderHUD(); // Draw the HUD
-             break;
-
-        case PAUSE_MENU:
-            // Render the paused game scene
-            camera->updateViewDirection(); // Camera
-            GamePlay(); // added this (Draw Scene Game Play)
-
-            // Switch to orthogonal projection for the pause menu
-            glMatrixMode(GL_PROJECTION);
-            glPushMatrix();
-            glLoadIdentity();
-            gluOrtho2D(0, screenWidth, screenHeight, 0);
-
-            glMatrixMode(GL_MODELVIEW);
-            glPushMatrix();
-            glLoadIdentity();
-
-            // Render the pause menu overlay
-            landingPage->drawPausePage(screenWidth, screenHeight);
-
-            // Restore the original projection
-            glMatrixMode(GL_PROJECTION);
-            glPopMatrix();
-            glMatrixMode(GL_MODELVIEW);
-            glPopMatrix();
-            break;
-        */
-
         case TEST_HUD: // state for testing HUD
             RenderHUD();
             break;
@@ -728,76 +720,6 @@ GLint Scene::drawScene() {
 
     return true;
 }
-
-/*Original drawScene()
-GLint Scene::drawScene()
-{
-    // added this
-    glClearColor(0.0, 0.0, 0.0, 0.0); // Ensure the alpha is set to 0 for transparency (Pause Menu)
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();           // Clear Matrices
-
-    wireFrame ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // added this
-
-    // Lighting
-    enableCelShading();
-
-    // Edit Mode State //
-    if(state_change)
-        t_switch();
-
-    // Camera
-    camera->updateViewDirection();
-
-    // Scene (GamePlay)
-    rotateTowards(&objectHierarchy[0]->rotation, nullptr);
-    objectHierarchy[0]->mdl->Actions();
-    objectHierarchy[0]->drawModel();
-
-    // Temp Reload
-    if(bullets_left <= 0 && !objectHierarchy[0]->mdl->In_Animation)
-    {
-        objectHierarchy[0]->mdl->actionTrigger = objectHierarchy[0]->mdl->RELOAD;
-        bullets_left = 2;
-    }
-
-    // Duck Debug
-    objectHierarchy[1]->mdl->actionTrigger = objectHierarchy[1]->mdl->FLY;
-    objectHierarchy[1]->mdl->Actions();
-    objectHierarchy[1]->drawModel();
-
-    // World Generating
-    terrain->drawTerrain();
-    drawFoliage();
-
-    // Update skybox if level has changed
-    updateSkybox();
-
-    // Draw the skybox
-    sky->skyBoxDraw();
-
-    // Test for duck collision
-    for(int i=0; i < 20; i++)
-    {
-        for(int j = 0; j < 4; j++)
-            if(hit->isSphereCollision(bullets[i].pos, ducks[j].pos, 0.6, 1.4, 0.4))
-                Kill_Duck(j);
-
-        bullets[i].drawProjectile(false);
-        bullets[i].ProjectileAction();
-    }
-
-    // Launch Ducks
-    Automatic_Launcher();
-
-    return true;
-}
-Original Scene ends */
-
-// added this
-// objectHierarchy[0]->mdl => gun model
-// objectHierarchy[1]->mdl => duck model
 
 void Scene::GamePlay() {
     // Update and draw the gun model
@@ -860,93 +782,6 @@ void Scene::GamePlay() {
     // Launch Ducks
     Automatic_Launcher();
 }
-
-/* original modified somewhat worked but no bullets drawn
-void Scene::GamePlay()
-{
-    // start ideas
-
-    // update and draw the duck models
-
-    // update and draw the gun model
-
-    // Temp reload
-
-    // Update projectiles
-
-    // Scene (GamePlay)
-
-    // World Generating
-
-    // Update skybox if level has changed
-
-    // Draw the skybox
-
-    // Test for duck collision
-
-    // Launch Ducks
-
-    // done ideas
-
-    // Update and draw duck models
-    for (int i = 0; i < 4; i++) { // Call rotateDuck method for each duck
-            //rotateDuck(&ducks[i].rot, nullptr); // Adjust target if needed
-            rotateDuck(&ducks[i].rot, desPos[i]); // Ensure ducks rotate towards their destination
-            //ducks[i].drawModel();
-    }
-
-    // gun model
-    rotateTowards(&objectHierarchy[0]->rotation, nullptr);
-    objectHierarchy[0]->mdl->Actions();
-    objectHierarchy[0]->drawModel();
-
-    // Temp Reload, gun model
-    if(bullets_left <= 0 && !objectHierarchy[0]->mdl->In_Animation)
-    {
-        objectHierarchy[0]->mdl->actionTrigger = objectHierarchy[0]->mdl->RELOAD;
-        bullets_left = 2;
-    }
-
-    // Duck Debug - Ensure it's for debugging only
-    if (duckDebug) {
-        objectHierarchy[1]->mdl->actionTrigger = objectHierarchy[1]->mdl->FLY;
-        objectHierarchy[1]->mdl->Actions();
-        objectHierarchy[1]->drawModel();
-    }
-
-    // added this
-    // Update projectiles
-    for (int i = 0; i < 20; i++) {
-        ducks[i].ProjectileAction(isPaused);
-        ducks[i].drawProjectile(false);
-    }
-
-    // World Generating
-    terrain->drawTerrain();
-    drawFoliage();
-
-    // Update skybox if level has changed
-    updateSkybox();
-
-    // Draw the skybox
-    sky->skyBoxDraw();
-
-    // Test for duck collision
-    for(int i=0; i < 20; i++)
-    {
-        for(int j = 0; j < 4; j++)
-            if(hit->isSphereCollision(bullets[i].pos, ducks[j].pos, 0.6, 1.4, 0.4))
-                Kill_Duck(j);
-
-        bullets[i].drawProjectile(true);
-        bullets[i].ProjectileAction(isPaused);
-    }
-
-    // Launch Ducks
-    Automatic_Launcher();
-} // Draw Scene (Game Play done)
-*/
-
 
 GLvoid Scene::resizeScene(GLsizei width, GLsizei height)
 {
@@ -1106,22 +941,25 @@ GLvoid Scene::t_switch()
 }
 
 // modified this
-GLvoid Scene::rotateTowards(vec3* object, vec3* target) {
-    if (isPaused) {
+GLvoid Scene::rotateTowards(vec3* object, vec3* target)
+{
+    if (isPaused)
         return;
-    }
 
     float directionX = 0;
     float directionY = 0;
     float directionZ = 0;
 
-    if (target == nullptr) {
+    if (target == nullptr)
+    {
         // Calculate the direction vector
         directionX = mouseX - object->x;
         directionY = object->y - mouseY; // Adjust to correct inversion
         //directionY = -(mouseY - object->y); // Invert the Y-axis
         directionZ = mouseZ - object->z;
-    } else {
+    }
+    else
+    {
         // Calculate the direction vector
         directionX = target->x - object->x;
         directionY = object->y - target->y; // Adjust to correct inversion
@@ -1223,21 +1061,6 @@ GLvoid Scene::rotateDuck(vec3* duck, vec3 target) {
     duck->x = duck->x * 0.5f + axis.x * angle * 0.1f; // Adjust smoothing factor (0.9 and 0.1) as needed
     duck->y = duck->y * 0.9f + axis.y * angle * 0.1f;
     duck->z = duck->z * 0.9f + axis.z * angle * 0.1f;
-
-    // Debugging output
-    /*
-    std::cout << "Rotate Duck Position: "
-              << "X: " << duck->x
-              << " Y: " << duck->y
-              << " Z: " << duck->z
-              << std::endl;
-    std::cout << "Rotate Duck Direction: "
-              << "X: " << directionX
-              << " Y: " << directionY
-              << " Z: " << directionZ
-              << std::endl;
-    std::cout << "Rotate Duck Angle: " << angle << std::endl;
-    */
 }
 
 GLvoid Scene::initFog()
@@ -1245,7 +1068,7 @@ GLvoid Scene::initFog()
     glEnable(GL_FOG);
     glFogi(GL_FOG_MODE, GL_EXP2); // Choose a fog mode (e.g., GL_EXP, GL_EXP2, or GL_LINEAR)
     glFogfv(GL_FOG_COLOR, fogColor); // Use the fogColor with alpha
-    glFogf(GL_FOG_DENSITY, 0.001f);    // Adjust density for desired thickness
+    glFogf(GL_FOG_DENSITY, fogDensity);    // Adjust density for desired thickness
     glHint(GL_FOG_HINT, GL_NICEST);  // Nicest quality
     glFogf(GL_FOG_START, 1.0f);      // Start distance (for GL_LINEAR)
     glFogf(GL_FOG_END, 100.0f);      // End distance (for GL_LINEAR)
@@ -1302,7 +1125,10 @@ GLvoid Scene::Launch_Duck(int current_duck)
 
 GLvoid Scene::Kill_Duck(int duck)
 {
-    ducks[duck].actionTrigger = ducks[active_duck].DEAD;
+    if(ducks[duck].actionTrigger != ducks[duck].DEAD)
+        pointsHit = pointsHit + 50;
+
+    ducks[duck].actionTrigger = ducks[duck].DEAD;
     ducks[duck].rot.x = 90;
 
     particleSystem[duck].init(ducks[duck].pos, "images/feathers.png");
@@ -1367,36 +1193,60 @@ GLvoid Scene::drawFoliage()
 
 GLvoid Scene::updateSkybox()
 {
-    if (liveLevel11)
+    if (pointsHit < 90)
     {
-        initFog();
-
         fogColor[0] = 0.33f;
         fogColor[1] = 0.33f;
         fogColor[2] = 0.53f;
         fogColor[3] = 1.0f;
-        sky->skyBoxInit("images/forestMorning.jfif");
+
+        fogDensity = 0.005;
+
+        if(sky != &skyboxes[0])
+        {
+            initFog();
+            sky = &skyboxes[0];
+        }
+
+        for(int i = 0; i < 4; i++)
+            ducks[i].projectile_speed = 15;
 
     }
-    else if (liveLevel12)
+    else if (pointsHit < 150)
     {
-        initFog();
-
         fogColor[0] = 0.8f;
         fogColor[1] = 0.5f;
         fogColor[2] = 0.5f;
         fogColor[3] = 0.5f;
-        sky->skyBoxInit("images/forestEvening.jfif");
-    }
-    else if (liveLevel13)
-    {
-        initFog();
 
+        fogDensity = 0.01;
+
+        if(sky != &skyboxes[1])
+        {
+            initFog();
+            sky = &skyboxes[1];
+        }
+
+        for(int i = 0; i < 4; i++)
+            ducks[i].projectile_speed = 10;
+    }
+    else if (pointsHit >= 190)
+    {
         fogColor[0] = 0.0f;
         fogColor[1] = 0.0f;
         fogColor[2] = 0.0f;
         fogColor[3] = 0.5f;
-        sky->skyBoxInit("images/forestNight.jfif");
+
+        fogDensity = 0.02;
+
+        if(sky != &skyboxes[2])
+        {
+            initFog();
+            sky = &skyboxes[2];
+        }
+
+        for(int i = 0; i < 4; i++)
+            ducks[i].projectile_speed = 5;
     }
 }
 
@@ -1455,6 +1305,19 @@ void Scene::updateTimer()
         {
             minutes--;
             seconds = 59;
+        }
+        else
+        {
+            currentState = LANDING_PAGE;
+
+            minutes = 1;
+            seconds = 30;
+            bullets_left = 2;
+            pointsHit = 0;
+
+            initShotgun();
+            initDuck();
+            initBullets();
         }
         //std::cout << "Timer updated: " << minutes << ":" << seconds << std::endl; // Debug output
     }
@@ -1524,7 +1387,7 @@ int Scene::GetPointsMissed()
 }
 
 int Scene::getAmmo() const { return bullets_left; } // Implement the logic to retrieve the ammo value
-int Scene::getScore() const { return 150; } // Implement the logic to retrieve the score value
+int Scene::getScore() const { return pointsHit; } // Implement the logic to retrieve the score value
 int Scene::getMinutes() const { return 5; } // Implement the logic to retrieve the minutes value, can be used for start up
 int Scene::getSeconds() const { return 30; } // Implement the logic to retrieve the seconds value, this can be use for start up
 const char* Scene::getNotification() const { return "READY TO SHOOT!"; } // Implement the logic to retrieve the notification message

@@ -46,7 +46,7 @@ void _HUD::draw(int ammo, int score, int minutes, int seconds, const char* notif
 // +++++ modified ++++++++++++++++++++++++++++++++
 void _HUD::drawCrosshair()
 {
-    glColor3f(1.0, 1.0, 1.0); // White color
+    glColor3f(1.0, 0.0, 0.0); // White color
     glBegin(GL_LINES);
         // Draw the horizontal line of the crosshair at mouse position
         glVertex2f(mouseX - 10, mouseY);
@@ -57,7 +57,7 @@ void _HUD::drawCrosshair()
     glEnd();
 
     // Debug output for crosshair position
-    std::cout << "Crosshair Position - X: " << mouseX << ", Y: " << mouseY << std::endl;
+    //std::cout << "Crosshair Position - X: " << mouseX << ", Y: " << mouseY << std::endl;
 }
 
 /* original drawCrosshair method
@@ -106,7 +106,7 @@ void _HUD::drawTimer(int minutes, int seconds) {
 }
 
 void _HUD::drawNotification(const char* notification) {
-    glColor3f(1.0, 1.0, 1.0); // White color
+    glColor3f(1.0, 0.0, 0.0); // White color
     glRasterPos2f(575, 200); // Position at the bottom center
     font->printString(const_cast<char*>(notification));
 }
