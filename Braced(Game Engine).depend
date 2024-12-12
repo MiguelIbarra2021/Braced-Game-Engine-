@@ -109,7 +109,7 @@
 	"_Common.h"
 	<SOIL.h>
 
-1733900076 c:\github\braced-game-engine-\include\_scene.h
+1733957031 c:\github\braced-game-engine-\include\_scene.h
 	<vector>
 	"_Scene.h"
 	"_LightSetup.h"
@@ -135,7 +135,7 @@
 	<_TextureLoader.h>
 	<_ModelLoaderMD2.h>
 
-1733904998 source:c:\github\braced-game-engine-\src\_scene.cpp
+1733961626 source:c:\github\braced-game-engine-\src\_scene.cpp
 	"_Scene.h"
 
 1733848306 source:c:\github\braced-game-engine-\src\_timer.cpp

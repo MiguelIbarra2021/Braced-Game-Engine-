@@ -245,7 +245,6 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
 
             shot = true;
             break;  // WM_LBUTTONDOWN ends
-
         case WM_RBUTTONDOWN:
             //sysControl->wParam = wParam;
             sysControl->mouseEventDown(LOWORD(lParam), HIWORD(lParam));
@@ -253,12 +252,12 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
         case WM_MBUTTONDOWN:
             sysControl->mouseEventDown(LOWORD(lParam), HIWORD(lParam));
             break;
-
         // bullets handled here with mouseclicks (src & des)
         case WM_LBUTTONUP:
             sysControl->mouseEventUp();
 
-            if (bullets_left > 0 && !objectHierarchy[0]->mdl->In_Animation) {
+            if (bullets_left > 0 && !objectHierarchy[0]->mdl->In_Animation)
+            {
                 objectHierarchy[0]->mdl->actionTrigger = objectHierarchy[0]->mdl->SHOOT;
 
                 // Assuming objectHierarchy[0] is the gun model
@@ -268,9 +267,9 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
                 gunBarrelOffset = { 0.5f, 0.0f, 0.0f }; // Example offset
 
                 // Calculate bullet initial position
-                bullets[mouseClicks].src.x = gunBarrelPosition.x + gunBarrelOffset.x;
-                bullets[mouseClicks].src.y = gunBarrelPosition.y + gunBarrelOffset.y;
-                bullets[mouseClicks].src.z = gunBarrelPosition.z + gunBarrelOffset.z;
+                bullets[mouseClicks].src.x = 0;
+                bullets[mouseClicks].src.y = 0;
+                bullets[mouseClicks].src.z = 0;
 
                 // Calculate direction vector for the bullet
                 vec3 bulletDirection;
@@ -298,25 +297,15 @@ int Scene::winMsg(HWND	hWnd,			    // Handle For This Window
 
                 bullets_left--;
 
-                // Debugging output
-                /*std::cout << "Bullet " << mouseClicks << " Initialized: "
-                          << "Src X: " << bullets[mouseClicks].src.x
-                          << " Y: " << bullets[mouseClicks].src.y
-                          << " Z: " << bullets[mouseClicks].src.z
-                          << " Des X: " << bullets[mouseClicks].des.x
-                          << " Y: " << bullets[mouseClicks].des.y
-                          << " Z: " << bullets[mouseClicks].des.z
-                          << " Live: " << bullets[mouseClicks].live
-                          << std::endl;*/
-
                 mouseClicks = (mouseClicks + 1) % 20;
             }
 
-            if (shot) {
+            if (shot)
+            {
                 shot = false;
             }
-            break;
 
+            break;
         case WM_RBUTTONUP:
             sysControl->mouseEventUp();
             break;
@@ -498,6 +487,7 @@ GLint Scene::initGL()   // Initalize Scene
 
     // init timers, can modify: original was => duck_timer->startTimer;
     duck_timer->initTimer();
+    duck_timer->startTime = clock();
 
     font->makeRasterFont(); // init raster font
     hud->initFonts(); // init HUD fonts
@@ -508,7 +498,8 @@ GLint Scene::initGL()   // Initalize Scene
 
 // modified this
 // **************   DUCKS ********************
-GLvoid Scene::initDuck() {
+GLvoid Scene::initDuck()
+{
     for(int i = 0; i < 4; i++)
     {
         ducks[i].projectile_speed = 15;
@@ -570,21 +561,13 @@ GLvoid Scene::initDuck() {
     desPos[3].x = -15;
     desPos[3].y = 100;
     desPos[3].z = 100;
-
-    // Debugging output
-    for (int i = 0; i < 4; i++) {
-        /*std::cout << "Init Duck Launcher " << i << " Rotation: "
-                  << "X: " << lanRot[i].x
-                  << " Y: " << lanRot[i].y
-                  << " Z: " << lanRot[i].z
-                  << std::endl;*/
-    }
 }
 
 // **********  Gun Position ***************
 // also modified
 GLvoid Scene::initShotgun() {
     insertObject("models/gun_color.png", "models/shotgun.md2");
+
     objectHierarchy[0]->mdl->actionTrigger = objectHierarchy[0]->mdl->IDLE;
     objectHierarchy[0]->mdl->In_Animation = false;
 
@@ -599,18 +582,6 @@ GLvoid Scene::initShotgun() {
     objectHierarchy[0]->rotation.x = 0.0f; // No tilt up or down
     objectHierarchy[0]->rotation.y = 0.0f; // Rotate 180 degrees around Y-axis to point forward
     objectHierarchy[0]->rotation.z = 0.0f; // No roll
-
-    // Debugging output
-    /*std::cout << "Init Shotgun Position: "
-              << "X: " << objectHierarchy[0]->position.x
-              << " Y: " << objectHierarchy[0]->position.y
-              << " Z: " << objectHierarchy[0]->position.z
-              << std::endl;
-    std::cout << "Init Shotgun Rotation: "
-              << "X: " << objectHierarchy[0]->rotation.x
-              << " Y: " << objectHierarchy[0]->rotation.y
-              << " Z: " << objectHierarchy[0]->rotation.z
-              << std::endl;*/
 }
 
 void Scene::enableCelShading() {
@@ -633,7 +604,7 @@ void Scene::enableCelShading() {
 
 // Modified drawScene
 GLint Scene::drawScene() {
-    glClearColor(1.0, 0.0, 0.0, 1.0); // Ensure the alpha is set to 0 for transparency (Pause Menu)
+    glClearColor(0.0, 0.0, 0.0, 0.0); // Ensure the alpha is set to 0 for transparency (Pause Menu)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();           // Clear Matrices
 
@@ -669,11 +640,14 @@ GLint Scene::drawScene() {
             sysControl->hideMouseCursor(); // hide mouse cursor
 
             camera->updateViewDirection(); // Camera
+
             if (!isPaused)
-                //GamePlay();
+                GamePlay();
 
             // Always render the game scene
             GamePlay(); // Only this should render, not update logic
+
+            glDisable(GL_FOG);
 
             if (isPaused)
             {
@@ -704,7 +678,6 @@ GLint Scene::drawScene() {
                 glPopMatrix();
             }
 
-            glDisable(GL_FOG);
             RenderHUD(); // Draw the HUD
             glEnable(GL_FOG);
 
@@ -738,7 +711,8 @@ void Scene::GamePlay() {
     //cout << bullets[0].pos.x << " " << bullets[0].pos.y << " " << bullets[0].pos.z << endl;
 
     // Temp Reload
-    if(bullets_left <= 0 && !objectHierarchy[0]->mdl->In_Animation) {
+    if(bullets_left <= 0 && !objectHierarchy[0]->mdl->In_Animation)
+    {
         objectHierarchy[0]->mdl->actionTrigger = objectHierarchy[0]->mdl->RELOAD;
         bullets_left = 2;
     }
@@ -747,7 +721,7 @@ void Scene::GamePlay() {
     for (int i = 0; i < 20; i++)
     {
         bullets[i].ProjectileAction(isPaused);
-        bullets[i].drawProjectile(false);
+        //bullets[i].drawProjectile(false);
     }
 
     // World Generating
@@ -772,7 +746,7 @@ void Scene::GamePlay() {
     {
         for(int j = 0; j < 4; j++)
         {
-            if(hit->isSphereCollision(bullets[i].pos, ducks[j].pos, 0.6, 1.4, 0.4))
+            if(ducks[j].actionTrigger != ducks[j].DEAD && hit->isSphereCollision(bullets[i].pos, ducks[j].pos, 0.6, 1.4, 0.4))
             {
                 Kill_Duck(j);
             }
@@ -818,12 +792,6 @@ GLvoid Scene::mouseMapping(int x, int y) // x & y are mouse coords
     // Read depth value at the current mouse position
     glReadPixels(x, int(winY), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ);
 
-    /*// Depth thresholding to ignore unintended objects
-    if (winZ < 0.01f || winZ > 0.99f) {
-        // Ignore out-of-range depth values
-        winZ = 1.0f; // Default depth (far plane)
-    }*/
-
     winZ = 1.0f; // Default depth (far plane)
 
     // Initialize mouse coordinates in world space
@@ -833,13 +801,11 @@ GLvoid Scene::mouseMapping(int x, int y) // x & y are mouse coords
 
     // Perform unprojection to get world coordinates
     gluUnProject(winX, winY, winZ, modelViewM, projectionM, viewPort, &mouseX, &mouseY, &mouseZ);
-
-    // Debug: Print unprojected coordinates, to find out buttons clickable area
-    //std::cout << "Mapped mouse coordinates: (" << mouseX << ", " << mouseY << ", " << mouseZ << ")" << std::endl;
 }
 
-
-// Game Engine Functions
+///////////////////////////
+// Game Engine Functions //
+///////////////////////////
 
 GLvoid Scene::insertObject(char* tex_file, char* mdl_file)             // Inserts selected object into the scene; Tempory
 {
@@ -981,7 +947,8 @@ GLvoid Scene::rotateTowards(vec3* object, vec3* target)
     vec3 forward = { 0.0f, 0.0f, -1.0f };
 
     // Calculate rotation axis using cross product
-    vec3 axis = {
+    vec3 axis =
+    {
         forward.y * directionZ - forward.z * directionY,
         forward.z * directionX - forward.x * directionZ,
         forward.x * directionY - forward.y * directionX
@@ -990,7 +957,8 @@ GLvoid Scene::rotateTowards(vec3* object, vec3* target)
     // Normalize axis
     float axisLength = sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z);
 
-    if (axisLength != 0) {
+    if (axisLength != 0)
+    {
         axis.x /= axisLength;
         axis.y /= axisLength;
         axis.z /= axisLength;
@@ -1004,22 +972,13 @@ GLvoid Scene::rotateTowards(vec3* object, vec3* target)
     object->x = axis.x * angle;
     object->y = axis.y * angle;
     object->z = axis.z * angle;
-
-    // Debugging output
-    /*
-    std::cout << "Rotate Towards Position: "
-              << "X: " << object->x
-              << " Y: " << object->y
-              << " Z: " << object->z
-              << std::endl;
-    */
 }
 
 // added for duck rotation adjustment
-GLvoid Scene::rotateDuck(vec3* duck, vec3 target) {
-    if (isPaused) {
+GLvoid Scene::rotateDuck(vec3* duck, vec3 target)
+{
+    if (isPaused)
         return; // Skip updating rotation if the game is paused
-    }
 
     // Calculate the direction vector to follow their destination
     float directionX = target.x - duck->x;
@@ -1081,6 +1040,8 @@ GLvoid Scene::Automatic_Launcher()
     {
         int i = rnd->pickNumber();
 
+        cout << "spawned " << i << endl;
+
         if(ducks[i].pos.y < -20)
             ducks[i].actionTrigger = ducks[i].READY;
 
@@ -1093,7 +1054,6 @@ GLvoid Scene::Automatic_Launcher()
     for(int i=0; i < 4; i++)
     {
         ducks[i].drawProjectile(true);
-        // ducks[i].ProjectileAction(); original
         ducks[i].ProjectileAction(isPaused);
     }
 }
@@ -1126,13 +1086,17 @@ GLvoid Scene::Launch_Duck(int current_duck)
 GLvoid Scene::Kill_Duck(int duck)
 {
     if(ducks[duck].actionTrigger != ducks[duck].DEAD)
-        pointsHit = pointsHit + 50;
+    {
+        cout << "killed " << duck << endl;
 
-    ducks[duck].actionTrigger = ducks[duck].DEAD;
-    ducks[duck].rot.x = 90;
+        ducks[duck].actionTrigger = ducks[duck].DEAD;
+        ducks[duck].rot.x = 90;
 
-    particleSystem[duck].init(ducks[duck].pos, "images/feathers.png");
-    snds->playSound("sounds/duck_dying.mp3");
+        particleSystem[duck].init(ducks[duck].pos, "images/feathers.png");
+        snds->playSound("sounds/duck_dying.mp3");
+
+        pointsHit = pointsHit + 10;
+    }
 }
 
 GLvoid Scene::initFoliage()
@@ -1349,8 +1313,6 @@ void Scene::RenderHUD() // use as template to work with drawHUD()
         // Get HUD-related data
         int ammo = getAmmo();
         int score = getScore();
-        //int minutes = getMinutes();
-        //int seconds = getSeconds();
         const char* notification = getNotification();
 
         // Render the HUD
